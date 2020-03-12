@@ -62,3 +62,5 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (2, 8, '2013-01-02',
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (3, 8, '2013-01-03', 'neutered');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04', 'spayed');
 
+INSERT INTO trainers(id, name, surname, email, phone) VALUES (1, 'John', 'Doe', 'acme@mail.com', '+34 111 111 111');
+INSERT INTO trainers(id, name, surname, email, phone) VALUES (2, 'Jane', 'Doe', 'acme@mail.com', '+34 222 222 222');
