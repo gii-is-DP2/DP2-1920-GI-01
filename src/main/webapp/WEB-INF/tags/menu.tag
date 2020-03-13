@@ -75,6 +75,11 @@
 											<p class="text-left">
 												<strong><sec:authentication property="name" /></strong>
 											</p>
+											<p>
+												<sec:authorize url="/admin/trainers">
+													<a href="/admin/trainers">Manage trainers</a>
+												</sec:authorize>
+											</p>
 											<p class="text-left">
 												<a href="<c:url value="/logout" />"
 													class="btn btn-primary btn-block btn-sm">Logout</a>
