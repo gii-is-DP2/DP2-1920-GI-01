@@ -77,11 +77,6 @@ public class VisitController {
 	public String initNewVisitForm(@PathVariable("petId") int petId, Map<String, Object> model) {
 		return "pets/createOrUpdateVisitForm";
 	}
-	
-	@GetMapping(value="/homeless-pets/{petId}/visits/new")
-	public String initNewVisitFormHomelessPet(@PathVariable("petId") int petId, Map<String, Object> model) {
-		return "homelessPets/editVisit";
-	}
 
 	// Spring MVC calls method loadPetWithVisit(...) before processNewVisitForm is called
 	@PostMapping(value = "/owners/{ownerId}/pets/{petId}/visits/new")
@@ -94,66 +89,11 @@ public class VisitController {
 			return "redirect:/owners/{ownerId}";
 		}
 	}
-	
-	@PostMapping(value = "/homeless-pets/{petId}/visits/new")
-	public String processNewVisitFormHomelessPet(@Valid Visit visit, BindingResult result) {
-		if (result.hasErrors()) {
-			return "homelessPets/editVisit";
-		}
-		else {
-			this.petService.saveVisit(visit);
-			return "redirect:/homeless-pets";
-		}
-	}
 
 	@GetMapping(value = "/owners/*/pets/{petId}/visits")
 	public String showVisits(@PathVariable int petId, Map<String, Object> model) {
 		model.put("visits", this.petService.findPetById(petId).getVisits());
 		return "visitList";
-	}
-	
-	@GetMapping("homeless-pets/{petId}/visits/{visitId}/edit")
-	public String initEditForm(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, ModelMap model) {
-		String view = "/homelessPets/editVisit";
-		Optional<Visit> visit = this.visitService.findVisitById(visitId);
-		model.addAttribute("visit", visit.get());
-		return view;
-	}
-	
-	@PostMapping("homeless-pets/{petId}/visits/{visitId}/edit")
-	public String processEditForm(@PathVariable("petId") int petId, @Valid Visit visit, BindingResult result, @PathVariable("visitId") int visitId, ModelMap model) {
-		if(result.hasErrors()) {
-			model.put("visit", visit);
-			return "/homelessPets/editVisit";
-		} else {
-			Optional<Visit> visitToUpdate = this.visitService.findVisitById(visitId);
-			BeanUtils.copyProperties(visit, visitToUpdate.get());
-			try {
-				//NO SE GUARDA NADA
-				//this.visitService.deleteVisit(visit);
-				this.visitService.saveVisit(visitToUpdate.get());
-			} catch (Exception e) {
-				return "/homelessPets/editVisit";
-			}
-			return "redirect:/homeless-pets";
-		}
-	}
-	
-	@GetMapping(value = {"/homeless-pets/{petId}/visits/{visitId}/delete"})
-	public String deleteVisit(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, ModelMap model) {
-		String view;
-		Optional<Visit> visit;
-		view = "homelessPets/listPets";
-		visit = this.visitService.findVisitById(visitId);
-		if(visit.isPresent()) {
-			visitService.deleteVisit(visit.get());
-			model.addAttribute("message", "Visit deleted successfully!");
-			view = "redirect:/homeless-pets";
-		} else {
-			model.addAttribute("message", "Visit not found!");
-			view = "redirect:/homeless-pets";
-		}
-		return view;
 	}
 
 }

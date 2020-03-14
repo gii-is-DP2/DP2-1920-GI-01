@@ -20,13 +20,13 @@ public class VisitService {
 		return visitRepository.findById(visitId);
 	}
 	
-	@Transactional
-	public void saveVisit(Visit visit) throws DataAccessException{
-		this.visitRepository.save(visit);
-	}
+//	@Transactional
+//	public void saveVisit(Visit visit) throws DataAccessException{
+//		this.visitRepository.save(visit);
+//	}
 	
 	@Transactional
-	public void deleteVisit(Visit visit) throws DataAccessException{
+	public void delete(Visit visit) throws DataAccessException{
 		this.visitRepository.delete(visit);
 	}
 	

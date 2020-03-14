@@ -7,6 +7,8 @@
 <petclinic:layout pageName="vets">
 
     <h2>Homeless Pets and their Visits</h2>
+    
+    <c:if test="${message != null}"><c:out value="${message}"></c:out></c:if>
 
     <table class="table table-striped">
         <c:forEach var="pet" items="${homelessPets}">
