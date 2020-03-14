@@ -10,9 +10,11 @@ import javax.validation.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class Medicine extends NamedEntity {
 	
 	@DateTimeFormat(pattern = "yyyy/MM/dd")

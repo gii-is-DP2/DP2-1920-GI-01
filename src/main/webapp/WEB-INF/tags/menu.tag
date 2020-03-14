@@ -46,6 +46,11 @@
 					<span>Error</span>
 				</petclinic:menuItem>
 
+				<petclinic:menuItem active="${name eq 'medicines'}" url="/medicine/create" title="add a medicine">
+					<span class= "glyphicon glyphicon-plus" aria-hidden="true"></span>
+					<span>Add a medicine</span>
+				</petclinic:menuItem>
+
 			</ul>
 
 
