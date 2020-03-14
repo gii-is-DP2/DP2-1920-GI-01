@@ -23,5 +23,9 @@ public class MedicineService {
 		return repository.findById(id).orElse(null);
 	}
 	
+	@Transactional
+	public void deleteMedicine(Medicine medicine) {
+		repository.delete(medicine);
+	}
 
 }

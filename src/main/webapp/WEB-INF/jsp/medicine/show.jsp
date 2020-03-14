@@ -24,4 +24,15 @@
 			<td><b><c:out value="${medicine.petType}"/></b></td>
 		</tr>
 	</table>
+	
+   	<spring:url value="update?id={medicineId}" var="editURL">
+        <spring:param name="medicineId" value="${medicine.id}"/>
+    </spring:url>
+    <a href="${fn:escapeXml(editURL)}" class="btn btn-default">Edit</a>
+    
+   	<spring:url value="delete?id={medicineId}" var="deleteURL">
+        <spring:param name="medicineId" value="${medicine.id}"/>
+    </spring:url>
+    <a href="${fn:escapeXml(deleteURL)}" class="btn btn-default">Delete</a>
+	
 </petclinic:layout>

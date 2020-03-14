@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Medicine;
 import org.springframework.samples.petclinic.model.PetType;
@@ -92,6 +93,59 @@ public class MedicineController {
 		model.put("medicine", medicine);
 		
 		return SHOW_VIEW;
+	}
+	
+	@GetMapping("/update")
+	public String initUpdateForm(@RequestParam(value = "id", required = true) Integer medicineId, ModelMap model) {
+		Medicine medicine;
+		
+		medicine = medicineService.findMedicineById(medicineId);
+		
+		if(medicine == null) {
+			throw new NullPointerException("Medicine not found");
+		}
+		
+		model.put("medicine", medicine);
+		
+		return CREATE_OR_UPDATE_VIEW;
+	}
+	
+	@PostMapping("/update")
+	public String proccessUpdateForm(@RequestParam(value = "id", required = true) Integer medicineId, @Valid Medicine medicine, BindingResult result, ModelMap model) {
+		String redirection;
+		Medicine medicineToUpdate;
+		
+		if(result.hasErrors()) {
+			model.put("medicine", medicine);
+			return CREATE_OR_UPDATE_VIEW;
+		}
+		
+		medicineToUpdate = medicineService.findMedicineById(medicineId);
+		redirection = "redirect:/medicine/show?id=" + medicineId;
+		
+		if(medicine == null) {
+			throw new NullPointerException("Medicine not found");
+		}
+		
+		BeanUtils.copyProperties(medicine, medicineToUpdate, "id", "name");
+		medicineService.saveMedicine(medicineToUpdate);
+		
+		return redirection;
+	}
+	
+	@GetMapping("/delete")
+	public String deleteMedicine(@RequestParam(value = "id", required = true) Integer medicineId, ModelMap model) {
+		Medicine medicine;
+		
+		medicine = medicineService.findMedicineById(medicineId);
+		
+		if(medicine == null) {
+			throw new NullPointerException("Medicine not found");
+		}
+		
+		medicineService.deleteMedicine(medicine);
+		
+		return "redirect:/";
 	}
 	
 }
