@@ -56,6 +56,9 @@ public class HomelessPetController {
 		return "homelessPets/listPets";
 	}
 	
+	//This next method is useless because all pet info is displayed in the listing
+	//Nevertheless, it should be kept in here
+	
 //	@GetMapping("/{petId}")
 //	public String showHomelessPet(@PathVariable("petId") int petId, ModelMap model) {
 //		Pet homelessPet = new Pet();

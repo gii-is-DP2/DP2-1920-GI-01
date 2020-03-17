@@ -84,10 +84,12 @@ public class PetService {
 		return visitRepository.findByPetId(petId);
 	}
 	
+	//This method allows us to find all homeless pets
 	public List<Pet> findHomelessPets() throws DataAccessException {
 		return petRepository.findHomelessPets();
 	}
 	
+	//This method allows us to delete a given pet
 	public void deletePet(Pet pet) throws DataAccessException {
 		petRepository.delete(pet);
 	}

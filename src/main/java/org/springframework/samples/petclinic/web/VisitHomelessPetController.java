@@ -70,9 +70,6 @@ public class VisitHomelessPetController {
 			if(visitToUpdate.isPresent()) {
 				BeanUtils.copyProperties(visit, visitToUpdate.get(), "id", "pet");
 				try {
-					//NO SE GUARDA NADA
-					//this.visitService.deleteVisit(visit);
-					//this.visitService.saveVisit(visitToUpdate.get());
 					this.petService.saveVisit(visitToUpdate.get());
 				} catch (Exception e) {
 					return "/homelessPets/editVisit";

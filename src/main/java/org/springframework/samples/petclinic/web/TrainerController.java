@@ -1,6 +1,6 @@
 package org.springframework.samples.petclinic.web;
 
-import java.util.Optional;
+import java.util.Optional; 
 
 import javax.validation.Valid;
 
@@ -8,15 +8,15 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Trainer;
 import org.springframework.samples.petclinic.service.TrainerService;
+import org.springframework.samples.petclinic.web.validators.TrainerValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -26,6 +26,11 @@ public class TrainerController {
 	//Advanced Unit Testing
 	@Autowired
 	private TrainerService	trainerService;
+	
+	@InitBinder
+	public void initTrainerBinder(WebDataBinder dataBinder) {
+		dataBinder.setValidator(new TrainerValidator());
+	}
 	
 	@GetMapping("/trainers")
   public String listTrainers(ModelMap modelMap) {
@@ -38,7 +43,7 @@ public class TrainerController {
   }
   
 	@GetMapping("/admin/trainers")
-	public String listTrainers(ModelMap modelMap) {
+	public String listTrainersAsAdmin(ModelMap modelMap) {
 		String view;
 		Iterable<Trainer> trainers;
 		view = "admin/trainers/listTrainers";
@@ -59,7 +64,7 @@ public class TrainerController {
   }
   
 	@GetMapping("/admin/trainers/{trainerId}")
-	public ModelAndView showTrainer(@PathVariable("trainerId") int trainerId) {
+	public ModelAndView showTrainerAsAdmin(@PathVariable("trainerId") int trainerId) {
 		Optional<Trainer> trainer;
 		ModelAndView mav = new ModelAndView("admin/trainers/showTrainer");
 		trainer = this.trainerService.findTrainerById(trainerId);

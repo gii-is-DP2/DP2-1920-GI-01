@@ -46,6 +46,7 @@ public interface VisitRepository {
 
 	List<Visit> findByPetId(Integer petId);
 	
+	//This method allows us to find a certain visit given an id
 	Optional<Visit> findById(int id) throws DataAccessException;
 
 }

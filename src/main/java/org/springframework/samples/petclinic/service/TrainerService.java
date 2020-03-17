@@ -25,7 +25,7 @@ public class TrainerService {
 		return res;
 	}
 	
-	//This next method helps us find a specific trainer given an id
+	//This method allows us to find a trainer given an id
 	@Transactional
 	public Optional<Trainer> findTrainerById(int trainerId) {
 		Optional<Trainer> res;
@@ -33,11 +33,13 @@ public class TrainerService {
 		return res;
 	}
   
+	//This method allows us to delete a given trainer
 	@Transactional
 	public void deleteTrainer (Trainer trainer) {
 		this.trainerRepository.delete(trainer);
 	}
 	
+	//This method allows us to save a given trainer
 	@Transactional
 	public void saveTrainer (Trainer trainer) {
 		this.trainerRepository.save(trainer);
