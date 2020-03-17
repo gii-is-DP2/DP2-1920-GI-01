@@ -71,7 +71,7 @@ CREATE TABLE interventions (
   visit_date DATE,
   description VARCHAR(255),
   intervention_date DATE,
-  intervention_time DATE,
+  intervention_time INTERGER,
   intervention_description VARCHAR(255)
 );
 ALTER TABLE interventions ADD CONSTRAINT fk_interventions_pets FOREING KEY (pet_id) REFERENCES pets (id);

@@ -62,5 +62,5 @@ INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (13, 'Sly', '2012-0
 --INSERT INTO visits(id,pet_id,visit_date,description) VALUES (3, 8, '2013-01-03', 'neutered');
 --INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04', 'spayed');
 
--- INSERT INTO interventions(id,pet_id,visit_date,description,intervention_date,intervention_time,intervention_description) VALUES (1, 7, '2013-01-10', 'rabies shot', '2013-01-10', '01:55', 'Bullet removal');
+--INSERT INTO interventions(id,pet_id,visit_date,description,intervention_date,intervention_time,intervention_description) VALUES (1, 7, '2013-01-10', 'rabies shot', '2013-01-10', 1, 'Bullet removal');
 

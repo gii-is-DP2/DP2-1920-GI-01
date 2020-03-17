@@ -54,7 +54,7 @@ public class InterventionController {
 	// Spring MVC calls method loadPetWithINtervention(...) before initNewVisitForm is called
 	@GetMapping(value = "/owners/*/pets/{petId}/interventions/new")
 	public String initNewINterventionForm(@PathVariable("petId") final int petId, final Map<String, Object> model) {
-		return "pets/createOrUpdateINterventionForm";
+		return "pets/createOrUpdateInterventionForm";
 	}
 
 	// Spring MVC calls method loadPetWithIntervention(...) before processNewINterventionForm is called

@@ -24,7 +24,7 @@ public interface InterventionRepository {
 	@Query("SELECT i FROM Intervention i where i.id=:interventionId")
 	Intervention findByInterventionId(@Param(value = "interventionId") int interventionId);
 
-	@Query("SELECT p.interventions FROM Pet p where p.id=:petId")
+	@Query("SELECT i FROM Intervention i where i.pet.id=:petId")
 	Collection<Intervention> findInterventionsByPetId(@Param(value = "petId") int petId);
 
 	@Transactional

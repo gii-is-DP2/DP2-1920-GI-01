@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,14 +23,12 @@ import lombok.EqualsAndHashCode;
 public class Intervention extends Visit {
 
 	@Column(name = "intervention_date")
-	@NotEmpty
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private LocalDate	interventionDate;
 
 	@Column(name = "intervention_time")
-	@NotEmpty
-	@DateTimeFormat(pattern = "HH:mm")
-	private LocalDate	interventionTime;
+	@NotNull
+	private Integer		interventionTime;
 
 	@Column(name = "intervention_description")
 	@NotEmpty
