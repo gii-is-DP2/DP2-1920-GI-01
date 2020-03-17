@@ -4,20 +4,24 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "trainers")
 public class Trainer extends NamedEntity{
+	
+	//Attributes
 
 	@Column(name = "surname")
 	private String surname;
 	
-	@Email
 	@Column(name = "email")
 	private String email;
 	
 	@Column(name = "phone")
 	private String phone;
+	
+	//Getters and Setters
 	
 	public String getSurname() {
 		return this.surname;

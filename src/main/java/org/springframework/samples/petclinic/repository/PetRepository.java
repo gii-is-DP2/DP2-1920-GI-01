@@ -58,6 +58,7 @@ public interface PetRepository {
 	
 	void delete(Pet pet) throws DataAccessException;
 
+	//This method allows us to find all the pets with no owners
 	List<Pet> findHomelessPets() throws DataAccessException;
 	
 }

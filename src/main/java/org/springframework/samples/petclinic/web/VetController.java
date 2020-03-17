@@ -154,25 +154,6 @@ public class VetController {
 			model.put("vet", vet);
 			return "admin/vets/vetEdit";
 		} else {
-//			Optional<Vet> vetToUpdate = this.vetService.findVetById(vetId);
-//			if(vetToUpdate.isPresent()) {
-//				BeanUtils.copyProperties(vet, vetToUpdate.get(), "id");
-//				try {
-////					//vetToUpdate.get().setSpecialtiesInternal((Set<Specialty>) vet.getSpecialties());
-////					List<Specialty> modelSpecialties = new ArrayList<Specialty>();
-////					modelSpecialties = (List<Specialty>) model.getAttribute("specialties");
-////					//modelSpecialties = vet.getSpecialties();
-////					for (Specialty s : modelSpecialties) {
-////						vetToUpdate.get().addSpecialty(s);
-////					}
-//					vetToUpdate.get().setId(vetId);
-////					vetToUpdate.get().setSpecialtiesInternal(vet.getSpecialties().stream().collect(Collectors.toSet()));
-//					this.vetService.saveVet(vetToUpdate.get());
-//				} catch (DuplicatedVetNameException ex){
-//					result.rejectValue("name", "duplicate", "already exists");
-//					return "admin/vets/vetEdit";
-//				}
-//			}
 			try {
 				vet.setId(vetId);
 				this.vetService.saveVet(vet);
