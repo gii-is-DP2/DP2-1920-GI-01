@@ -40,15 +40,12 @@
 					<span>Veterinarians</span>
 				</petclinic:menuItem>
 
-				<petclinic:menuItem active="${name eq 'error'}" url="/oups"
-					title="trigger a RuntimeException to see how it is handled">
-					<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
-					<span>Error</span>
+				<petclinic:menuItem active="${name eq 'medicines'}" url="/medicine/list" title="Medicines">
+					<span class= "glyphicon glyphicon-plus" aria-hidden="true"></span>
+					<span>Medicines</span>
 				</petclinic:menuItem>
 
 			</ul>
-
-
 
 
 			<ul class="nav navbar-nav navbar-right">
@@ -58,7 +55,7 @@
 				</sec:authorize>
 				<sec:authorize access="isAuthenticated()">
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown"> <span class="glyphicon glyphicon-user"></span> 
+						data-toggle="dropdown"> <span class="glyphicon glyphicon-user"></span>
 							<strong><sec:authentication property="name" /></strong> <span
 							class="glyphicon glyphicon-chevron-down"></span>
 					</a>
@@ -78,6 +75,12 @@
 											<p>
 												<sec:authorize url="/admin/trainers">
 													<a href="/admin/trainers">Manage trainers</a>
+                        </sec:authorize>
+												<sec:authorize url="/admin/vets">
+													<a href="/admin/vets">Manage veterinarians</a>
+                        </sec:authorize>
+												<sec:authorize url="/homeless-pets">
+													<a href="/homeless-pets">Manage homeless pets</a>
 												</sec:authorize>
 											</p>
 											<p class="text-left">
