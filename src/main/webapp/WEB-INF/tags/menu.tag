@@ -73,6 +73,9 @@
 												<strong><sec:authentication property="name" /></strong>
 											</p>
 											<p>
+												<sec:authorize url="/admin/trainers">
+													<a href="/admin/trainers">Manage trainers</a>
+                        </sec:authorize>
 												<sec:authorize url="/admin/vets">
 													<a href="/admin/vets">Manage veterinarians</a>
                         </sec:authorize>
