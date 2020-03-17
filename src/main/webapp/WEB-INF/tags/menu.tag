@@ -39,6 +39,12 @@
 					<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
 					<span>Veterinarians</span>
 				</petclinic:menuItem>
+				
+				<petclinic:menuItem active="${name eq 'trainers'}" url="/trainers"
+					title="trainers">
+					<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+					<span>Trainers</span>
+				</petclinic:menuItem>
 
 				<petclinic:menuItem active="${name eq 'medicines'}" url="/medicine/list" title="Medicines">
 					<span class= "glyphicon glyphicon-plus" aria-hidden="true"></span>

@@ -32,7 +32,7 @@ public class TrainerService {
 		res = trainerRepository.findById(trainerId);
 		return res;
 	}
-	
+  
 	@Transactional
 	public void deleteTrainer (Trainer trainer) {
 		this.trainerRepository.delete(trainer);
