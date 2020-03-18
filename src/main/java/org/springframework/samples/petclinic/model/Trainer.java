@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -13,12 +14,15 @@ public class Trainer extends NamedEntity{
 	//Attributes
 
 	@Column(name = "surname")
+	@NotEmpty
 	private String surname;
 	
 	@Column(name = "email")
+	@NotEmpty
 	private String email;
 	
 	@Column(name = "phone")
+	@NotEmpty
 	private String phone;
 	
 	//Getters and Setters
