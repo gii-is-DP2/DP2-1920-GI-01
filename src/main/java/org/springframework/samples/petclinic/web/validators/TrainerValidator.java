@@ -10,7 +10,8 @@ public class TrainerValidator implements Validator {
 	private static final String REQUIRED = "required";
 	private static final String EMAIL = "required as follows: acme@example.com";
 	private static final String PHONE = "required as follows: 999999999";
-
+	private static final String NAME_LENGTH = "required length between 3 and 50";
+	
 	@Override
 	public boolean supports(Class<?> clazz) {
 		return Trainer.class.isAssignableFrom(clazz);
@@ -33,6 +34,8 @@ public class TrainerValidator implements Validator {
 		
 		if(StringHelper.isNullOrEmptyString(name)) {
 			errors.rejectValue("name", REQUIRED, "Required");
+		} else if(name.length() < 3 || name.length() > 50) {
+			errors.rejectValue("name", NAME_LENGTH, "Length should be between 3 and 50 characters");
 		}
 		
 		if(StringHelper.isNullOrEmptyString(surname)) {

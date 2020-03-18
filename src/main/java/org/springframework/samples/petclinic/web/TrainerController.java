@@ -53,14 +53,14 @@ public class TrainerController {
 	}
   
 	@GetMapping("/trainers/{trainerId}")
-	public ModelAndView showTrainer(@PathVariable("trainerId") int trainerId) {
+	public String showTrainer(@PathVariable("trainerId") int trainerId, ModelMap modelMap) {
 		Optional<Trainer> trainer;
-		ModelAndView mav = new ModelAndView("trainers/showTrainer");
+		String view = "trainers/showTrainer";
     trainer = this.trainerService.findTrainerById(trainerId);
     if(trainer.isPresent()) {
-      mav.addObject("trainer", trainer.get());
+      modelMap.addAttribute("trainer", trainer.get());
     }
-    return mav;
+    return view;
   }
   
 	@GetMapping("/admin/trainers/{trainerId}")
