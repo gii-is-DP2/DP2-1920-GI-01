@@ -92,7 +92,7 @@ public class TrainerController {
 	}
 	
 	@GetMapping("/admin/trainers/{trainerId}/edit")
-	public String initUpdateFor(@PathVariable("trainerId") int trainerId, ModelMap modelMap) {
+	public String initUpdateForm(@PathVariable("trainerId") int trainerId, ModelMap modelMap) {
 		Optional<Trainer> trainer = this.trainerService.findTrainerById(trainerId);
 		if(trainer.isPresent()) {
 			modelMap.put("trainer", trainer.get());
@@ -120,14 +120,14 @@ public class TrainerController {
 	}
 	
 	@GetMapping("/admin/trainers/new")
-	public String initCreationForm(ModelMap modelMap) {
+	public String initCreateForm(ModelMap modelMap) {
 		Trainer trainer = new Trainer();
 		modelMap.put("trainer", trainer);
 		return "admin/trainers/editTrainer";
 	}
 	
 	@PostMapping("/admin/trainers/new")
-	public String processCreationForm(@Valid Trainer trainer, BindingResult result, ModelMap modelMap) {
+	public String processCreateForm(@Valid Trainer trainer, BindingResult result, ModelMap modelMap) {
 		if(result.hasErrors()) {
 			modelMap.put("trainer", trainer);
 			return "admin/trainers/editTrainer";

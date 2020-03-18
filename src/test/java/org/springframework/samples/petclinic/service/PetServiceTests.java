@@ -15,7 +15,7 @@
  */
 package org.springframework.samples.petclinic.service;
 
-import static org.assertj.core.api.Assertions.assertThat; 
+import static org.assertj.core.api.Assertions.assertThat;  
 
 import java.time.LocalDate;
 import java.util.Collection;
