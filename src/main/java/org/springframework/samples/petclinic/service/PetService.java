@@ -23,9 +23,11 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Intervention;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
+import org.springframework.samples.petclinic.model.SimpleVisit;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.repository.InterventionRepository;
 import org.springframework.samples.petclinic.repository.PetRepository;
+import org.springframework.samples.petclinic.repository.SimpleVisitRepository;
 import org.springframework.samples.petclinic.repository.VisitRepository;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
 import org.springframework.stereotype.Service;
@@ -47,12 +49,15 @@ public class PetService {
 
 	private InterventionRepository	interventionRepository;
 
+	private SimpleVisitRepository	simpleVisitRepository;
+
 
 	@Autowired
-	public PetService(final PetRepository petRepository, final VisitRepository visitRepository, final InterventionRepository interventionRepository) {
+	public PetService(final PetRepository petRepository, final VisitRepository visitRepository, final InterventionRepository interventionRepository, final SimpleVisitRepository simpleVisitRepository) {
 		this.petRepository = petRepository;
 		this.visitRepository = visitRepository;
 		this.interventionRepository = interventionRepository;
+		this.simpleVisitRepository = simpleVisitRepository;
 	}
 
 	@Transactional(readOnly = true)
@@ -91,6 +96,15 @@ public class PetService {
 
 	public Collection<Intervention> findInterventionsByPetId(final int petId) {
 		return this.interventionRepository.findInterventionsByPetId(petId);
+	}
+
+	@Transactional
+	public void saveSimpleVisit(final SimpleVisit simpleVisit) throws DataAccessException {
+		this.simpleVisitRepository.save(simpleVisit);
+	}
+
+	public Collection<SimpleVisit> findSimpleVisitsByPetId(final int petId) {
+		return this.simpleVisitRepository.findByPetId(petId);
 	}
 
 }

@@ -65,6 +65,9 @@ public class Pet extends NamedEntity {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
 	private Set<Intervention>	interventions;
 
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
+	private Set<SimpleVisit>	simpleVisits;
+
 
 	public void setBirthDate(final LocalDate birthDate) {
 		this.birthDate = birthDate;
@@ -113,8 +116,8 @@ public class Pet extends NamedEntity {
 	}
 
 	protected Set<Intervention> getInterventionsInternal() {
-		if (this.visits == null) {
-			this.visits = new HashSet<>();
+		if (this.interventions == null) {
+			this.interventions = new HashSet<>();
 		}
 		return this.interventions;
 	}
@@ -132,6 +135,28 @@ public class Pet extends NamedEntity {
 	public void addIntervention(final Intervention intervention) {
 		this.getInterventionsInternal().add(intervention);
 		intervention.setPet(this);
+	}
+
+	protected Set<SimpleVisit> getSimpleVisitsInternal() {
+		if (this.simpleVisits == null) {
+			this.simpleVisits = new HashSet<>();
+		}
+		return this.simpleVisits;
+	}
+
+	protected void setSimpleVisitsInternal(final Set<SimpleVisit> simpleVisits) {
+		this.simpleVisits = simpleVisits;
+	}
+
+	public List<SimpleVisit> getSimpleVisits() {
+		List<SimpleVisit> sortedSimpleVisits = new ArrayList<>(this.getSimpleVisitsInternal());
+		PropertyComparator.sort(sortedSimpleVisits, new MutableSortDefinition("date", false, false));
+		return Collections.unmodifiableList(sortedSimpleVisits);
+	}
+
+	public void addSimpleVisits(final SimpleVisit simpleVisit) {
+		this.getSimpleVisitsInternal().add(simpleVisit);
+		simpleVisit.setPet(this);
 	}
 
 }

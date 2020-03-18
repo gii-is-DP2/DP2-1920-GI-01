@@ -65,10 +65,10 @@
                             <th>Description</th>
                         </tr>
                         </thead>
-                        <c:forEach var="visit" items="${pet.visits}">
+                        <c:forEach var="visit" items="${pet.simpleVisits}">
                             <tr>
-                                <td><petclinic:localDate date="${visit.date}" pattern="yyyy-MM-dd"/></td>
-                                <td><c:out value="${visit.description}"/></td>
+                                <td><petclinic:localDate date="${simple_visit.date}" pattern="yyyy-MM-dd"/></td>
+                                <td><c:out value="${simple_visit.description}"/></td>
                             </tr>
                         </c:forEach>
                         <tr>
@@ -80,14 +80,34 @@
                                 <a href="${fn:escapeXml(petUrl)}">Edit Pet</a>
                             </td>
                             <td>
-                                <spring:url value="/owners/{ownerId}/pets/{petId}/visits/new" var="visitUrl">
+                                <spring:url value="/owners/{ownerId}/pets/{petId}/simple_visits/new" var="simpleVisitUrl">
                                     <spring:param name="ownerId" value="${owner.id}"/>
                                     <spring:param name="petId" value="${pet.id}"/>
                                 </spring:url>
-                                <a href="${fn:escapeXml(visitUrl)}">Add Visit</a>
+                                <a href="${fn:escapeXml(simpleVisitUrl)}">Add Visit</a>
                             </td>
                         </tr>
                     </table>
+                </td>
+                </tr>
+                <br>
+
+        </c:forEach>
+    </table>
+                
+    <table class="table table-striped">
+        <c:forEach var="pet" items="${owner.pets}">
+
+            <tr>
+                <td valign="top">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><c:out value="${pet.name}"/></dd>
+                        <dt>Birth Date</dt>
+                        <dd><petclinic:localDate date="${pet.birthDate}" pattern="yyyy-MM-dd"/></dd>
+                        <dt>Type</dt>
+                        <dd><c:out value="${pet.type.name}"/></dd>
+                    </dl>
                 </td>
                 
                 <td valign="top">
