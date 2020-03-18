@@ -65,3 +65,5 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04',
 
 INSERT INTO medicine VALUES (1, 'Test', '2023-05-22', 'Maker', 1);
 
+INSERT INTO medical_records VALUES (1, 'TestRecord', 'Test', 'Se encuentra muy malito', 1);
+
