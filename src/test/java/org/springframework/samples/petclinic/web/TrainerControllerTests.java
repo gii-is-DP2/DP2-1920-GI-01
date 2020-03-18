@@ -52,4 +52,92 @@ public class TrainerControllerTests {
 //			.andExpect(model().attributeExists("trainer"));
 	}
 	
+	@WithMockUser(value = "spring")
+	@Test
+	void testListTrainersAsAdministrator() throws Exception {
+		mockMvc.perform(get("/admin/trainers")).andExpect(status().isOk())
+			.andExpect(view().name("admin/trainers/listTrainers"))
+			.andExpect(model().attributeExists("trainers"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testShowTrainerAsAdministrator() throws Exception {
+		mockMvc.perform(get("/admin/trainers/{trainerId}", TEST_TRAINER_ID)).andExpect(status().isOk())
+			.andExpect(view().name("admin/trainers/showTrainer"));
+//			.andExpect(model().attributeExists("trainer"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testInitCreateForm() throws Exception {
+		mockMvc.perform(get("/admin/trainers/new")).andExpect(status().isOk())
+				.andExpect(view().name("admin/trainers/editTrainer"))
+				.andExpect(model().attributeExists("trainer"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testProcessCreateFormSuccess() throws Exception {
+		mockMvc.perform(post("/admin/trainers/new")
+							.with(csrf())
+							.param("name", "testName")
+							.param("surname", "testSurname")
+							.param("email", "test@test.com")
+							.param("phone", "999999999"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/admin/trainers"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testProcessCreateFormHasErrors() throws Exception {
+		mockMvc.perform(post("/admin/trainers/new")
+							.with(csrf())
+							.param("name", "")
+							.param("surname", "testSurname")
+							.param("email", "test@test.com")
+							.param("phone", "999999999"))
+				.andExpect(model().attributeHasErrors("trainer"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("admin/trainers/editTrainer"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testInitUpdateForm() throws Exception {
+		mockMvc.perform(get("/admin/trainers/{trainerId}/edit", TEST_TRAINER_ID))
+				.andExpect(status().isOk())
+//				.andExpect(model().attributeExists("trainer"))
+				.andExpect(view().name("admin/trainers/editTrainer"));
+			
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testProcessUpdateFormSuccess() throws Exception {
+		mockMvc.perform(post("/admin/trainers/{trainerId}/edit", TEST_TRAINER_ID)
+							.with(csrf())
+							.param("name", "John")
+							.param("surname", "Doe")
+							.param("email", "acme@mail.com")
+							.param("phone", "999999999"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/admin/trainers"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testProcessUpdateFormHasErrors() throws Exception {
+		mockMvc.perform(post("/admin/trainers/{trainerId}/edit", TEST_TRAINER_ID)
+							.with(csrf())
+							.param("name", "John")
+							.param("surname", "Doe")
+							.param("email", "acme@mail.com")
+							.param("phone", ""))
+				.andExpect(model().attributeHasErrors("trainer"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("admin/trainers/editTrainer"));
+	}
+	
 }
