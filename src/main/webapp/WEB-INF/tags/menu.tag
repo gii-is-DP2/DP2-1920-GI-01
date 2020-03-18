@@ -39,11 +39,11 @@
 					<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
 					<span>Veterinarians</span>
 				</petclinic:menuItem>
-
-				<petclinic:menuItem active="${name eq 'error'}" url="/oups"
-					title="trigger a RuntimeException to see how it is handled">
-					<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
-					<span>Error</span>
+				
+				<petclinic:menuItem active="${name eq 'trainers'}" url="/trainers"
+					title="trainers">
+					<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+					<span>Trainers</span>
 				</petclinic:menuItem>
 
 				<petclinic:menuItem active="${name eq 'medicines'}" url="/medicine/list" title="Medicines">
@@ -54,8 +54,6 @@
 			</ul>
 
 
-
-
 			<ul class="nav navbar-nav navbar-right">
 				<sec:authorize access="!isAuthenticated()">
 					<li><a href="<c:url value="/login" />">Login</a></li>
@@ -63,7 +61,7 @@
 				</sec:authorize>
 				<sec:authorize access="isAuthenticated()">
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown"> <span class="glyphicon glyphicon-user"></span> 
+						data-toggle="dropdown"> <span class="glyphicon glyphicon-user"></span>
 							<strong><sec:authentication property="name" /></strong> <span
 							class="glyphicon glyphicon-chevron-down"></span>
 					</a>
@@ -79,6 +77,17 @@
 										<div class="col-lg-8">
 											<p class="text-left">
 												<strong><sec:authentication property="name" /></strong>
+											</p>
+											<p>
+												<sec:authorize url="/admin/trainers">
+													<a href="/admin/trainers">Manage trainers</a>
+                        </sec:authorize>
+												<sec:authorize url="/admin/vets">
+													<a href="/admin/vets">Manage veterinarians</a>
+                        </sec:authorize>
+												<sec:authorize url="/homeless-pets">
+													<a href="/homeless-pets">Manage homeless pets</a>
+												</sec:authorize>
 											</p>
 											<p class="text-left">
 												<a href="<c:url value="/logout" />"

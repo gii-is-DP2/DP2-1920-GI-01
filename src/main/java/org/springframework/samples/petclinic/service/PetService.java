@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -67,16 +68,30 @@ public class PetService {
 
 	@Transactional(rollbackFor = DuplicatedPetNameException.class)
 	public void savePet(Pet pet) throws DataAccessException, DuplicatedPetNameException {
-			Pet otherPet=pet.getOwner().getPetwithIdDifferent(pet.getName(), pet.getId());
-            if (StringUtils.hasLength(pet.getName()) &&  (otherPet!= null && otherPet.getId()!=pet.getId())) {            	
-            	throw new DuplicatedPetNameException();
-            }else
-                petRepository.save(pet);                
+			Pet otherPet = new Pet();
+			if(pet.getOwner() != null &&
+					StringUtils.hasLength(pet.getName()) &&
+					(otherPet!= null && otherPet.getId()!=pet.getId())) {
+				otherPet=pet.getOwner().getPetwithIdDifferent(pet.getName(), pet.getId());
+				throw new DuplicatedPetNameException();
+			} else {
+                petRepository.save(pet);
+			}
 	}
 
 
 	public Collection<Visit> findVisitsByPetId(int petId) {
 		return visitRepository.findByPetId(petId);
+	}
+	
+	//This method allows us to find all homeless pets
+	public List<Pet> findHomelessPets() throws DataAccessException {
+		return petRepository.findHomelessPets();
+	}
+	
+	//This method allows us to delete a given pet
+	public void deletePet(Pet pet) throws DataAccessException {
+		petRepository.delete(pet);
 	}
 
 }

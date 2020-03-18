@@ -15,7 +15,7 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import org.springframework.beans.support.MutableSortDefinition;
+import org.springframework.beans.support.MutableSortDefinition; 
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -56,7 +56,7 @@ public class Pet extends NamedEntity {
 	@JoinColumn(name = "type_id")
 	private PetType type;
 
-	@ManyToOne
+	@ManyToOne(optional = true)
 	@JoinColumn(name = "owner_id")
 	private Owner owner;
 
@@ -107,6 +107,10 @@ public class Pet extends NamedEntity {
 	public void addVisit(Visit visit) {
 		getVisitsInternal().add(visit);
 		visit.setPet(this);
+	}
+	
+	public void removeVisit(Visit visit) {
+		getVisitsInternal().remove(visit);
 	}
 
 }
