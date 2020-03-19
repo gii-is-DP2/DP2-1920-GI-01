@@ -26,7 +26,7 @@
                         <spring:param name="trainerId" value="${trainer.id}"/>
                     </spring:url>
                     <a href="${fn:escapeXml(trainerUrl)}">
-                    	<c:out value="${trainer.name} ${trainer.surname}"/>
+                    	<c:out value="${trainer.firstName} ${trainer.lastName}"/>
                     </a>
                 </td>
                 <td>
