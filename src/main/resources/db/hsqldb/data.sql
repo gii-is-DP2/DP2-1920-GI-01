@@ -90,6 +90,6 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (5, 14, '2018-07-09'
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (6, 14, '2018-08-09', 'Description 2');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (7, 15, '2017-08-09', 'Description 3');
 
-INSERT INTO medical_records VALUES (1, 'TestRecord', 'Test', 'Se encuentra muy malito', 1);
+INSERT INTO medical_records VALUES (1, 'Test', 'Se encuentra muy malito', 1);
 
 INSERT INTO medicine VALUES (1, 'Test', '2023-05-22', 'Maker', 1);

@@ -2,6 +2,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec"
+    uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
 <petclinic:layout pageName="owners">
@@ -69,6 +71,16 @@
                             <tr>
                                 <td><petclinic:localDate date="${visit.date}" pattern="yyyy-MM-dd"/></td>
                                 <td><c:out value="${visit.description}"/></td>
+                                <td>
+                                <spring:url value="/owners/{ownerId}/pets/{petId}/visits/{visitId}/medical-record/new" var="medicalRecordUrl">
+                                    <spring:param name="ownerId" value="${owner.id}"/>
+                                    <spring:param name="petId" value="${pet.id}"/>
+                                    <spring:param name="visitId" value="${visit.id}"/>
+                                </spring:url>
+                                <sec:authorize access="hasAuthority('veterinarian')">
+                                <a href="${fn:escapeXml(medicalRecordUrl)}">Add Medical Record</a>
+                                </sec:authorize>
+                            </td>
                             </tr>
                         </c:forEach>
                         <tr>
@@ -90,7 +102,13 @@
                     </table>
                 </td>
             </tr>
-
+			<td>
+            	<spring:url value="/owners/{ownerId}/pets/{petId}/medical-history" var="medicalHistoryUrl">
+                <spring:param name="ownerId" value="${owner.id}"/>
+                <spring:param name="petId" value="${pet.id}"/>
+                </spring:url>
+            <a href="${fn:escapeXml(medicalHistoryUrl)}">Medical History</a>
+            </td>
         </c:forEach>
     </table>
     
