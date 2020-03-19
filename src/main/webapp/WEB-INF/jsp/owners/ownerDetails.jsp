@@ -111,5 +111,53 @@
             </td>
         </c:forEach>
     </table>
+    
+    <table class="table table-striped">
+        <c:forEach var="pet" items="${owner.pets}">
+
+            <tr>
+                <td valign="top">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><c:out value="${pet.name}"/></dd>
+                        <dt>Birth Date</dt>
+                        <dd><petclinic:localDate date="${pet.birthDate}" pattern="yyyy-MM-dd"/></dd>
+                        <dt>Type</dt>
+                        <dd><c:out value="${pet.type.name}"/></dd>
+                    </dl>
+                </td>
+                
+                <td valign="top">
+                    <table class="table-condensed">
+                        <thead>
+                        <tr>
+                            <th>Intervention Date</th>
+                            <th>Intervention Description</th>
+                            <th>Intervention Time</th>
+                        </tr>
+                        </thead>
+                        <c:forEach var="intervention" items="${pet.interventions}">
+                            <tr>
+                                <td><petclinic:localDate date="${intervention.interventionDate}" pattern="yyyy-MM-dd"/></td>
+                                <td><c:out value="${intervention.interventionDescription}"/></td>
+                                <td><c:out value="${intervention.interventionTime}"/></td>
+                            </tr>
+                        </c:forEach>
+                        <tr>
+                             <td>
+                                <spring:url value="/owners/{ownerId}/pets/{petId}/interventions/new" var="interventionUrl">
+                                    <spring:param name="ownerId" value="${owner.id}"/>
+                                    <spring:param name="petId" value="${pet.id}"/>
+                                </spring:url>
+                                <a href="${fn:escapeXml(interventionUrl)}">Add Intervention</a>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                
+            </tr>
+
+        </c:forEach>
+    </table>
 
 </petclinic:layout>

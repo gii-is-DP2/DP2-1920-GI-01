@@ -1,21 +1,18 @@
 package org.springframework.samples.petclinic.model;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
+import javax.persistence.Column; 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "trainers")
-public class Trainer extends NamedEntity{
+public class Trainer extends Person{
 	
 	//Attributes
-
-	@Column(name = "surname")
-	@NotEmpty
-	private String surname;
 	
 	@Column(name = "email")
 	@NotEmpty
@@ -25,15 +22,11 @@ public class Trainer extends NamedEntity{
 	@NotEmpty
 	private String phone;
 	
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "username", referencedColumnName = "username")
+	private User user;
+	
 	//Getters and Setters
-	
-	public String getSurname() {
-		return this.surname;
-	}
-	
-	public void setSurname(String surname) {
-		this.surname = surname;
-	}
 	
 	public String getEmail() {
 		return this.email;
@@ -49,6 +42,14 @@ public class Trainer extends NamedEntity{
 	
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+	
+	public User getUser() {
+		return this.user;
+	}
+	
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 }

@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Trainer;
-import org.springframework.samples.petclinic.repository.springdatajpa.TrainerRepository;
+import org.springframework.samples.petclinic.repository.TrainerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +16,12 @@ public class TrainerService {
 	
 	@Autowired
 	private TrainerRepository	trainerRepository;
+	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private AuthoritiesService authoritiesService;
 	
 	//This next method helps us find all trainers in the database
 	@Transactional
@@ -43,6 +49,8 @@ public class TrainerService {
 	@Transactional
 	public void saveTrainer (Trainer trainer) {
 		this.trainerRepository.save(trainer);
+		this.userService.saveUser(trainer.getUser());
+		this.authoritiesService.saveAuthorities(trainer.getUser().getUsername(), "trainer");
 	}
 	
 }

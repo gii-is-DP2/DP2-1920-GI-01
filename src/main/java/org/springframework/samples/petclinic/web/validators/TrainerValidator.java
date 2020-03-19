@@ -21,25 +21,23 @@ public class TrainerValidator implements Validator {
 	public void validate(Object target, Errors errors) {
 
 		Trainer trainer;
-		String name;
-		String surname;
+		String firstName;
+		String lastName;
 		String email;
 		String phone;
 		
 		trainer = (Trainer) target;
-		name = trainer.getName();
-		surname = trainer.getSurname();
+		firstName = trainer.getFirstName();
+		lastName = trainer.getLastName();
 		email = trainer.getEmail();
 		phone = trainer.getPhone();
 		
-		if(StringHelper.isNullOrEmptyString(name)) {
-			errors.rejectValue("name", REQUIRED, "Required");
-		} else if(name.length() < 3 || name.length() > 50) {
-			errors.rejectValue("name", NAME_LENGTH, "Length should be between 3 and 50 characters");
+		if(StringHelper.isNullOrEmptyString(firstName)) {
+			errors.rejectValue("firstName", REQUIRED, "Required");
 		}
 		
-		if(StringHelper.isNullOrEmptyString(surname)) {
-			errors.rejectValue("surname", REQUIRED, "Required");
+		if(StringHelper.isNullOrEmptyString(lastName)) {
+			errors.rejectValue("lastName", REQUIRED, "Required");
 		}
 		
 		if(StringHelper.isNullOrEmptyString(email)) {

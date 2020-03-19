@@ -11,7 +11,7 @@
     <table class="table table-striped">
         <tr>
             <th>Name</th>
-            <td><b><c:out value="${trainer.name} ${trainer.surname}"/></b></td>
+            <td><b><c:out value="${trainer.firstName} ${trainer.lastName}"/></b></td>
         </tr>
         <tr>
             <th>Email</th>

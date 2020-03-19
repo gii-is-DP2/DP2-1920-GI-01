@@ -81,10 +81,12 @@ public class TrainerControllerTests {
 	void testProcessCreateFormSuccess() throws Exception {
 		mockMvc.perform(post("/admin/trainers/new")
 							.with(csrf())
-							.param("name", "testName")
-							.param("surname", "testSurname")
+							.param("firstName", "testFirstName")
+							.param("lastName", "testLastName")
 							.param("email", "test@test.com")
-							.param("phone", "999999999"))
+							.param("phone", "999999999")
+							.param("user.username", "testing")
+							.param("user.password", "testing"))
 				.andExpect(status().is3xxRedirection())
 				.andExpect(view().name("redirect:/admin/trainers"));
 	}
@@ -94,10 +96,12 @@ public class TrainerControllerTests {
 	void testProcessCreateFormHasErrors() throws Exception {
 		mockMvc.perform(post("/admin/trainers/new")
 							.with(csrf())
-							.param("name", "")
-							.param("surname", "testSurname")
+							.param("firstName", "")
+							.param("lastName", "testLastName")
 							.param("email", "test@test.com")
-							.param("phone", "999999999"))
+							.param("phone", "999999999")
+							.param("user.username", "testing")
+							.param("user.password", "testing"))
 				.andExpect(model().attributeHasErrors("trainer"))
 				.andExpect(status().isOk())
 				.andExpect(view().name("admin/trainers/editTrainer"));
@@ -118,10 +122,12 @@ public class TrainerControllerTests {
 	void testProcessUpdateFormSuccess() throws Exception {
 		mockMvc.perform(post("/admin/trainers/{trainerId}/edit", TEST_TRAINER_ID)
 							.with(csrf())
-							.param("name", "John")
-							.param("surname", "Doe")
+							.param("firstName", "John")
+							.param("lastName", "Doe")
 							.param("email", "acme@mail.com")
-							.param("phone", "999999999"))
+							.param("phone", "999999999")
+							.param("user.username", "testing")
+							.param("user.password", "testing"))
 				.andExpect(status().is3xxRedirection())
 				.andExpect(view().name("redirect:/admin/trainers"));
 	}
@@ -131,13 +137,22 @@ public class TrainerControllerTests {
 	void testProcessUpdateFormHasErrors() throws Exception {
 		mockMvc.perform(post("/admin/trainers/{trainerId}/edit", TEST_TRAINER_ID)
 							.with(csrf())
-							.param("name", "John")
-							.param("surname", "Doe")
+							.param("firstName", "John")
+							.param("lastName", "Doe")
 							.param("email", "acme@mail.com")
-							.param("phone", ""))
+							.param("phone", "")
+							.param("user.username", "testing")
+							.param("user.password", "testing"))
 				.andExpect(model().attributeHasErrors("trainer"))
 				.andExpect(status().isOk())
 				.andExpect(view().name("admin/trainers/editTrainer"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testDelete() throws Exception {
+		mockMvc.perform(get("/admin/trainers/{trainerId}/delete", TEST_TRAINER_ID)).andExpect(status().isOk())
+				.andExpect(view().name("admin/trainers/listTrainers"));
 	}
 	
 }

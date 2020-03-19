@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.samples.petclinic.model.Trainer;
+import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,12 +24,19 @@ public class TrainerServiceTests {
 	protected TrainerService trainerService;
 	
 	@Test
+	void shouldNotFindTrainerWithIncorrectId() {
+		Optional<Trainer> noTrainer = this.trainerService.findTrainerById(-1);
+		
+		assertThat(noTrainer.isPresent()).isEqualTo(false);
+	}
+	
+	@Test
 	void shouldFindTrainerWithCorrectId() {
 		Optional<Trainer> trainer1 = this.trainerService.findTrainerById(1);
-		if(trainer1.isPresent()) {
-			assertThat(trainer1.get().getName().startsWith("John"));
-			assertThat(trainer1.get().getSurname().startsWith("Doe"));
-		}
+		
+		assertThat(trainer1.isPresent()).isEqualTo(true);
+		assertThat(trainer1.get().getFirstName()).startsWith("John");
+		assertThat(trainer1.get().getLastName()).startsWith("Doe");
 	}
 	
 	@Test
@@ -36,27 +44,33 @@ public class TrainerServiceTests {
 		Collection<Trainer> trainers = (Collection<Trainer>) this.trainerService.findAll();
 		
 		Trainer trainer1 = EntityUtils.getById(trainers, Trainer.class, 1);
-		assertThat(trainer1.getName().startsWith("John"));
-		Trainer trainer2 = EntityUtils.getById(trainers, Trainer.class, 2);
-		assertThat(trainer2.getName().startsWith("Jane"));
+		
+		assertThat(trainer1.getFirstName()).startsWith("John");
 	}
 	
 	@Test
 	@Transactional
-	void shouldInsertTrainerIntoDatabaseAndGenerateId() {
+	void shouldInsertTrainer() {
+		Collection<Trainer> trainers = (Collection<Trainer>) this.trainerService.findAll();
+		int found = trainers.size();
+		
 		Trainer trainer = new Trainer();
-		trainer.setName("testName");
-		trainer.setSurname("testSurname");
+		trainer.setFirstName("testFirstName");
+		trainer.setLastName("testLastName");
 		trainer.setEmail("email@test.com");
 		trainer.setPhone("999999999");
 		
-		try {
-			this.trainerService.saveTrainer(trainer);
-		} catch (Exception e) {
-			Logger.getLogger(TrainerServiceTests.class.getName()).log(Level.SEVERE, null, e);
-		}
+		User user = new User();
+		user.setUsername("testTrainerUsername");
+		user.setPassword("testTrainerPassword");
+		user.setEnabled(true);
+		trainer.setUser(user);
 		
-		assertThat(trainer.getId()).isNotNull();
+		this.trainerService.saveTrainer(trainer);
+		
+		assertThat(trainer.getId()).isNotEqualTo(0);
+		trainers = (Collection<Trainer>) this.trainerService.findAll();
+		assertThat(trainers.size()).isEqualTo(found + 1);
 		
 	}
 	
@@ -64,30 +78,31 @@ public class TrainerServiceTests {
 	@Transactional
 	void shouldUpdateTrainerName() throws Exception {
 		Optional<Trainer> trainer1 = this.trainerService.findTrainerById(1);
-		String oldName, newName;
-		if(trainer1.isPresent()) {
-			oldName = trainer1.get().getName();
-			newName = oldName + "Test";
-			trainer1.get().setName(newName);
-			this.trainerService.saveTrainer(trainer1.get());
+		String oldFirstName, newFirstName;
+		
+		assertThat(trainer1.isPresent()).isEqualTo(true);
+		oldFirstName = trainer1.get().getFirstName();
+		newFirstName = oldFirstName + "Test";
+		trainer1.get().setFirstName(newFirstName);
+		
+		this.trainerService.saveTrainer(trainer1.get());
 			
-			trainer1 = this.trainerService.findTrainerById(1);
-			if(trainer1.isPresent()) {
-				assertThat(trainer1.get().getName()).isEqualTo(newName);
-			}
-		}
+		trainer1 = this.trainerService.findTrainerById(1);
+		assertThat(trainer1.isPresent()).isEqualTo(true);
+		assertThat(trainer1.get().getFirstName()).isEqualTo(newFirstName);
+		
 	}
 	
 	@Test
 	@Transactional
 	void shouldDeleteTrainer() {
 		Optional<Trainer> trainer1 = this.trainerService.findTrainerById(1);
-		if(trainer1.isPresent()) {
-			this.trainerService.deleteTrainer(trainer1.get());
-		}
 		
+		assertThat(trainer1.isPresent()).isEqualTo(true);
+		this.trainerService.deleteTrainer(trainer1.get());
+	
 		trainer1 = this.trainerService.findTrainerById(1);
-		assertThat(!trainer1.isPresent());
+		assertThat(trainer1.isPresent()).isEqualTo(false);
 		
 	}
 	

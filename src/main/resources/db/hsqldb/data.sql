@@ -1,20 +1,36 @@
--- One admin user, named admin1 with passwor 4dm1n and authority admin
+-- One admin user, named admin1 with password 4dm1n and authority admin
 INSERT INTO users(username,password,enabled) VALUES ('admin1','4dm1n',TRUE);
 INSERT INTO authorities VALUES ('admin1','admin');
--- One owner user, named owner1 with passwor 0wn3r
+-- One owner user, named owner1 with password 0wn3r
 INSERT INTO users(username,password,enabled) VALUES ('owner1','0wn3r',TRUE);
 INSERT INTO authorities VALUES ('owner1','owner');
--- One vet user, named vet1 with passwor v3t
-INSERT INTO users(username,password,enabled) VALUES ('vet1','v3t',TRUE);
+-- Vet users
+-- One vet user, named vet1 with password v3t
+INSERT INTO users(username,password,enabled) VALUES ('vet1','v3t1',TRUE);
 INSERT INTO authorities VALUES ('vet1','veterinarian');
+INSERT INTO users(username,password,enabled) VALUES ('vet2','v3t2',TRUE);
+INSERT INTO authorities VALUES ('vet2','veterinarian');
+INSERT INTO users(username,password,enabled) VALUES ('vet3','v3t3',TRUE);
+INSERT INTO authorities VALUES ('vet3','veterinarian');
+INSERT INTO users(username,password,enabled) VALUES ('vet4','v3t4',TRUE);
+INSERT INTO authorities VALUES ('vet4','veterinarian');
+INSERT INTO users(username,password,enabled) VALUES ('vet5','v3t5',TRUE);
+INSERT INTO authorities VALUES ('vet5','veterinarian');
+INSERT INTO users(username,password,enabled) VALUES ('vet6','v3t6',TRUE);
+INSERT INTO authorities VALUES ('vet6','veterinarian');
+INSERT INTO users(username,password,enabled) VALUES ('vet7','v3t7',TRUE);
+INSERT INTO authorities VALUES ('vet7','veterinarian');
+-- One trainer user, named trainer1 with password tr41n3r
+INSERT INTO users(username,password,enabled) VALUES ('trainer1','tr41n3r',TRUE);
+INSERT INTO authorities VALUES ('trainer1','trainer');
 
-INSERT INTO vets VALUES (1, 'James', 'Carter');
-INSERT INTO vets VALUES (2, 'Helen', 'Leary');
-INSERT INTO vets VALUES (3, 'Linda', 'Douglas');
-INSERT INTO vets VALUES (4, 'Rafael', 'Ortega');
-INSERT INTO vets VALUES (5, 'Henry', 'Stevens');
-INSERT INTO vets VALUES (6, 'Sharon', 'Jenkins');
-INSERT INTO vets VALUES (7, 'Test', 'Dummy');
+INSERT INTO vets VALUES (1, 'James', 'Carter','vet1');
+INSERT INTO vets VALUES (2, 'Helen', 'Leary','vet2');
+INSERT INTO vets VALUES (3, 'Linda', 'Douglas','vet3');
+INSERT INTO vets VALUES (4, 'Rafael', 'Ortega','vet4');
+INSERT INTO vets VALUES (5, 'Henry', 'Stevens','vet5');
+INSERT INTO vets VALUES (6, 'Sharon', 'Jenkins','vet6');
+INSERT INTO vets VALUES (7, 'Test', 'Dummy','vet7');
 
 INSERT INTO specialties VALUES (1, 'radiology');
 INSERT INTO specialties VALUES (2, 'surgery');
@@ -67,8 +83,7 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (2, 8, '2013-01-02',
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (3, 8, '2013-01-03', 'neutered');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04', 'spayed');
 
-INSERT INTO trainers(id, name, surname, email, phone) VALUES (1, 'John', 'Doe', 'acme@mail.com', '111 111 111');
-INSERT INTO trainers(id, name, surname, email, phone) VALUES (2, 'Jane', 'Doe', 'acme@mail.com', '222 222 222');
+INSERT INTO trainers VALUES (1, 'John', 'Doe', 'acme@mail.com', '111111111', 'trainer1');
 
 -- Homeless pets' visits from now on
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (5, 14, '2018-07-09', 'Description 1');

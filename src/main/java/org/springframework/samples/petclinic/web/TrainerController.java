@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Trainer;
+import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.service.TrainerService;
 import org.springframework.samples.petclinic.web.validators.TrainerValidator;
 import org.springframework.stereotype.Controller;
@@ -83,10 +84,10 @@ public class TrainerController {
 		if(trainer.isPresent()) {
 			this.trainerService.deleteTrainer(trainer.get());
 			modelMap.addAttribute("message", "Trainer deleted successfully!");
-			view = listTrainers(modelMap);
+			view = listTrainersAsAdmin(modelMap);
 		} else {
 			modelMap.addAttribute("message", "Trainer not found!");
-			view = listTrainers(modelMap);
+			view = listTrainersAsAdmin(modelMap);
 		}
 		return view;
 	}
