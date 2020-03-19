@@ -10,6 +10,7 @@ import org.springframework.samples.petclinic.model.Intervention;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,20 +48,21 @@ public class InterventionController {
 	public Intervention loadPetWithIntervention(@PathVariable("petId") final int petId) {
 		Pet pet = this.petService.findPetById(petId);
 		Intervention intervention = new Intervention();
-		pet.addVisit(intervention);
+		pet.addIntervention(intervention);
 		return intervention;
 	}
 
 	// Spring MVC calls method loadPetWithINtervention(...) before initNewVisitForm is called
 	@GetMapping(value = "/owners/*/pets/{petId}/interventions/new")
-	public String initNewINterventionForm(@PathVariable("petId") final int petId, final Map<String, Object> model) {
+	public String initNewInterventionForm(@PathVariable("petId") final int petId, final Map<String, Object> model) {
 		return "pets/createOrUpdateInterventionForm";
 	}
 
 	// Spring MVC calls method loadPetWithIntervention(...) before processNewINterventionForm is called
 	@PostMapping(value = "/owners/{ownerId}/pets/{petId}/interventions/new")
-	public String processNewInterventionForm(@Valid final Intervention intervention, final BindingResult result) {
+	public String processNewInterventionForm(@Valid final Intervention intervention, final BindingResult result, final ModelMap modelMap) {
 		if (result.hasErrors()) {
+			modelMap.addAttribute("intervention", intervention);
 			return "pets/createOrUpdateInterventionForm";
 		} else {
 			this.petService.saveIntervention(intervention);
