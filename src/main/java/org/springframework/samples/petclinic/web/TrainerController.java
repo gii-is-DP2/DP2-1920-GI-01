@@ -84,10 +84,10 @@ public class TrainerController {
 		if(trainer.isPresent()) {
 			this.trainerService.deleteTrainer(trainer.get());
 			modelMap.addAttribute("message", "Trainer deleted successfully!");
-			view = listTrainers(modelMap);
+			view = listTrainersAsAdmin(modelMap);
 		} else {
 			modelMap.addAttribute("message", "Trainer not found!");
-			view = listTrainers(modelMap);
+			view = listTrainersAsAdmin(modelMap);
 		}
 		return view;
 	}

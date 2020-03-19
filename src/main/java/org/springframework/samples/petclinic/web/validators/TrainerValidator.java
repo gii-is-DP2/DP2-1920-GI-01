@@ -34,8 +34,6 @@ public class TrainerValidator implements Validator {
 		
 		if(StringHelper.isNullOrEmptyString(firstName)) {
 			errors.rejectValue("firstName", REQUIRED, "Required");
-		} else if(firstName.length() < 3 || firstName.length() > 50) {
-			errors.rejectValue("firstName", NAME_LENGTH, "Length should be between 3 and 50 characters");
 		}
 		
 		if(StringHelper.isNullOrEmptyString(lastName)) {
