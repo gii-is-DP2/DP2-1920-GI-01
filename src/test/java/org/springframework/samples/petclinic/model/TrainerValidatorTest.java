@@ -1,14 +1,15 @@
 package org.springframework.samples.petclinic.model;
 
-import static org.assertj.core.api.Assertions.assertThat; 
+import static org.assertj.core.api.Assertions.assertThat;   
 
 import java.util.Locale;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.samples.petclinic.web.validators.TrainerValidator;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -24,6 +25,11 @@ public class TrainerValidatorTest extends ValidatorTests {
 		trainer.setLastName("testLastName");
 		trainer.setEmail("example@test.com");
 		trainer.setPhone("123456789");
+		User user = new User();
+		user.setUsername("testing");
+		user.setPassword("testing");
+		user.setEnabled(true);
+		trainer.setUser(user);
 		
 		Validator validator = createValidator();
 		Set<ConstraintViolation<Trainer>> constraintViolations = validator.validate(trainer);
@@ -129,6 +135,54 @@ public class TrainerValidatorTest extends ValidatorTests {
 		ConstraintViolation<Trainer> violation = constraintViolations.iterator().next();
 		assertThat(violation.getPropertyPath().toString()).isEqualTo("phone");
 		assertThat(violation.getMessage()).isEqualTo("must not be empty");
+	}
+	
+	//This test should not validate
+	//because the email doesn't follow the pattern
+	@Test
+	void shouldNotValidateWhenEmailDoesNotMatchPattern() {
+		LocaleContextHolder.setLocale(Locale.ENGLISH);
+		Trainer trainer = new Trainer();
+		trainer.setFirstName("testFirstName");
+		trainer.setLastName("testLastName");
+		trainer.setEmail("noEmailPattern");
+		trainer.setPhone("999999999");
+		User user = new User();
+		user.setUsername("testing");
+		user.setPassword("testing");
+		user.setEnabled(true);
+		trainer.setUser(user);
+		
+		TrainerValidator trainerValidator = new TrainerValidator();
+		Errors errors = new BeanPropertyBindingResult(trainer, "trainer");
+		trainerValidator.validate(trainer, errors);
+		
+		assertThat(errors.hasFieldErrors("email")).isEqualTo(true);
+		assertThat(errors.getFieldError("email").getDefaultMessage()).startsWith("Email should match the following pattern: acme@example.com");
+	}
+	
+	//This test should not validate
+	//because the phone doesn't follow the pattern
+	@Test
+	void shouldNotValidateWhenPhoneDoesNotMatchPattern() {
+		LocaleContextHolder.setLocale(Locale.ENGLISH);
+		Trainer trainer = new Trainer();
+		trainer.setFirstName("testFirstName");
+		trainer.setLastName("testLastName");
+		trainer.setEmail("example@test.com");
+		trainer.setPhone("aaaaaaaaa");
+		User user = new User();
+		user.setUsername("testing");
+		user.setPassword("testing");
+		user.setEnabled(true);
+		trainer.setUser(user);
+		
+		TrainerValidator trainerValidator = new TrainerValidator();
+		Errors errors = new BeanPropertyBindingResult(trainer, "trainer");
+		trainerValidator.validate(trainer, errors);
+		
+		assertThat(errors.hasFieldErrors("phone")).isEqualTo(true);
+		assertThat(errors.getFieldError("phone").getDefaultMessage()).startsWith("The phone should be added and it should contain only numbers");
 	}
 	
 }
