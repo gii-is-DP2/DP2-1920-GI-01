@@ -75,7 +75,7 @@ CREATE TABLE interventions (
   intervention_time INTERGER,
   intervention_description VARCHAR(255)
 );
-ALTER TABLE interventions ADD CONSTRAINT fk_interventions_pets FOREING KEY (pet_id) REFERENCES pets (id);
+ALTER TABLE interventions ADD CONSTRAINT fk_interventions_pets FOREIGN KEY (pet_id) REFERENCES pets (id);
 CREATE INDEX interventions_pet_id ON interventions (pet_id);
 
 CREATE TABLE simple_visits (
@@ -84,8 +84,8 @@ CREATE TABLE simple_visits (
   visit_date  DATE,
   description VARCHAR(255)
 );
-ALTER TABLE simple_visits ADD CONSTRAINT fk_visits_pets FOREIGN KEY (pet_id) REFERENCES pets (id);
-CREATE INDEX simple_visits_pet_id ON visits (pet_id);
+ALTER TABLE simple_visits ADD CONSTRAINT fk_simple_visits_pets FOREIGN KEY (pet_id) REFERENCES pets (id);
+CREATE INDEX simple_visits_pet_id ON simple_visits (pet_id);
 
 CREATE TABLE users(
 	username varchar_ignorecase(255) NOT NULL PRIMARY KEY,
