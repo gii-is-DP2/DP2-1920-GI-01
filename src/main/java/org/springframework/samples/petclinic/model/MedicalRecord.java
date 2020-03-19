@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "medical_records")
-public class MedicalRecord extends NamedEntity {
+public class MedicalRecord extends BaseEntity {
 
 	@NotBlank
 	private String	description;

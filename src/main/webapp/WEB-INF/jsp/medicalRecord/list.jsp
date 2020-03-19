@@ -13,9 +13,8 @@
 	    <table id="medicalRecordsTable" class="table table-striped">
 	        <thead>
 	        <tr>
-	        	<th>Name</th>
+	        	<th>Visit Date</th>
 	            <th>Status</th>
-	            <th>Visit Date</th>
 	        </tr>
 	        </thead>
 	        <tbody>
@@ -26,13 +25,10 @@
 	                        <spring:param name="medicalRecordId" value="${medicalRecord.id}"/>
 	                         <spring:param name="visitId" value="${medicalRecord.visit.id}"/>
 	                    </spring:url>
-	                    <strong><a href="${fn:escapeXml(medicalRecordURL)}"><c:out value="${medicalRecord.name}"/></a></strong>
+	                    <strong><a href="${fn:escapeXml(medicalRecordURL)}"><c:out value="${medicalRecord.visit.date}"/></a></strong>
 	                </td>
 	                <td>
 	                    <c:out value="${medicalRecord.status}"/>
-	                </td>
-	                <td>
-	                    <c:out value="${medicalRecord.visit.date}"/>
 	                </td>
 	            </tr>
 	        </c:forEach>

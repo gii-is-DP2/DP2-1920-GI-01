@@ -7,7 +7,9 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.MedicalRecord;
+import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.service.MedicalRecordService;
+import org.springframework.samples.petclinic.service.VisitService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -24,43 +26,57 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 public class MedicalRecordController {
 
-	private static final String		SHOW_VIEW				= "medicalRecord/show";
-	private static final String		CREATE_OR_UPDATE_VIEW	= "medicalRecord/form";
+	private static final String			SHOW_VIEW				= "medicalRecord/show";
+	private static final String			CREATE_OR_UPDATE_VIEW	= "medicalRecord/form";
+
+	private final VisitService			visitService;
+	private final MedicalRecordService	medicalRecordService;
+
 
 	@Autowired
-	private MedicalRecordService	medicalRecordService;
-
+	public MedicalRecordController(final MedicalRecordService medicalRecordService, final VisitService visitService) {
+		this.medicalRecordService = medicalRecordService;
+		this.visitService = visitService;
+	}
 
 	@InitBinder
 	public void setAllowedFields(final WebDataBinder dataBinder) {
 		dataBinder.setDisallowedFields("id");
 	}
 
-	@GetMapping("/owners/*/pets/*/visits/{visitId}/medical-record/create")
-	public String initCreationForm(final ModelMap model) {
+	@GetMapping("/owners/*/pets/*/visits/{visitId}/medical-record/new")
+	public String initCreationForm(@PathVariable("visitId") final int visitId, final ModelMap model) {
 		MedicalRecord medicalRecord;
-
+		Visit visit;
 		medicalRecord = new MedicalRecord();
-
+		visit = this.visitService.findVisitById(visitId).get();
+		String result = MedicalRecordController.CREATE_OR_UPDATE_VIEW;
+		medicalRecord.setVisit(visit);
 		model.put("medicalRecord", medicalRecord);
 
-		return MedicalRecordController.CREATE_OR_UPDATE_VIEW;
+		return result;
 	}
 
-	@PostMapping("/owners/*/pets/*/visits/{visitId}/medical-record/create")
-	public String proccessCreationForm(@Valid final MedicalRecord medicalRecord, final BindingResult result, final ModelMap model) {
+	@PostMapping("/owners/*/pets/*/visits/{visitId}/medical-record/new")
+	public String proccessCreationForm(@PathVariable("visitId") final int visitId, @Valid final MedicalRecord medicalRecord, final BindingResult result, final ModelMap model) {
 		Integer medicalRecordId;
 		String redirection;
+		Visit visit;
 
 		if (result.hasErrors()) {
+
 			model.put("medicalRecord", medicalRecord);
 			return MedicalRecordController.CREATE_OR_UPDATE_VIEW;
 		}
 
+		visit = this.visitService.findVisitById(visitId).get();
+		medicalRecord.setVisit(visit);
 		this.medicalRecordService.saveMedicalRecord(medicalRecord);
 
 		medicalRecordId = medicalRecord.getId();
-		redirection = "redirect:/medicalRecord/show?id=" + medicalRecordId;
+		//String petId = medicalRecord.getVisit().getPet().getId().toString();
+		//String ownerId = medicalRecord.getVisit().getPet().getOwner().getId().toString();
+		redirection = "redirect:/owners/*/pets/*/visits/{visitId}/medical-record/show?id=" + medicalRecordId;
 
 		return redirection;
 	}
