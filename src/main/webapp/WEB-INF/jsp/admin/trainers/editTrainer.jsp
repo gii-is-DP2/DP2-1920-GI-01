@@ -13,10 +13,12 @@
     <form:form modelAttribute="trainer" class="form-horizontal" id="add-trainer-form">
     	<input type="hidden" name="id" value="${trainer.id}"/>
         <div class="form-group has-feedback">
-            <petclinic:inputField label="Name" name="name"/>
-            <petclinic:inputField label="Surname" name="surname"/>
+            <petclinic:inputField label="First Name" name="firstName"/>
+            <petclinic:inputField label="Last Name" name="lastName"/>
             <petclinic:inputField label="Email" name="email"/>
             <petclinic:inputField label="Phone" name="phone"/>
+            <petclinic:inputField label="Username" name="user.username"/>
+            <petclinic:inputField label="Password" name="user.password"/>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
