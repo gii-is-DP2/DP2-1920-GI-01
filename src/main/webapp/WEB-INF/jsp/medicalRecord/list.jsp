@@ -8,7 +8,7 @@
 <%@ taglib prefix ="c"  uri ="http://java.sun.com/jsp/jstl/core"%>
 
 <petclinic:layout pageName="medical record">
-	<h2>Find Medicines</h2>
+	<h2>Medical Records</h2>
 	
 	    <table id="medicalRecordsTable" class="table table-striped">
 	        <thead>
@@ -21,9 +21,11 @@
 	        <c:forEach items="${medicalRecords}" var="medicalRecord">
 	            <tr>
 	                <td>
-	                    <spring:url value="/owners/*/pets/*/visits/{visitId}/medical-record/show?id={medicalRecordId}" var="medicalRecordURL">
+	                    <spring:url value="/owners/{ownerId}/pets/{petId}/visits/{visitId}/medical-record/show?id={medicalRecordId}" var="medicalRecordURL">
+	                    	<spring:param name="ownerId" value="${medicalRecord.visit.pet.owner.id}"/>
+	                    	<spring:param name="petId" value="${medicalRecord.visit.pet.id}"/>
 	                        <spring:param name="medicalRecordId" value="${medicalRecord.id}"/>
-	                         <spring:param name="visitId" value="${medicalRecord.visit.id}"/>
+	                        <spring:param name="visitId" value="${medicalRecord.visit.id}"/>
 	                    </spring:url>
 	                    <strong><a href="${fn:escapeXml(medicalRecordURL)}"><c:out value="${medicalRecord.visit.date}"/></a></strong>
 	                </td>
