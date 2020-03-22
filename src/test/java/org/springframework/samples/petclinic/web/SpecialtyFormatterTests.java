@@ -14,6 +14,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.service.VetService;
+import org.springframework.samples.petclinic.web.formatters.SpecialtyFormatter;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
