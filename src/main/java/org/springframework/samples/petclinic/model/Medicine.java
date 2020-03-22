@@ -5,7 +5,8 @@ import java.time.LocalDate;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -17,14 +18,16 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class Medicine extends NamedEntity {
 	
+	@NotNull
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private LocalDate expirationDate;
 	
-	@NotEmpty
+	@NotBlank
 	private String maker;
 	
-	@ManyToOne
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "type_id")
+	@NotNull
 	private PetType petType;
 
 }
