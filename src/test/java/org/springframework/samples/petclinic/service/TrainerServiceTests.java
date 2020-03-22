@@ -26,16 +26,17 @@ public class TrainerServiceTests {
 	@Test
 	void shouldNotFindTrainerWithIncorrectId() {
 		Optional<Trainer> noTrainer = this.trainerService.findTrainerById(-1);
-		assertThat(!noTrainer.isPresent());
+		
+		assertThat(noTrainer.isPresent()).isEqualTo(false);
 	}
 	
 	@Test
 	void shouldFindTrainerWithCorrectId() {
 		Optional<Trainer> trainer1 = this.trainerService.findTrainerById(1);
-		if(trainer1.isPresent()) {
-			assertThat(trainer1.get().getFirstName().startsWith("John"));
-			assertThat(trainer1.get().getLastName().startsWith("Doe"));
-		}
+		
+		assertThat(trainer1.isPresent()).isEqualTo(true);
+		assertThat(trainer1.get().getFirstName()).startsWith("John");
+		assertThat(trainer1.get().getLastName()).startsWith("Doe");
 	}
 	
 	@Test
@@ -43,7 +44,8 @@ public class TrainerServiceTests {
 		Collection<Trainer> trainers = (Collection<Trainer>) this.trainerService.findAll();
 		
 		Trainer trainer1 = EntityUtils.getById(trainers, Trainer.class, 1);
-		assertThat(trainer1.getFirstName().startsWith("John"));
+		
+		assertThat(trainer1.getFirstName()).startsWith("John");
 	}
 	
 	@Test
@@ -64,11 +66,7 @@ public class TrainerServiceTests {
 		user.setEnabled(true);
 		trainer.setUser(user);
 		
-		try {
-			this.trainerService.saveTrainer(trainer);
-		} catch (Exception e) {
-			Logger.getLogger(TrainerServiceTests.class.getName()).log(Level.SEVERE, null, e);
-		}
+		this.trainerService.saveTrainer(trainer);
 		
 		assertThat(trainer.getId()).isNotEqualTo(0);
 		trainers = (Collection<Trainer>) this.trainerService.findAll();
@@ -80,30 +78,31 @@ public class TrainerServiceTests {
 	@Transactional
 	void shouldUpdateTrainerName() throws Exception {
 		Optional<Trainer> trainer1 = this.trainerService.findTrainerById(1);
-		String oldName, newName;
-		if(trainer1.isPresent()) {
-			oldName = trainer1.get().getFirstName();
-			newName = oldName + "Test";
-			trainer1.get().setFirstName(newName);
-			this.trainerService.saveTrainer(trainer1.get());
+		String oldFirstName, newFirstName;
+		
+		assertThat(trainer1.isPresent()).isEqualTo(true);
+		oldFirstName = trainer1.get().getFirstName();
+		newFirstName = oldFirstName + "Test";
+		trainer1.get().setFirstName(newFirstName);
+		
+		this.trainerService.saveTrainer(trainer1.get());
 			
-			trainer1 = this.trainerService.findTrainerById(1);
-			if(trainer1.isPresent()) {
-				assertThat(trainer1.get().getFirstName()).isEqualTo(newName);
-			}
-		}
+		trainer1 = this.trainerService.findTrainerById(1);
+		assertThat(trainer1.isPresent()).isEqualTo(true);
+		assertThat(trainer1.get().getFirstName()).isEqualTo(newFirstName);
+		
 	}
 	
 	@Test
 	@Transactional
 	void shouldDeleteTrainer() {
 		Optional<Trainer> trainer1 = this.trainerService.findTrainerById(1);
-		if(trainer1.isPresent()) {
-			this.trainerService.deleteTrainer(trainer1.get());
-		}
 		
+		assertThat(trainer1.isPresent()).isEqualTo(true);
+		this.trainerService.deleteTrainer(trainer1.get());
+	
 		trainer1 = this.trainerService.findTrainerById(1);
-		assertThat(!trainer1.isPresent());
+		assertThat(trainer1.isPresent()).isEqualTo(false);
 		
 	}
 	

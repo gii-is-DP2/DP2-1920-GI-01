@@ -148,4 +148,11 @@ public class TrainerControllerTests {
 				.andExpect(view().name("admin/trainers/editTrainer"));
 	}
 	
+	@WithMockUser(value = "spring")
+	@Test
+	void testDelete() throws Exception {
+		mockMvc.perform(get("/admin/trainers/{trainerId}/delete", TEST_TRAINER_ID)).andExpect(status().isOk())
+				.andExpect(view().name("admin/trainers/listTrainers"));
+	}
+	
 }

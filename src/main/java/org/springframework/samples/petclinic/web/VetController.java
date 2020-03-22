@@ -125,20 +125,20 @@ public class VetController {
 	public String initCreateForm(final ModelMap model) {
 		Vet vet = new Vet();
 		model.addAttribute("vet", vet);
-		return "/admin/vets/vetEdit";
+		return "admin/vets/vetEdit";
 	}
 
 	@PostMapping("/admin/vets/new")
 	public String processCreateForm(@Valid final Vet vet, final BindingResult result, final ModelMap model) {
 		if (result.hasErrors()) {
 			model.addAttribute("vet", vet);
-			return "/admin/vets/vetEdit";
+			return "admin/vets/vetEdit";
 		} else {
 			try {
 				this.vetService.saveVet(vet);
 				return this.showVetListAsAdmin(model);
 			} catch (Exception e) {
-				return "/admin/vets/vetEdit";
+				return "admin/vets/vetEdit";
 			}
 		}
 	}
@@ -150,7 +150,7 @@ public class VetController {
 		if (vet.isPresent()) {
 			modelMap.put("vet", vet.get());
 		}
-		return "/admin/vets/vetEdit";
+		return "admin/vets/vetEdit";
 	}
 
 	@PostMapping("/admin/vets/{vetId}/edit")

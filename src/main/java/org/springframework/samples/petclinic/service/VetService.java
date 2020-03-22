@@ -47,6 +47,11 @@ public class VetService {
 
 	private VetRepository vetRepository;
 
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private AuthoritiesService authoritiesService;
 
 	@Autowired
 	public VetService(VetRepository vetRepository) {
@@ -78,6 +83,8 @@ public class VetService {
 	@Transactional
 	public void saveVet(Vet vet) throws DataAccessException{
 		this.vetRepository.save(vet);
+		this.userService.saveUser(vet.getUser());
+		this.authoritiesService.saveAuthorities(vet.getUser().getUsername(), "veterinarian");
 	}
 
 }
