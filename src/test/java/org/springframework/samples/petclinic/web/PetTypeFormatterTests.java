@@ -1,6 +1,6 @@
 package org.springframework.samples.petclinic.web;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assertions; 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

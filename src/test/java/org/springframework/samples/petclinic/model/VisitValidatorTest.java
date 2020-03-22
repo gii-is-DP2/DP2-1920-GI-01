@@ -18,6 +18,8 @@ import org.springframework.validation.Errors;
 
 public class VisitValidatorTest extends ValidatorTests{
 
+	//Perfect scenario ----------------------------------------------------------------------------------------------------
+	
 	@Test
 	void shouldValidateWhenCorrect() {
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
@@ -34,6 +36,8 @@ public class VisitValidatorTest extends ValidatorTests{
 		
 		assertThat(constraintViolations.size()).isEqualTo(0);
 	}
+	
+	//Unit tests ----------------------------------------------------------------------------------------------------------
 	
 	@Test
 	void shouldNotValidateWhenDescriptionEmpty() {
@@ -55,8 +59,28 @@ public class VisitValidatorTest extends ValidatorTests{
 		assertThat(violation.getMessage()).isEqualTo("must not be empty");
 	}
 	
+	//Custom validator VisitValidator ----------------------------------------------------------------------------------------
+	
 	@Test
-	void shouldNotValidateWhenDateIsNull() {
+	void customValidatorShouldNotValidateWhenCorrect() {
+		LocaleContextHolder.setLocale(Locale.ENGLISH);
+		Visit visit = new Visit();
+		visit.setDescription("testDescription");
+		visit.setDate(LocalDate.of(2021, Month.AUGUST, 17));
+		Pet pet = new Pet();
+		pet.setName("petTestName");
+		pet.setBirthDate(LocalDate.of(2018, Month.AUGUST, 17));
+		visit.setPet(pet);
+		
+		VisitValidator visitValidator = new VisitValidator();
+		Errors errors = new BeanPropertyBindingResult(visit, "visit");
+		visitValidator.validate(visit, errors);
+		
+		assertThat(errors.hasFieldErrors("date")).isEqualTo(false);
+	}
+	
+	@Test
+	void customValidatorShouldNotValidateWhenDateIsNull() {
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
 		Visit visit = new Visit();
 		visit.setDescription("testDescription");
@@ -75,7 +99,7 @@ public class VisitValidatorTest extends ValidatorTests{
 	}
 	
 	@Test
-	void shouldNotValidateWhenDateIsBeforeCurrent() {
+	void customValidatorShouldNotValidateWhenDateIsBeforeCurrent() {
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
 		Visit visit = new Visit();
 		visit.setDescription("testDescription");

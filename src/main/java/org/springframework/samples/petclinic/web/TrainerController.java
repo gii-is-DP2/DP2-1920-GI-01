@@ -34,14 +34,14 @@ public class TrainerController {
 	}
 	
 	@GetMapping("/trainers")
-  public String listTrainers(ModelMap modelMap) {
-    String view;
-    Iterable<Trainer> trainers;
-    view = "trainers/listTrainers";
-    trainers = trainerService.findAll();
-    modelMap.addAttribute("trainers", trainers);
-    return view;
-  }
+	public String listTrainers(ModelMap modelMap) {
+		String view;
+		Iterable<Trainer> trainers;
+		view = "trainers/listTrainers";
+		trainers = trainerService.findAll();
+		modelMap.addAttribute("trainers", trainers);
+		return view;
+	}
   
 	@GetMapping("/admin/trainers")
 	public String listTrainersAsAdmin(ModelMap modelMap) {

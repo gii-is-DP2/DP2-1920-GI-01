@@ -15,7 +15,8 @@ import org.springframework.context.i18n.LocaleContextHolder;
 
 public class VetValidatorTest extends ValidatorTests{
 	
-	//The right scenario
+	//Perfect scenario -----------------------------------------------------------------------------------------------------------
+	
 	@Test
 	void shouldValidateWhenCorrect() {
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
@@ -35,6 +36,8 @@ public class VetValidatorTest extends ValidatorTests{
 		
 		assertThat(constraintViolations.size()).isEqualTo(0);
 	}
+	
+	//Unit tests -------------------------------------------------------------------------------------
 	
 	@Test
 	void shouldNotValidateWhenFirstNameEmpty() {

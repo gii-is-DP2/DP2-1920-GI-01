@@ -38,11 +38,11 @@ public class TrainerValidator implements Validator {
 		}
 		
 		if (StringHelper.isNullOrEmptyString(email) || !email.matches("^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$")){
-			errors.rejectValue("email", REQUIRED + "and should match the following pattern: acme@example.com", REQUIRED + "and should match the following pattern: acme@example.com");
+			errors.rejectValue("email", REQUIRED + " and should match the following pattern: acme@example.com", REQUIRED + " and should match the following pattern: acme@example.com");
 		}
 		
 		if(StringHelper.isNullOrEmptyString(phone) || !phone.matches("[0-9]+")) {
-			errors.rejectValue("phone", REQUIRED + "and should be added and it should contain only numbers", REQUIRED + "and should be added and it should contain only numbers");
+			errors.rejectValue("phone", REQUIRED + " and should be added and it should contain only numbers", REQUIRED + " and should be added and it should contain only numbers");
 		}
 		
 	}

@@ -1,5 +1,6 @@
 package org.springframework.samples.petclinic.web;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -7,12 +8,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.samples.petclinic.configuration.SecurityConfiguration;
+import org.springframework.samples.petclinic.model.Pet;
+import org.springframework.samples.petclinic.model.PetType;
+import org.springframework.samples.petclinic.model.Trainer;
 import org.springframework.samples.petclinic.service.TrainerService;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -20,12 +25,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.util.Optional;
+
+import org.assertj.core.util.Lists;
+
 @WebMvcTest(value = TrainerController.class,
 		excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class),
 		excludeAutoConfiguration= SecurityConfiguration.class)
 public class TrainerControllerTests {
 
 	private static final int TEST_TRAINER_ID = 1;
+	private static final int TEST_TRAINER_ID_2 = 4;
 	
 	@Autowired
 	private TrainerController trainerController;
@@ -35,6 +45,19 @@ public class TrainerControllerTests {
 	
 	@Autowired
 	private MockMvc mockMvc;
+	
+	@BeforeEach
+	void setup() {
+		Trainer t = new Trainer();
+		t.setFirstName("John");
+		t.setLastName("Doe");
+		t.setEmail("acme@mail.com");
+		t.setPhone("111111111");
+		Optional<Trainer> trainer = Optional.of(t);
+		Optional<Trainer> trainer2 = Optional.empty();
+		given(this.trainerService.findTrainerById(TEST_TRAINER_ID)).willReturn(trainer);
+		given(this.trainerService.findTrainerById(TEST_TRAINER_ID_2)).willReturn(trainer2);
+	}
 	
 	@WithMockUser(value = "spring")
 	@Test
@@ -48,8 +71,8 @@ public class TrainerControllerTests {
 	@Test
 	void testShowTrainerAsUnregisteredUser() throws Exception {
 		mockMvc.perform(get("/trainers/{trainerId}", TEST_TRAINER_ID)).andExpect(status().isOk())
-			.andExpect(view().name("trainers/showTrainer"));
-//			.andExpect(model().attributeExists("trainer"));
+			.andExpect(view().name("trainers/showTrainer"))
+			.andExpect(model().attributeExists("trainer"));
 	}
 	
 	@WithMockUser(value = "spring")
@@ -64,8 +87,8 @@ public class TrainerControllerTests {
 	@Test
 	void testShowTrainerAsAdministrator() throws Exception {
 		mockMvc.perform(get("/admin/trainers/{trainerId}", TEST_TRAINER_ID)).andExpect(status().isOk())
-			.andExpect(view().name("admin/trainers/showTrainer"));
-//			.andExpect(model().attributeExists("trainer"));
+			.andExpect(view().name("admin/trainers/showTrainer"))
+			.andExpect(model().attributeExists("trainer"));
 	}
 	
 	@WithMockUser(value = "spring")
@@ -112,7 +135,7 @@ public class TrainerControllerTests {
 	void testInitUpdateForm() throws Exception {
 		mockMvc.perform(get("/admin/trainers/{trainerId}/edit", TEST_TRAINER_ID))
 				.andExpect(status().isOk())
-//				.andExpect(model().attributeExists("trainer"))
+				.andExpect(model().attributeExists("trainer"))
 				.andExpect(view().name("admin/trainers/editTrainer"));
 			
 	}

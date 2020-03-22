@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.samples.petclinic.web;
+package org.springframework.samples.petclinic.web.validators;
 
 import java.time.LocalDate; 
 
@@ -42,7 +42,7 @@ public class PetValidator implements Validator {
 		String name = pet.getName();
 		// name validation
 		if (!StringUtils.hasLength(name) || name.length()>50 || name.length()<3) {
-			errors.rejectValue("name", REQUIRED + " and between 3 and 50 characters", REQUIRED + " and between 3 and 50 character");
+			errors.rejectValue("name", REQUIRED + " and between 3 and 50 characters", REQUIRED + " and between 3 and 50 characters");
 		}
 
 		// type validation
