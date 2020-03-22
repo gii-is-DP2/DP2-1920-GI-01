@@ -31,12 +31,12 @@ public class MedicalRecordService {
 	public Collection<MedicalRecord> findMedicalRecordByPetId(final Integer id) {
 		return this.repository.findByPetId(id);
 	}
-	/*
-	 * @Transactional
-	 * public void deleteMedicalRecord(final MedicalRecord medicalRecord) {
-	 * this.repository.delete(medicalRecord);
-	 * }
-	 */
+	
+	@Transactional
+	public void deleteMedicalRecord(final MedicalRecord medicalRecord) {
+		this.repository.delete(medicalRecord);
+	}
+	
 
 	@Transactional(readOnly = true)
 	public Collection<MedicalRecord> findMedicalHistory() throws DataAccessException {

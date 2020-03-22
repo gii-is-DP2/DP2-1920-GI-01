@@ -16,7 +16,6 @@
 package org.springframework.samples.petclinic.web.validators;
 
 import java.time.LocalDate; 
-
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;

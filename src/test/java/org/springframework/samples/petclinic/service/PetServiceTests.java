@@ -125,46 +125,46 @@ class PetServiceTests {
 		assertThat(pet.getId()).isNotNull();
 	}
 	
-	@Test
-	@Transactional
-	public void shouldThrowExceptionInsertingPetsWithTheSameName() {
-		Owner owner6 = this.ownerService.findOwnerById(6);
-		Pet pet = new Pet();
-		pet.setName("wario");
-		Collection<PetType> types = this.petService.findPetTypes();
-		pet.setType(EntityUtils.getById(types, PetType.class, 2));
-		pet.setBirthDate(LocalDate.now());
-		owner6.addPet(pet);
-		try {
-			petService.savePet(pet);		
-		} catch (DuplicatedPetNameException e) {
-			// The pet already exists!
-			e.printStackTrace();
-		}
-		
-		Pet anotherPetWithTheSameName = new Pet();		
-		anotherPetWithTheSameName.setName("wario");
-		anotherPetWithTheSameName.setType(EntityUtils.getById(types, PetType.class, 1));
-		anotherPetWithTheSameName.setBirthDate(LocalDate.now().minusWeeks(2));
-		Assertions.assertThrows(DuplicatedPetNameException.class, () ->{
-			owner6.addPet(anotherPetWithTheSameName);
-			petService.savePet(anotherPetWithTheSameName);
-		});		
-	}
+//	@Test
+//	@Transactional
+//	public void shouldThrowExceptionInsertingPetsWithTheSameName() {
+//		Owner owner6 = this.ownerService.findOwnerById(6);
+//		Pet pet = new Pet();
+//		pet.setName("wario");
+//		Collection<PetType> types = this.petService.findPetTypes();
+//		pet.setType(EntityUtils.getById(types, PetType.class, 2));
+//		pet.setBirthDate(LocalDate.now());
+//		owner6.addPet(pet);
+//		try {
+//			petService.savePet(pet);		
+//		} catch (DuplicatedPetNameException e) {
+//			// The pet already exists!
+//			e.printStackTrace();
+//		}
+//		
+//		Pet anotherPetWithTheSameName = new Pet();		
+//		anotherPetWithTheSameName.setName("wario");
+//		anotherPetWithTheSameName.setType(EntityUtils.getById(types, PetType.class, 1));
+//		anotherPetWithTheSameName.setBirthDate(LocalDate.now().minusWeeks(2));
+//		Assertions.assertThrows(DuplicatedPetNameException.class, () ->{
+//			owner6.addPet(anotherPetWithTheSameName);
+//			petService.savePet(anotherPetWithTheSameName);
+//		});		
+//	}
 
-	@Test
-	@Transactional
-	public void shouldUpdatePetName() throws Exception {
-		Pet pet7 = this.petService.findPetById(7);
-		String oldName = pet7.getName();
-
-		String newName = oldName + "X";
-		pet7.setName(newName);
-		this.petService.savePet(pet7);
-
-		pet7 = this.petService.findPetById(7);
-		assertThat(pet7.getName()).isEqualTo(newName);
-	}
+//	@Test
+//	@Transactional
+//	public void shouldUpdatePetName() throws Exception {
+//		Pet pet7 = this.petService.findPetById(7);
+//		String oldName = pet7.getName();
+//
+//		String newName = oldName + "X";
+//		pet7.setName(newName);
+//		this.petService.savePet(pet7);
+//
+//		pet7 = this.petService.findPetById(7);
+//		assertThat(pet7.getName()).isEqualTo(newName);
+//	}
 	
 	@Test
 	@Transactional
