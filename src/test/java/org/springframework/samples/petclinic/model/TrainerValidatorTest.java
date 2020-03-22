@@ -16,7 +16,8 @@ import javax.validation.Validator;
 
 public class TrainerValidatorTest extends ValidatorTests {
 
-	//The right scenario
+	//Perfect scenario -------------------------------------------------------------------------------------------
+	
 	@Test
 	void shouldValidateWhenCorrect() {
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
@@ -37,8 +38,8 @@ public class TrainerValidatorTest extends ValidatorTests {
 		assertThat(constraintViolations.size()).isEqualTo(0);
 	}
 	
-	//This test should not validate
-	//because the first name is empty
+	//Unit tests --------------------------------------------------------------------------------------------------
+	
 	@Test
 	void shouldNotValidateWhenFirstNameEmpty() {
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
@@ -61,9 +62,7 @@ public class TrainerValidatorTest extends ValidatorTests {
 		assertThat(violation.getPropertyPath().toString()).isEqualTo("firstName");
 		assertThat(violation.getMessage()).isEqualTo("must not be empty");
 	}
-	
-	//This test should not validate
-	//because the last name is empty
+
 	@Test
 	void shouldNotValidateWhenLastNameEmpty() {
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
@@ -86,9 +85,7 @@ public class TrainerValidatorTest extends ValidatorTests {
 		assertThat(violation.getPropertyPath().toString()).isEqualTo("lastName");
 		assertThat(violation.getMessage()).isEqualTo("must not be empty");
 	}
-	
-	//This test should not validate
-	//because the email is empty
+
 	@Test
 	void shouldNotValidateWhenEmailEmpty() {
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
@@ -111,9 +108,7 @@ public class TrainerValidatorTest extends ValidatorTests {
 		assertThat(violation.getPropertyPath().toString()).isEqualTo("email");
 		assertThat(violation.getMessage()).isEqualTo("must not be empty");
 	}
-	
-	//This test should not validate
-	//because the phone is empty
+
 	@Test
 	void shouldNotValidateWhenPhoneEmpty() {
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
@@ -136,11 +131,78 @@ public class TrainerValidatorTest extends ValidatorTests {
 		assertThat(violation.getPropertyPath().toString()).isEqualTo("phone");
 		assertThat(violation.getMessage()).isEqualTo("must not be empty");
 	}
+
+	//Custom validator TrainerValidator ---------------------------------------------------------------------------------------------
 	
-	//This test should not validate
-	//because the email doesn't follow the pattern
 	@Test
-	void shouldNotValidateWhenEmailDoesNotMatchPattern() {
+	void customValidatorShouldValidateWhenCorrect() {
+		LocaleContextHolder.setLocale(Locale.ENGLISH);
+		Trainer trainer = new Trainer();
+		trainer.setFirstName("testFirstName");
+		trainer.setLastName("testLastName");
+		trainer.setEmail("example@test.com");
+		trainer.setPhone("999999999");
+		User user = new User();
+		user.setUsername("testing");
+		user.setPassword("testing");
+		user.setEnabled(true);
+		trainer.setUser(user);
+		
+		TrainerValidator trainerValidator = new TrainerValidator();
+		Errors errors = new BeanPropertyBindingResult(trainer, "trainer");
+		trainerValidator.validate(trainer, errors);
+		
+		assertThat(errors.getErrorCount()).isEqualTo(0);
+	}
+	
+	@Test
+	void customValidatorShouldNotValidateWhenFirstNameEmpty() {
+		LocaleContextHolder.setLocale(Locale.ENGLISH);
+		Trainer trainer = new Trainer();
+		trainer.setFirstName("");
+		trainer.setLastName("testLastName");
+		trainer.setEmail("example@test.com");
+		trainer.setPhone("999999999");
+		User user = new User();
+		user.setUsername("testing");
+		user.setPassword("testing");
+		user.setEnabled(true);
+		trainer.setUser(user);
+		
+		TrainerValidator trainerValidator = new TrainerValidator();
+		Errors errors = new BeanPropertyBindingResult(trainer, "trainer");
+		trainerValidator.validate(trainer, errors);
+		
+		assertThat(errors.hasFieldErrors("firstName")).isEqualTo(true);
+		assertThat(errors.getFieldError("firstName").getDefaultMessage()) //
+			.startsWith("required");
+	}
+	
+	@Test
+	void customValidatorShouldNotValidateWhenLastNameEmpty() {
+		LocaleContextHolder.setLocale(Locale.ENGLISH);
+		Trainer trainer = new Trainer();
+		trainer.setFirstName("testFirstName");
+		trainer.setLastName("");
+		trainer.setEmail("example@test.com");
+		trainer.setPhone("999999999");
+		User user = new User();
+		user.setUsername("testing");
+		user.setPassword("testing");
+		user.setEnabled(true);
+		trainer.setUser(user);
+		
+		TrainerValidator trainerValidator = new TrainerValidator();
+		Errors errors = new BeanPropertyBindingResult(trainer, "trainer");
+		trainerValidator.validate(trainer, errors);
+		
+		assertThat(errors.hasFieldErrors("lastName")).isEqualTo(true);
+		assertThat(errors.getFieldError("lastName").getDefaultMessage()) //
+			.startsWith("required");
+	}
+	
+	@Test
+	void customValidatorShouldNotValidateWhenEmailDoesNotMatchPattern() {
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
 		Trainer trainer = new Trainer();
 		trainer.setFirstName("testFirstName");
@@ -158,13 +220,12 @@ public class TrainerValidatorTest extends ValidatorTests {
 		trainerValidator.validate(trainer, errors);
 		
 		assertThat(errors.hasFieldErrors("email")).isEqualTo(true);
-		assertThat(errors.getFieldError("email").getDefaultMessage()).startsWith("Email should match the following pattern: acme@example.com");
+		assertThat(errors.getFieldError("email").getDefaultMessage()) //
+			.startsWith("required and should match the following pattern: acme@example.com");
 	}
-	
-	//This test should not validate
-	//because the phone doesn't follow the pattern
+
 	@Test
-	void shouldNotValidateWhenPhoneDoesNotMatchPattern() {
+	void customValidatorShouldNotValidateWhenPhoneDoesNotMatchPattern() {
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
 		Trainer trainer = new Trainer();
 		trainer.setFirstName("testFirstName");
@@ -182,7 +243,8 @@ public class TrainerValidatorTest extends ValidatorTests {
 		trainerValidator.validate(trainer, errors);
 		
 		assertThat(errors.hasFieldErrors("phone")).isEqualTo(true);
-		assertThat(errors.getFieldError("phone").getDefaultMessage()).startsWith("The phone should be added and it should contain only numbers");
+		assertThat(errors.getFieldError("phone").getDefaultMessage()) //
+			.startsWith("required and should be added and it should contain only numbers");
 	}
 	
 }

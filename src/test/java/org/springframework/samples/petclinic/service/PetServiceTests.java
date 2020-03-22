@@ -15,7 +15,7 @@
  */
 package org.springframework.samples.petclinic.service;
 
-import static org.assertj.core.api.Assertions.assertThat;  
+import static org.assertj.core.api.Assertions.assertThat;   
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -24,17 +24,13 @@ import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
-import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Visit;
-import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
 import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Service;
@@ -76,7 +72,13 @@ class PetServiceTests {
 	protected PetService petService;
         
         @Autowired
-	protected OwnerService ownerService;	
+	protected OwnerService ownerService;
+        
+    @Test
+    void shouldNotFindPetWithIncorrectId() {
+    	Pet noPet = this.petService.findPetById(-1);
+    	assertThat(noPet == null).isEqualTo(true);
+    }
 
 	@Test
 	void shouldFindPetWithCorrectId() {
@@ -223,6 +225,27 @@ class PetServiceTests {
 		assertThat(visitArr[0].getPet()).isNotNull();
 		assertThat(visitArr[0].getDate()).isNotNull();
 		assertThat(visitArr[0].getPet().getId()).isEqualTo(7);
+	}
+	
+	@Test
+	void shouldFindAllHomelessPets() throws Exception {
+		Collection<Pet> homelessPets = this.petService.findHomelessPets();
+		
+		Pet homelessPet1 = EntityUtils.getById(homelessPets, Pet.class, 14);
+		Pet homelessPet2 = EntityUtils.getById(homelessPets, Pet.class, 15);
+		
+		assertThat(homelessPet1.getName()).startsWith("Tucker");
+		assertThat(homelessPet2.getName()).startsWith("Lekay");
+	}
+	
+	@Test
+	void shouldDeletePet() throws Exception {
+		Pet pet1 = this.petService.findPetById(1);
+		
+		this.petService.deletePet(pet1);
+		
+		pet1 = this.petService.findPetById(1);
+		assertThat(pet1 == null).isEqualTo(true);
 	}
 
 }
