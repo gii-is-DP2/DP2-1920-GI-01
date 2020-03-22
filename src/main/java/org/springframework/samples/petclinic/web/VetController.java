@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,9 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.samples.petclinic.web;
 
-import org.springframework.beans.BeanUtils;  
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Specialty;
@@ -32,16 +38,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
 /**
  * @author Juergen Hoeller
  * @author Mark Fisher
@@ -53,18 +49,21 @@ public class VetController {
 
 	private final VetService vetService;
 
+
 	@Autowired
-	public VetController(VetService clinicService) {
+	public VetController(final VetService clinicService) {
 		this.vetService = clinicService;
 	}
-	
+
 	@ModelAttribute("specialties")
 	public Collection<Specialty> populateSpecialties() {
 		return this.vetService.findAllSpecialty();
 	}
 
-	@GetMapping(value = { "/vets"})
-	public String showVetList(Map<String, Object> model) {
+	@GetMapping(value = {
+		"/vets"
+	})
+	public String showVetList(final Map<String, Object> model) {
 		// Here we are returning an object of type 'Vets' rather than a collection of Vet
 		// objects
 		// so it is simpler for Object-Xml mapping
@@ -73,10 +72,12 @@ public class VetController {
 		model.put("vets", vets);
 		return "vets/vetList";
 	}
-	
+
 	//This method allows us to list the vets as an admin in a different view
-	@GetMapping(value = { "/admin/vets" })
-	public String showVetListAsAdmin(Map<String, Object> model) {
+	@GetMapping(value = {
+		"/admin/vets"
+	})
+	public String showVetListAsAdmin(final Map<String, Object> model) {
 		// Here we are returning an object of type 'Vets' rather than a collection of Vet
 		// objects
 		// so it is simpler for Object-Xml mapping
@@ -85,71 +86,75 @@ public class VetController {
 		model.put("vets", vets);
 		return "admin/vets/vetList";
 	}
-	
+
 	//This method allows us to show a certain pet given an id
-	@GetMapping(value = {"/admin/vets/{vetId}"})
-	public ModelAndView showVet(@PathVariable("vetId") int vetId) {
+	@GetMapping(value = {
+		"/vets/{vetId}"
+	})
+	public ModelAndView showVet(@PathVariable("vetId") final int vetId) {
 		Optional<Vet> vet;
-		ModelAndView mav = new ModelAndView("admin/vets/vetShow");
+		ModelAndView mav = new ModelAndView("/vets/vetDetails");
 		vet = this.vetService.findVetById(vetId);
-		if(vet.isPresent()) {
+		if (vet.isPresent()) {
 			mav.addObject("vet", vet.get());
 		}
 		return mav;
 	}
-	
+
 	//This method allows us to delete a certain vet given an id
-	@GetMapping(value = {"/admin/vets/{vetId}/delete"})
-	public String deleteVet(@PathVariable("vetId") int vetId, ModelMap modelMap) {
+	@GetMapping(value = {
+		"/admin/vets/{vetId}/delete"
+	})
+	public String deleteVet(@PathVariable("vetId") final int vetId, final ModelMap modelMap) {
 		String view;
 		Optional<Vet> vet;
 		view = "admin/vets/vetList";
 		vet = this.vetService.findVetById(vetId);
-		if(vet.isPresent()) {
-			vetService.deleteVet(vet.get());
+		if (vet.isPresent()) {
+			this.vetService.deleteVet(vet.get());
 			modelMap.addAttribute("message", "Vet deleted successfully!");
-			view = showVetListAsAdmin(modelMap);
+			view = this.showVetListAsAdmin(modelMap);
 		} else {
 			modelMap.addAttribute("message", "Vet not found!");
-			view = showVetListAsAdmin(modelMap);
+			view = this.showVetListAsAdmin(modelMap);
 		}
 		return view;
 	}
-	
+
 	@GetMapping("/admin/vets/new")
-	public String initCreateForm(ModelMap model) {
+	public String initCreateForm(final ModelMap model) {
 		Vet vet = new Vet();
 		model.addAttribute("vet", vet);
 		return "/admin/vets/vetEdit";
 	}
-	
+
 	@PostMapping("/admin/vets/new")
-	public String processCreateForm(@Valid Vet vet, BindingResult result, ModelMap model) {
-		if(result.hasErrors()) {
+	public String processCreateForm(@Valid final Vet vet, final BindingResult result, final ModelMap model) {
+		if (result.hasErrors()) {
 			model.addAttribute("vet", vet);
 			return "/admin/vets/vetEdit";
 		} else {
 			try {
 				this.vetService.saveVet(vet);
-				return showVetListAsAdmin(model);
+				return this.showVetListAsAdmin(model);
 			} catch (Exception e) {
 				return "/admin/vets/vetEdit";
 			}
 		}
 	}
-	
+
 	//This method allows us to display vet data when trying to update
 	@GetMapping("/admin/vets/{vetId}/edit")
-	public String initUpdateForm(@PathVariable("vetId") int vetId, ModelMap modelMap) {
+	public String initUpdateForm(@PathVariable("vetId") final int vetId, final ModelMap modelMap) {
 		Optional<Vet> vet = this.vetService.findVetById(vetId);
-		if(vet.isPresent()) {
+		if (vet.isPresent()) {
 			modelMap.put("vet", vet.get());
 		}
 		return "/admin/vets/vetEdit";
 	}
-	
+
 	@PostMapping("/admin/vets/{vetId}/edit")
-	public String processUpdateForm(@Valid Vet vet, BindingResult result, @PathVariable("vetId") int vetId, ModelMap model) {
+	public String processUpdateForm(@Valid final Vet vet, final BindingResult result, @PathVariable("vetId") final int vetId, final ModelMap model) {
 		if (result.hasErrors()) {
 			model.put("vet", vet);
 			return "admin/vets/vetEdit";
@@ -164,7 +169,9 @@ public class VetController {
 		}
 	}
 
-	@GetMapping(value = { "/vets.xml"})
+	@GetMapping(value = {
+		"/vets.xml"
+	})
 	public @ResponseBody Vets showResourcesVetList() {
 		// Here we are returning an object of type 'Vets' rather than a collection of Vet
 		// objects
