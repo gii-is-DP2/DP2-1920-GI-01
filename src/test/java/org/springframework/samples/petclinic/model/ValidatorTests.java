@@ -1,6 +1,6 @@
 package org.springframework.samples.petclinic.model;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat; 
 
 import java.util.Locale;
 import java.util.Set;
@@ -18,7 +18,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
  */
 class ValidatorTests {
 
-	private Validator createValidator() {
+	protected Validator createValidator() {
 		LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
 		localValidatorFactoryBean.afterPropertiesSet();
 		return localValidatorFactoryBean;

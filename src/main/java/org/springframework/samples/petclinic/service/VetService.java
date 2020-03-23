@@ -15,7 +15,8 @@
  */
 package org.springframework.samples.petclinic.service;
 
-import java.util.Collection;
+import java.util.Collection; 
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -23,6 +24,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
+import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
@@ -45,6 +47,11 @@ public class VetService {
 
 	private VetRepository vetRepository;
 
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private AuthoritiesService authoritiesService;
 
 	@Autowired
 	public VetService(VetRepository vetRepository) {
@@ -54,6 +61,30 @@ public class VetService {
 	@Transactional(readOnly = true)	
 	public Collection<Vet> findVets() throws DataAccessException {
 		return vetRepository.findAll();
-	}	
+	}
+	
+	@Transactional(readOnly = true)
+	public Collection<Specialty> findAllSpecialty() throws DataAccessException{
+		return this.vetRepository.findAllSpecialty();
+	}
+	
+	@Transactional
+	public Optional<Vet> findVetById(int vetId){
+		Optional<Vet> res;
+		res = vetRepository.findById(vetId);
+		return res;
+	}
+	
+	@Transactional
+	public void deleteVet(Vet vet) {
+		vetRepository.delete(vet);
+	}
+	
+	@Transactional
+	public void saveVet(Vet vet) throws DataAccessException{
+		this.vetRepository.save(vet);
+		this.userService.saveUser(vet.getUser());
+		this.authoritiesService.saveAuthorities(vet.getUser().getUsername(), "veterinarian");
+	}
 
 }

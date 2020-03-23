@@ -1,6 +1,6 @@
 package org.springframework.samples.petclinic.web.validators;
 
-import java.time.LocalDate;
+import java.time.LocalDate; 
 
 import org.springframework.samples.petclinic.model.Medicine;
 import org.springframework.samples.petclinic.model.PetType;
@@ -31,15 +31,15 @@ public class MedicineValidator implements Validator {
 		expirationDate = medicine.getExpirationDate();
 		petType = medicine.getPetType();
 		
-		if(name == null) {
+		if(name == null || name.equals("")) {
 			errors.rejectValue("name", REQUIRED, "Required");
 		}
 		
-		if (!StringUtils.hasLength(name) || name.length()>50 || name.length()<3) {
+		if (!StringUtils.hasLength(name) || name.length() > 50 || name.length() < 3) {
 			errors.rejectValue("name", REQUIRED+" and between 3 and 50 characters", REQUIRED+" and between 3 and 50 character");
 		}
 		
-		if(maker == null) {
+		if(maker == null || maker.equals("")) {
 			errors.rejectValue("maker", REQUIRED, "Required");
 		}
 		
