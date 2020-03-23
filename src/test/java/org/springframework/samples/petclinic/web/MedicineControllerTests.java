@@ -1,6 +1,5 @@
 package org.springframework.samples.petclinic.web;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
@@ -24,10 +23,10 @@ import org.springframework.samples.petclinic.model.Medicine;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.service.MedicineService;
 import org.springframework.samples.petclinic.service.PetService;
+import org.springframework.samples.petclinic.web.formatters.PetTypeFormatter;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.util.NestedServletException;
 
 @WebMvcTest(value = MedicineController.class,
 	includeFilters = @ComponentScan.Filter(value = PetTypeFormatter.class, type = FilterType.ASSIGNABLE_TYPE),
