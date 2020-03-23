@@ -122,7 +122,7 @@ public class MedicineController {
 		medicineToUpdate = medicineService.findMedicineById(medicineId);
 		redirection = "redirect:/medicine/show?id=" + medicineId;
 		
-		if(medicine == null) {
+		if(medicineToUpdate == null) {
 			throw new NullPointerException("Medicine not found");
 		}
 		
