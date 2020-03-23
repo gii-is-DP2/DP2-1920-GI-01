@@ -25,7 +25,7 @@ public class Prescription extends BaseEntity {
 	@NotNull
 	private Medicine		medicine;
 
-	@NotBlank
+	@NotBlank(message = "must not be blank")
 	private String			dose;
 
 }

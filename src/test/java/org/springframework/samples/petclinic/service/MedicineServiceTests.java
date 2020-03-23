@@ -5,10 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.validation.ConstraintViolationException;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -35,7 +34,7 @@ public class MedicineServiceTests {
 		
 		medicine1 = medicineService.findMedicineById(1);
 		
-		assertThat(medicine1.getName()).startsWith("Test");
+		assertThat(medicine1.getName()).startsWith("Cat medicine");
 		assertThat(medicine1.getMaker()).startsWith("Maker");
 	}
 	
@@ -54,21 +53,20 @@ public class MedicineServiceTests {
 	void shouldInsertMedicineIntoDatabaseAndGenerateId() {
 		Medicine medicine; 
 		PetType petType;
+		Integer size;
 		
 		medicine = new Medicine();
 		petType = EntityUtils.getById(petService.findPetTypes(), PetType.class, 1);
+		size = medicineService.findManyAll().size();
 		
 		medicine.setName("Test");
 		medicine.setExpirationDate(LocalDate.now());
 		medicine.setMaker("Test");
 		medicine.setPetType(petType);
 		
-        try {
-            medicineService.saveMedicine(medicine);
-        } catch (Exception ex) {
-            Logger.getLogger(PetServiceTests.class.getName()).log(Level.SEVERE, null, ex);
-        }
-	
+        medicineService.saveMedicine(medicine);
+        
+        assertThat(medicineService.findManyAll().size()).isEqualTo(size + 1);
 		assertThat(medicine.getId()).isNotNull();
 	}
 	
@@ -78,7 +76,6 @@ public class MedicineServiceTests {
 		Medicine medicine;
 		PetType petType;
 		InvalidDataAccessApiUsageException exception;
-		
 		
 		medicine = new Medicine();
 		petType = new PetType();
@@ -100,7 +97,6 @@ public class MedicineServiceTests {
 		Medicine medicine;
 		PetType petType;
 		ConstraintViolationException exception;
-		
 		
 		medicine = new Medicine();
 		petType = new PetType();
@@ -166,6 +162,49 @@ public class MedicineServiceTests {
 		exception = assertThrows(InvalidDataAccessApiUsageException.class, () -> medicineService.findManyMedicineByName(null));
 		
 		assertThat(exception.getMessage()).contains("Value must not be null");
+	}
+	
+	@Test
+	void shouldListAllMedicines() {
+		Collection<Medicine> medicines;
+		Medicine medicine1;
+		
+		medicines = medicineService.findManyAll();
+		medicine1 = medicineService.findMedicineById(1);
+		
+		assertThat(medicines).isNotNull();
+		assertThat(medicines).isNotEmpty();
+		assertThat(medicines).contains(medicine1);
+	}
+	
+	@Test
+	void shouldListMedicinesWithCorrectPetType() {
+		Collection<Medicine> medicines;
+		PetType petType;
+		Medicine medicine1;
+		
+		petType = new PetType();
+		petType.setId(1);
+		petType.setName("cat");
+		
+		medicines = medicineService.findByPetType(petType);
+		medicine1 = medicineService.findMedicineById(1);
+		
+		assertThat(medicines).isNotNull();
+		assertThat(medicines).isNotEmpty();
+		assertThat(medicines).contains(medicine1);
+	}
+	
+	@Test
+	void shouldNotListMedicinesWithIncorrectPetType() {
+		PetType petType;
+		InvalidDataAccessApiUsageException exception;
+		
+		petType = new PetType();
+		
+		exception = assertThrows(InvalidDataAccessApiUsageException.class, () -> medicineService.findByPetType(petType));
+		
+		assertThat(exception.getMessage()).contains("object references an unsaved transient instance");
 	}
 
 }
