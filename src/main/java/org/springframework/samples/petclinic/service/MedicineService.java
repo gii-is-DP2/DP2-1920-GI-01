@@ -1,8 +1,11 @@
 package org.springframework.samples.petclinic.service;
 
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Medicine;
+import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.repository.MedicineRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +29,21 @@ public class MedicineService {
 	@Transactional
 	public void deleteMedicine(Medicine medicine) {
 		repository.delete(medicine);
+	}
+	
+	@Transactional(readOnly = true)
+	public Collection<Medicine> findManyMedicineByName(String name) {
+		return repository.findByNameContaining(name);
+	}
+	
+	@Transactional(readOnly = true)
+	public Collection<Medicine> findManyAll() {
+		return repository.findAll();
+	}
+	
+	@Transactional(readOnly = true)
+	public Collection<Medicine> findByPetType(PetType petType) {
+		return repository.findByPetType(petType);
 	}
 
 }

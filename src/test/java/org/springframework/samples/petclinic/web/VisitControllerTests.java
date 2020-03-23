@@ -1,6 +1,6 @@
 package org.springframework.samples.petclinic.web;
 
-import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.given;  
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -17,7 +17,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.samples.petclinic.configuration.SecurityConfiguration;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.service.PetService;
-import org.springframework.samples.petclinic.service.VetService;
+import org.springframework.samples.petclinic.service.VisitService;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,25 +38,28 @@ class VisitControllerTests {
 	private VisitController visitController;
 
 	@MockBean
-	private PetService clinicService;
+	private VisitService visitService;
+	
+	@MockBean
+	private PetService petService;
 
 	@Autowired
 	private MockMvc mockMvc;
 
 	@BeforeEach
 	void setup() {
-		given(this.clinicService.findPetById(TEST_PET_ID)).willReturn(new Pet());
+		given(this.petService.findPetById(TEST_PET_ID)).willReturn(new Pet());
 	}
 
-        @WithMockUser(value = "spring")
-        @Test
+    @WithMockUser(value = "spring")
+    @Test
 	void testInitNewVisitForm() throws Exception {
 		mockMvc.perform(get("/owners/*/pets/{petId}/visits/new", TEST_PET_ID)).andExpect(status().isOk())
 				.andExpect(view().name("pets/createOrUpdateVisitForm"));
 	}
 
 	@WithMockUser(value = "spring")
-        @Test
+    @Test
 	void testProcessNewVisitFormSuccess() throws Exception {
 		mockMvc.perform(post("/owners/*/pets/{petId}/visits/new", TEST_PET_ID).param("name", "George")
 							.with(csrf())
@@ -66,7 +69,7 @@ class VisitControllerTests {
 	}
 
 	@WithMockUser(value = "spring")
-        @Test
+    @Test
 	void testProcessNewVisitFormHasErrors() throws Exception {
 		mockMvc.perform(post("/owners/*/pets/{petId}/visits/new", TEST_PET_ID)
 							.with(csrf())
@@ -76,7 +79,7 @@ class VisitControllerTests {
 	}
 
 	@WithMockUser(value = "spring")
-        @Test
+    @Test
 	void testShowVisits() throws Exception {
 		mockMvc.perform(get("/owners/*/pets/{petId}/visits", TEST_PET_ID)).andExpect(status().isOk())
 				.andExpect(model().attributeExists("visits")).andExpect(view().name("visitList"));

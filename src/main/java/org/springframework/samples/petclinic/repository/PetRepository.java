@@ -55,5 +55,10 @@ public interface PetRepository {
 	 * @see BaseEntity#isNew
 	 */
 	void save(Pet pet) throws DataAccessException;
+	
+	void delete(Pet pet) throws DataAccessException;
 
+	//This method allows us to find all the pets with no owners
+	List<Pet> findHomelessPets() throws DataAccessException;
+	
 }

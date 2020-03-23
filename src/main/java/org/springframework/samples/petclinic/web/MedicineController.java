@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class MedicineController {
 	
 	private static final String SHOW_VIEW = "medicine/show";
-
 	private static final String CREATE_OR_UPDATE_VIEW = "medicine/form";
 	
 	@Autowired
@@ -146,6 +145,24 @@ public class MedicineController {
 		medicineService.deleteMedicine(medicine);
 		
 		return "redirect:/";
+	}
+	
+	@GetMapping("/list")
+	public String listMedicine(Medicine medicine, BindingResult result, ModelMap model) {
+		if(medicine.getName() != null) {
+			Collection<Medicine> results;
+			results = medicineService.findManyMedicineByName(medicine.getName());
+		
+			if(results.isEmpty()) {
+				result.rejectValue("name", "not found", "No medicines where found");
+			} else if(results.size() == 1) {
+				return "redirect:/medicine/show" + "?id=" + results.iterator().next().getId();
+			} else {
+				model.put("results", results);
+			}
+		}
+		
+		return "medicine/list";
 	}
 	
 }
