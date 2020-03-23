@@ -70,7 +70,7 @@ public class PrescriptionServiceTest {
 		
 		exception = assertThrows(ConstraintViolationException.class, () -> prescriptionService.savePrescription(prescription));
 		
-		assertThat(exception.getMessage()).contains("no puede estar vacío");
+		assertThat(exception.getMessage()).contains("must not be blank");
 	}
 	
 	@Test
