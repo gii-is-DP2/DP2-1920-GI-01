@@ -106,9 +106,10 @@ public class MedicineControllerTests {
 	@WithMockUser(value = "spring")
 	@Test
 	void testInitUpdateFormNullReference() throws Exception {
-		assertThatThrownBy(() -> mockMvc.perform(get("/medicine/update")
-													.queryParam("id", "0"))
-										.andExpect(status().isOk())).isInstanceOf(NestedServletException.class);
+		mockMvc.perform(get("/medicine/update")
+							.queryParam("id", "0"))
+			   .andExpect(status().isOk())
+			   .andExpect(view().name("exception"));
 	}
 	
 	@WithMockUser(value = "spring")
@@ -132,14 +133,15 @@ public class MedicineControllerTests {
 	@WithMockUser(value = "spring")
 	@Test
 	void testProccessUpdateFormNullReference() throws Exception {
-		assertThatThrownBy(() -> mockMvc.perform(post("/medicine/update")
-													.queryParam("id", "0")
-													.with(csrf())
-													.param("name", "Test")
-													.param("expirationDate", "2100/01/01")
-													.param("maker", "Test")
-													.param("petType", "dog"))
-										.andExpect(status().isOk())).isInstanceOf(NestedServletException.class);
+		mockMvc.perform(post("/medicine/update")
+							.queryParam("id", "0")
+							.with(csrf())
+							.param("name", "Test")
+							.param("expirationDate", "2100/01/01")
+							.param("maker", "Test")
+							.param("petType", "dog"))
+			   .andExpect(status().isOk())
+			   .andExpect(view().name("exception"));
 	}
 	
 	@WithMockUser(value = "spring")
@@ -162,15 +164,16 @@ public class MedicineControllerTests {
 		mockMvc.perform(get("/medicine/delete")
 							.queryParam("id", "1"))
 			   .andExpect(status().is3xxRedirection())
-			   .andExpect(view().name("redirect:/")); //Change when added US-002
+			   .andExpect(view().name("redirect:/medicine/list"));
 	}
 
 	@WithMockUser(value = "spring")
 	@Test
 	void testDeleteMedicineHasErrors() throws Exception {
-		assertThatThrownBy(() -> mockMvc.perform(get("/medicine/delete")
-													.queryParam("id", "0"))
-										.andExpect(status().isOk())).isInstanceOf(NestedServletException.class);
+		mockMvc.perform(get("/medicine/delete")
+							.queryParam("id", "0"))
+			   .andExpect(status().isOk())
+			   .andExpect(view().name("exception"));
 	}
 	
 	@WithMockUser(value = "spring")
@@ -187,9 +190,41 @@ public class MedicineControllerTests {
 	@WithMockUser(value = "spring")
 	@Test
 	void testShowMedicineWithNullReference() throws Exception {
-		assertThatThrownBy(() -> mockMvc.perform(get("/medicine/show")
-													.queryParam("id", "0"))
-										.andExpect(status().isOk())).isInstanceOf(NestedServletException.class);
+		mockMvc.perform(get("/medicine/show")
+								.queryParam("id", "0"))
+			   .andExpect(status().isOk())
+			   .andExpect(view().name("exception"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testListMedicineOneResult() throws Exception {
+		given(this.medicineService.findManyMedicineByName("")).willReturn(Lists.newArrayList(new Medicine()));
+		
+		mockMvc.perform(get("/medicine/list"))
+			   .andExpect(status().is3xxRedirection())
+			   .andExpect(view().name("redirect:/medicine/show?id=null"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testListMedicineNoResults() throws Exception {
+		given(this.medicineService.findManyMedicineByName("")).willReturn(Lists.newArrayList());
+		
+		mockMvc.perform(get("/medicine/list"))
+			   .andExpect(status().isOk())
+			   .andExpect(view().name("medicine/list"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testListMedicineMultipleResults() throws Exception {
+		given(this.medicineService.findManyMedicineByName("")).willReturn(Lists.newArrayList(new Medicine(), new Medicine()));
+		
+		mockMvc.perform(get("/medicine/list"))
+			   .andExpect(status().isOk())
+			   .andExpect(view().name("medicine/list"))
+			   .andExpect(model().attributeExists("results"));
 	}
 	
 }

@@ -144,22 +144,24 @@ public class MedicineController {
 		
 		medicineService.deleteMedicine(medicine);
 		
-		return "redirect:/";
+		return "redirect:/medicine/list";
 	}
 	
 	@GetMapping("/list")
 	public String listMedicine(Medicine medicine, BindingResult result, ModelMap model) {
-		if(medicine.getName() != null) {
-			Collection<Medicine> results;
-			results = medicineService.findManyMedicineByName(medicine.getName());
+		if(medicine.getName() == null) {
+			medicine.setName("");
+		}
 		
-			if(results.isEmpty()) {
-				result.rejectValue("name", "not found", "No medicines where found");
-			} else if(results.size() == 1) {
-				return "redirect:/medicine/show" + "?id=" + results.iterator().next().getId();
-			} else {
-				model.put("results", results);
-			}
+		Collection<Medicine> results;
+		results = medicineService.findManyMedicineByName(medicine.getName());
+	
+		if(results.isEmpty()) {
+			result.rejectValue("name", "not found", "No medicines where found");
+		} else if(results.size() == 1) {
+			return "redirect:/medicine/show" + "?id=" + results.iterator().next().getId();
+		} else {
+			model.put("results", results);
 		}
 		
 		return "medicine/list";

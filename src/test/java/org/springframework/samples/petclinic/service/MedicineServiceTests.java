@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -66,9 +68,7 @@ public class MedicineServiceTests {
         } catch (Exception ex) {
             Logger.getLogger(PetServiceTests.class.getName()).log(Level.SEVERE, null, ex);
         }
-		
-		//ADD ASSERT WITH SIZE OF LIST + 1 (Made in US-002)
-		
+	
 		assertThat(medicine.getId()).isNotNull();
 	}
 	
@@ -96,6 +96,29 @@ public class MedicineServiceTests {
 	
 	@Test
 	@Transactional
+	void shouldNotInsertMedicineWithNameBlank() {
+		Medicine medicine;
+		PetType petType;
+		ConstraintViolationException exception;
+		
+		
+		medicine = new Medicine();
+		petType = new PetType();
+		
+		petType.setName("dog");
+		petType.setId(2);
+		medicine.setName("");
+		medicine.setExpirationDate(LocalDate.now());
+		medicine.setMaker("Test");
+		medicine.setPetType(petType);
+		
+        exception = assertThrows(ConstraintViolationException.class, () -> medicineService.saveMedicine(medicine));
+        
+        assertThat(exception.getMessage()).contains("Validation failed");
+	}
+	
+	@Test
+	@Transactional
 	void shouldDeleteMedicineWithCorrectId() {
 		Medicine medicine1; 
 		
@@ -119,6 +142,30 @@ public class MedicineServiceTests {
 		exception = assertThrows(InvalidDataAccessApiUsageException.class, () -> medicineService.deleteMedicine(medicine0));
 		
 		assertThat(exception.getMessage()).contains("Entity must not be null");
+	}
+	
+	@Test
+	void shouldListMedicinesWithCorrectString() {
+		Collection<Medicine> medicines;
+		String query;
+		Medicine medicine1;
+		
+		query = "";
+		medicines = medicineService.findManyMedicineByName(query);
+		medicine1 = medicineService.findMedicineById(1);
+		
+		assertThat(medicines).isNotNull();
+		assertThat(medicines).isNotEmpty();
+		assertThat(medicines).contains(medicine1);
+	}
+	
+	@Test
+	void shouldListMedicinesWithIncorrectString() {
+		InvalidDataAccessApiUsageException exception;
+		
+		exception = assertThrows(InvalidDataAccessApiUsageException.class, () -> medicineService.findManyMedicineByName(null));
+		
+		assertThat(exception.getMessage()).contains("Value must not be null");
 	}
 
 }
