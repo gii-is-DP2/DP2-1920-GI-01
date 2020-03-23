@@ -29,17 +29,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 public class MedicalRecordController {
 
-	private static final String			SHOW_VIEW				= "medicalRecord/show";
-	private static final String			CREATE_OR_UPDATE_VIEW	= "medicalRecord/form";
-	
+	private static final String		SHOW_VIEW				= "medicalRecord/show";
+	private static final String		CREATE_OR_UPDATE_VIEW	= "medicalRecord/form";
+
 	@Autowired
 	private VisitService			visitService;
-	
+
 	@Autowired
 	private MedicalRecordService	medicalRecordService;
 
 	@Autowired
-	private PrescriptionService 	prescriptionService;
+	private PrescriptionService		prescriptionService;
+
 
 	@Autowired
 	public MedicalRecordController(final MedicalRecordService medicalRecordService, final VisitService visitService) {
@@ -57,13 +58,14 @@ public class MedicalRecordController {
 		MedicalRecord medicalRecord;
 		Visit visit;
 		String result;
-		
+
 		medicalRecord = new MedicalRecord();
 		visit = this.visitService.findVisitById(visitId).get();
 		result = MedicalRecordController.CREATE_OR_UPDATE_VIEW;
-		
+
 		medicalRecord.setVisit(visit);
 		model.put("medicalRecord", medicalRecord);
+		model.put("visit", visit);
 
 		return result;
 	}
@@ -74,14 +76,15 @@ public class MedicalRecordController {
 		String redirection;
 		Visit visit;
 
+		visit = this.visitService.findVisitById(visitId).get();
+		medicalRecord.setVisit(visit);
+
 		if (result.hasErrors()) {
 
 			model.put("medicalRecord", medicalRecord);
 			return MedicalRecordController.CREATE_OR_UPDATE_VIEW;
 		}
 
-		visit = this.visitService.findVisitById(visitId).get();
-		medicalRecord.setVisit(visit);
 		this.medicalRecordService.saveMedicalRecord(medicalRecord);
 
 		medicalRecordId = medicalRecord.getId();
@@ -98,7 +101,7 @@ public class MedicalRecordController {
 		Collection<Prescription> prescriptions;
 
 		medicalRecord = this.medicalRecordService.findMedicalRecordById(medicalRecordId);
-		prescriptions = prescriptionService.findManyByMedicalRecord(medicalRecord);
+		prescriptions = this.prescriptionService.findManyByMedicalRecord(medicalRecord);
 
 		if (medicalRecord == null) {
 			throw new NullPointerException("MedicalRecord not found");
@@ -113,71 +116,70 @@ public class MedicalRecordController {
 	@GetMapping("/owners/*/pets/{petId}/medical-history")
 	public String showVetList(@PathVariable("petId") final int petId, final MedicalRecord medicalRecord, final BindingResult result, final ModelMap model) {
 		Collection<MedicalRecord> res = this.medicalRecordService.findMedicalRecordByPetId(petId);
-		
+
 		model.put("medicalRecords", res);
-		
+
 		return "medicalRecord/list";
 	}
 
-	
 	@GetMapping("/owners/*/pets/*/visits/{visitId}/medical-record/update")
-	public String initUpdateForm(@RequestParam(value = "id", required = true) Integer medicalRecordId, ModelMap model) {
+	public String initUpdateForm(@RequestParam(value = "id", required = true) final Integer medicalRecordId, final ModelMap model) {
 		MedicalRecord medicalRecord;
-		
-		medicalRecord = medicalRecordService.findMedicalRecordById(medicalRecordId);
-		
-		if(medicalRecord == null) {
+
+		medicalRecord = this.medicalRecordService.findMedicalRecordById(medicalRecordId);
+
+		if (medicalRecord == null) {
 			throw new NullPointerException("MedicalRecord not found");
 		}
-		
+
 		model.put("medicalRecord", medicalRecord);
-		
-		return CREATE_OR_UPDATE_VIEW;
+
+		return MedicalRecordController.CREATE_OR_UPDATE_VIEW;
 	}
-		 
+
 	@PostMapping("/owners/*/pets/*/visits/{visitId}/medical-record/update")
-	public String proccessUpdateForm(@PathVariable("visitId") final int visitId, @RequestParam(value = "id", required = true) Integer medicalRecordId, @Valid MedicalRecord medicalRecord, BindingResult result, ModelMap model) {
+	public String proccessUpdateForm(@PathVariable("visitId") final int visitId, @RequestParam(value = "id", required = true) final Integer medicalRecordId, @Valid final MedicalRecord medicalRecord, final BindingResult result, final ModelMap model) {
 		String redirection;
 		MedicalRecord medicalRecordToUpdate;
 		Visit visit;
-		
-		if(medicalRecord == null) {
+
+		if (medicalRecord == null) {
 			throw new NullPointerException("MedicalRecord not found");
 		}
-		
-		visit = visitService.findVisitById(visitId).get();
+
+		visit = this.visitService.findVisitById(visitId).get();
 		medicalRecord.setVisit(visit);
-		
-		if(result.hasErrors()) {
+
+		if (result.hasErrors()) {
 			model.put("medicalRecord", medicalRecord);
-			return CREATE_OR_UPDATE_VIEW;
+			return MedicalRecordController.CREATE_OR_UPDATE_VIEW;
 		}
-		
-		medicalRecordToUpdate = medicalRecordService.findMedicalRecordById(medicalRecordId);
-		
+
+		medicalRecordToUpdate = this.medicalRecordService.findMedicalRecordById(medicalRecordId);
+
 		BeanUtils.copyProperties(medicalRecord, medicalRecordToUpdate, "id", "name");
-		medicalRecordService.saveMedicalRecord(medicalRecordToUpdate);
-		
+		this.medicalRecordService.saveMedicalRecord(medicalRecordToUpdate);
+
 		String petId = visit.getPet().getId().toString();
 		String ownerId = visit.getPet().getOwner().getId().toString();
 		redirection = "redirect:/owners/" + ownerId + "/pets/" + petId + "/visits/" + visitId + "/medical-record/show?id=" + medicalRecordId;
-		
+
 		return redirection;
 	}
-	
+
 	@GetMapping("/owners/{ownerId}/pets/{petId}/visits/*/medical-record/delete")
-	public String deleteMedicalReport(@PathVariable("ownerId") final int ownerId, @PathVariable("petId") final int petId, @RequestParam(value = "id", required = true) Integer medicalRecordId, ModelMap model) {
+	public String deleteMedicalReport(@PathVariable("ownerId") final int ownerId, @PathVariable("petId") final int petId, @RequestParam(value = "id", required = true) final Integer medicalRecordId, final ModelMap model) {
 		MedicalRecord medicalRecord;
-		
-		medicalRecord = medicalRecordService.findMedicalRecordById(medicalRecordId);
-		
-		if(medicalRecord == null) {
+
+		medicalRecord = this.medicalRecordService.findMedicalRecordById(medicalRecordId);
+
+		if (medicalRecord == null) {
 			throw new NullPointerException("Medicine not found");
 		}
-		
-		prescriptionService.deleteAllAssociated(medicalRecord);
-		medicalRecordService.deleteMedicalRecord(medicalRecord);
-		
+
+		this.prescriptionService.deleteAllAssociated(medicalRecord);
+		this.medicalRecordService.deleteMedicalRecord(medicalRecord);
+
 		return "redirect:/owners/" + ownerId + "/pets/" + petId + "/medical-history";
 	}
 
