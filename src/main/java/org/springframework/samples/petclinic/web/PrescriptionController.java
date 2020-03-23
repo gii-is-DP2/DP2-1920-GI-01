@@ -2,8 +2,6 @@ package org.springframework.samples.petclinic.web;
 
 import java.util.Collection;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.MedicalRecord;
 import org.springframework.samples.petclinic.model.Medicine;
@@ -60,7 +58,7 @@ public class PrescriptionController {
 		petType = medicalRecord.getVisit().getPet().getType();
 		medicines = medicineService.findByPetType(petType);
 		
-		prescription.setMedicalRecord(medicalRecord);
+		//prescription.setMedicalRecord(medicalRecord);
 		model.put("prescription", prescription);
 		model.put("medicines", medicines);
 		
@@ -68,15 +66,19 @@ public class PrescriptionController {
 	}
 	
 	@PostMapping("/create")
-	public String proccessCreationForm(@PathVariable("medical-recordId") Integer medicalRecordId, @Valid Prescription prescription, BindingResult result, ModelMap model) {
+	public String proccessCreationForm(@PathVariable("medical-recordId") Integer medicalRecordId, Prescription prescription, BindingResult result, ModelMap model) {
 		String ownerId;
 		String petId;
 		String visitId;
 		String redirection;
 		MedicalRecord medicalRecord;
+		PrescriptionValidator validator;
 		
+		validator = new PrescriptionValidator();
 		medicalRecord = medicalRecordService.findMedicalRecordById(medicalRecordId);
 		prescription.setMedicalRecord(medicalRecord);
+		
+		validator.validate(prescription, result);
 		
 		if(result.hasErrors()) {
 			model.put("prescription", prescription);
