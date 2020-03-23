@@ -50,6 +50,12 @@
 					<span class= "glyphicon glyphicon-plus" aria-hidden="true"></span>
 					<span>Medicines</span>
 				</petclinic:menuItem>
+				
+				<petclinic:menuItem active="${name eq 'organizations'}" url="/organizations"
+					title="organizations">
+					<span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+					<span>Organizations</span>
+				</petclinic:menuItem>
 
 			</ul>
 
