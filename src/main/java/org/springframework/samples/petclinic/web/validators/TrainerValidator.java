@@ -41,8 +41,8 @@ public class TrainerValidator implements Validator {
 			errors.rejectValue("email", REQUIRED + " and should match the following pattern: acme@example.com", REQUIRED + " and should match the following pattern: acme@example.com");
 		}
 		
-		if(StringHelper.isNullOrEmptyString(phone) || !phone.matches("[0-9]+")) {
-			errors.rejectValue("phone", REQUIRED + " and should be added and it should contain only numbers", REQUIRED + " and should be added and it should contain only numbers");
+		if(StringHelper.isNullOrEmptyString(phone) || !phone.matches("^\\d{1,3}[\\s-]\\d{1,9}$")) {
+			errors.rejectValue("phone", REQUIRED + " and should match the following pattern: 34 123456789", REQUIRED + " and should match the following pattern: 34 123456789");
 		}
 		
 	}

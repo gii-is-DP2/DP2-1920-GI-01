@@ -22,7 +22,7 @@ public class VisitValidator implements Validator {
 		Visit visit = (Visit) target;
 		LocalDate date = visit.getDate();
 		
-		if(date == null || date.isBefore(LocalDate.now())) {
+		if(visit.isNew() && (date == null || date.isBefore(LocalDate.now()))) {
 			errors.rejectValue("date", REQUIRED + " and after current date", REQUIRED + " and after current date");
 		}
 	}

@@ -8,37 +8,39 @@
 <petclinic:layout pageName="events">
     <h2>Trainers</h2>
     
-    <c:if test="${message != null}"><c:out value="${message}"></c:out></c:if>
+    <c:if test="${message != null}"><h3><c:out value="${message}"></c:out></h3><br/></c:if>
 
-    <table id="trainersTable" class="table table-striped">
-        <thead>
-        <tr>
-            <th style="width: 300px;">Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach items="${trainers}" var="trainer">
-            <tr>
-                <td>
-                	<spring:url value="/admin/trainers/{trainerId}" var="trainerUrl">
-                        <spring:param name="trainerId" value="${trainer.id}"/>
-                    </spring:url>
-                    <a href="${fn:escapeXml(trainerUrl)}">
-                    	<c:out value="${trainer.firstName} ${trainer.lastName}"/>
-                    </a>
-                </td>
-                <td>
-                    <c:out value="${trainer.email}"/>
-                </td>
-                <td>
-                    <c:out value="${trainer.phone}"/>
-                </td>
-            </tr>
-        </c:forEach>
-        </tbody>
-    </table>
+	<c:if test="${message == null}">
+	    <table id="trainersTable" class="table table-striped">
+	        <thead>
+	        <tr>
+	            <th style="width: 300px;">Name</th>
+	            <th>Email</th>
+	            <th>Phone</th>
+	        </tr>
+	        </thead>
+	        <tbody>
+	        <c:forEach items="${trainers}" var="trainer">
+	            <tr>
+	                <td>
+	                	<spring:url value="/admin/trainers/{trainerId}" var="trainerUrl">
+	                        <spring:param name="trainerId" value="${trainer.id}"/>
+	                    </spring:url>
+	                    <a href="${fn:escapeXml(trainerUrl)}">
+	                    	<c:out value="${trainer.firstName} ${trainer.lastName}"/>
+	                    </a>
+	                </td>
+	                <td>
+	                    <c:out value="${trainer.email}"/>
+	                </td>
+	                <td>
+	                    <c:out value="${trainer.phone}"/>
+	                </td>
+	            </tr>
+	        </c:forEach>
+	        </tbody>
+	    </table>
+    </c:if>
     
     <spring:url value="/admin/trainers/new" var="trainerUrl">
     </spring:url>

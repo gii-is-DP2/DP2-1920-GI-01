@@ -1,10 +1,13 @@
 package org.springframework.samples.petclinic.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows; 
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Optional;
+
+import javax.validation.ConstraintViolationException;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +54,22 @@ public class VisitServiceTests {
 		this.petService.saveVisit(visit);
 		
 		assertThat(visit.getId()).isNotEqualTo(0);
+	}
+	
+	@Test
+	void shouldNotInsertVisitWithDescriptionEmpty() {
+		ConstraintViolationException exception;
+		Visit visit = new Visit();
+		
+		visit.setDescription("");
+		visit.setDate(LocalDate.of(2020, Month.DECEMBER, 24));
+		Pet pet = new Pet();
+		pet.setName("petTestName");
+		pet.setBirthDate(LocalDate.of(2018, Month.AUGUST, 17));
+		visit.setPet(pet);
+
+		exception = assertThrows(ConstraintViolationException.class, () -> this.petService.saveVisit(visit));
+		assertThat(exception.getMessage()).contains("Validation failed");
 	}
 	
 	@Test

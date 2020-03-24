@@ -8,6 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.time.LocalDate;
+import java.time.Month;
+
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,6 +52,11 @@ public class HomelessPetControllerTests {
 		PetType dog = new PetType();
 		dog.setId(1);
 		dog.setName("dog");
+		Pet petForDuplicateNameTest = new Pet();
+		petForDuplicateNameTest.setName("Tucker");
+		petForDuplicateNameTest.setBirthDate(LocalDate.of(2018, Month.AUGUST, 17));
+		petForDuplicateNameTest.setType(dog);
+		given(this.petService.findHomelessPets()).willReturn(Lists.newArrayList(petForDuplicateNameTest));
 		given(this.petService.findPetTypes()).willReturn(Lists.newArrayList(dog));
 		given(this.petService.findPetById(TEST_PET_ID)).willReturn(new Pet());
 		given(this.petService.findPetById(TEST_PET_ID_2)).willReturn(null);

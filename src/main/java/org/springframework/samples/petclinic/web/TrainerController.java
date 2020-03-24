@@ -59,7 +59,9 @@ public class TrainerController {
 		String view = "trainers/showTrainer";
     trainer = this.trainerService.findTrainerById(trainerId);
     if(trainer.isPresent()) {
-      modelMap.addAttribute("trainer", trainer.get());
+    	modelMap.addAttribute("trainer", trainer.get());
+    } else {
+    	modelMap.addAttribute("message", "Trainer not found!");
     }
     return view;
   }
@@ -71,7 +73,9 @@ public class TrainerController {
 		trainer = this.trainerService.findTrainerById(trainerId);
 		if(trainer.isPresent()) {
 			mav.addObject("trainer", trainer.get());
-		}
+		} else {
+	    	mav.addObject("message", "Trainer not found!");
+	    }
 		return mav;
 	}
 	
@@ -97,6 +101,8 @@ public class TrainerController {
 		Optional<Trainer> trainer = this.trainerService.findTrainerById(trainerId);
 		if(trainer.isPresent()) {
 			modelMap.put("trainer", trainer.get());
+		} else {
+			modelMap.addAttribute("message", "Trainer not found!");
 		}
 		return "admin/trainers/editTrainer";
 	}
