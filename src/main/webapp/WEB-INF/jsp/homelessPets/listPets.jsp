@@ -8,7 +8,7 @@
 
     <h2>Homeless Pets and their Visits</h2>
     
-    <c:if test="${message != null}"><c:out value="${message}"></c:out></c:if>
+    <c:if test="${message != null}"><h3><c:out value="${message}"></c:out></h3></c:if>
 
     <table class="table table-striped">
         <c:forEach var="pet" items="${homelessPets}">

@@ -8,28 +8,33 @@
 
     <h2>Trainer Information</h2>
 
-    <table class="table table-striped">
-        <tr>
-            <th>Name</th>
-            <td><b><c:out value="${trainer.firstName} ${trainer.lastName}"/></b></td>
-        </tr>
-        <tr>
-            <th>Email</th>
-            <td><c:out value="${trainer.email}"/></td>
-        </tr>
-        <tr>
-            <th>Phone</th>
-            <td><c:out value="${trainer.phone}"/></td>
-        </tr>
-    </table>
-    
-    <spring:url value="/admin/trainers/{trainerId}/edit" var="trainerUrl">
-    	<spring:param name="trainerId" value="${trainer.id}"/>
-    </spring:url>
-    <a href="${fn:escapeXml(trainerUrl)}">Edit</a>
-    <spring:url value="/admin/trainers/{trainerId}/delete" var="trainerUrl2">
-        <spring:param name="trainerId" value="${trainer.id}"/>
-    </spring:url>
-    <a href="${fn:escapeXml(trainerUrl2)}">Delete</a>
+	<c:if test="${message != 'Trainer not found!'}">
+	    <table class="table table-striped">
+	        <tr>
+	            <th>Name</th>
+	            <td><b><c:out value="${trainer.firstName} ${trainer.lastName}"/></b></td>
+	        </tr>
+	        <tr>
+	            <th>Email</th>
+	            <td><c:out value="${trainer.email}"/></td>
+	        </tr>
+	        <tr>
+	            <th>Phone</th>
+	            <td><c:out value="${trainer.phone}"/></td>
+	        </tr>
+	    </table>
+	    
+	    <spring:url value="/admin/trainers/{trainerId}/edit" var="trainerUrl">
+	    	<spring:param name="trainerId" value="${trainer.id}"/>
+	    </spring:url>
+	    <a href="${fn:escapeXml(trainerUrl)}">Edit</a>
+	    <spring:url value="/admin/trainers/{trainerId}/delete" var="trainerUrl2">
+	        <spring:param name="trainerId" value="${trainer.id}"/>
+	    </spring:url>
+	    <a href="${fn:escapeXml(trainerUrl2)}">Delete</a>
+	</c:if>
+	<c:if test="${message == 'Trainer not found!'}">
+		<h3>Trainer not found!</h3>
+	</c:if>
 
 </petclinic:layout>

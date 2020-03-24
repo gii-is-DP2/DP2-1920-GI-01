@@ -83,7 +83,7 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (2, 8, '2013-01-02',
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (3, 8, '2013-01-03', 'neutered');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04', 'spayed');
 
-INSERT INTO trainers VALUES (1, 'John', 'Doe', 'acme@mail.com', '111111111', 'trainer1');
+INSERT INTO trainers VALUES (1, 'John', 'Doe', 'acme@mail.com', '34 111111111', 'trainer1');
 
 -- Homeless pets' visits from now on
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (5, 14, '2018-07-09', 'Description 1');

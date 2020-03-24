@@ -77,6 +77,14 @@ public class TrainerControllerTests {
 	
 	@WithMockUser(value = "spring")
 	@Test
+	void testShowTrainerAsUnregisteredUserHasErrors() throws Exception {
+		mockMvc.perform(get("/trainers/-1")).andExpect(status().isOk())
+			.andExpect(view().name("trainers/showTrainer"))
+			.andExpect(model().attributeExists("message"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
 	void testListTrainersAsAdministrator() throws Exception {
 		mockMvc.perform(get("/admin/trainers")).andExpect(status().isOk())
 			.andExpect(view().name("admin/trainers/listTrainers"))
@@ -89,6 +97,14 @@ public class TrainerControllerTests {
 		mockMvc.perform(get("/admin/trainers/{trainerId}", TEST_TRAINER_ID)).andExpect(status().isOk())
 			.andExpect(view().name("admin/trainers/showTrainer"))
 			.andExpect(model().attributeExists("trainer"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testShowTrainerAsAdministratorHasErrors() throws Exception {
+		mockMvc.perform(get("/admin/trainers/-1")).andExpect(status().isOk())
+			.andExpect(view().name("admin/trainers/showTrainer"))
+			.andExpect(model().attributeExists("message"));
 	}
 	
 	@WithMockUser(value = "spring")
@@ -107,7 +123,7 @@ public class TrainerControllerTests {
 							.param("firstName", "testFirstName")
 							.param("lastName", "testLastName")
 							.param("email", "test@test.com")
-							.param("phone", "999999999")
+							.param("phone", "34 999999999")
 							.param("user.username", "testing")
 							.param("user.password", "testing"))
 				.andExpect(status().is3xxRedirection())
@@ -122,7 +138,7 @@ public class TrainerControllerTests {
 							.param("firstName", "")
 							.param("lastName", "testLastName")
 							.param("email", "test@test.com")
-							.param("phone", "999999999")
+							.param("phone", "34 999999999")
 							.param("user.username", "testing")
 							.param("user.password", "testing"))
 				.andExpect(model().attributeHasErrors("trainer"))
@@ -142,13 +158,23 @@ public class TrainerControllerTests {
 	
 	@WithMockUser(value = "spring")
 	@Test
+	void testInitUpdateFormHasErrors() throws Exception {
+		mockMvc.perform(get("/admin/trainers/-1/edit"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeExists("message"))
+				.andExpect(view().name("admin/trainers/editTrainer"));
+			
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
 	void testProcessUpdateFormSuccess() throws Exception {
 		mockMvc.perform(post("/admin/trainers/{trainerId}/edit", TEST_TRAINER_ID)
 							.with(csrf())
 							.param("firstName", "John")
 							.param("lastName", "Doe")
 							.param("email", "acme@mail.com")
-							.param("phone", "999999999")
+							.param("phone", "34 999999999")
 							.param("user.username", "testing")
 							.param("user.password", "testing"))
 				.andExpect(status().is3xxRedirection())
@@ -176,6 +202,14 @@ public class TrainerControllerTests {
 	void testDelete() throws Exception {
 		mockMvc.perform(get("/admin/trainers/{trainerId}/delete", TEST_TRAINER_ID)).andExpect(status().isOk())
 				.andExpect(view().name("admin/trainers/listTrainers"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testDeleteHasErrors() throws Exception {
+		mockMvc.perform(get("/admin/trainers/-1/delete")).andExpect(status().isOk())
+			.andExpect(model().attributeExists("message"))
+			.andExpect(view().name("admin/trainers/listTrainers"));
 	}
 	
 }

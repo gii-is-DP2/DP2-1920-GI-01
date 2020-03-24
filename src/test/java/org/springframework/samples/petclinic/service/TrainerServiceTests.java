@@ -1,11 +1,12 @@
 package org.springframework.samples.petclinic.service;
 
-import static org.assertj.core.api.Assertions.assertThat; 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows; 
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import javax.validation.ConstraintViolationException;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public class TrainerServiceTests {
 		trainer.setFirstName("testFirstName");
 		trainer.setLastName("testLastName");
 		trainer.setEmail("email@test.com");
-		trainer.setPhone("999999999");
+		trainer.setPhone("34 999999999");
 		
 		User user = new User();
 		user.setUsername("testTrainerUsername");
@@ -76,7 +77,28 @@ public class TrainerServiceTests {
 	
 	@Test
 	@Transactional
-	void shouldUpdateTrainerName() throws Exception {
+	void shouldNotInsertTrainerWithFirstNameBlank() {
+		Trainer trainer = new Trainer();
+		ConstraintViolationException exception;
+		
+		trainer.setFirstName("");
+		trainer.setLastName("testLastName");
+		trainer.setEmail("email@test.com");
+		trainer.setPhone("34 999999999");
+		
+		User user = new User();
+		user.setUsername("testTrainerUsername");
+		user.setPassword("testTrainerPassword");
+		user.setEnabled(true);
+		trainer.setUser(user);
+		
+		exception = assertThrows(ConstraintViolationException.class, () -> this.trainerService.saveTrainer(trainer));
+		assertThat(exception.getMessage()).contains("Validation failed");
+	}
+	
+	@Test
+	@Transactional
+	void shouldUpdateTrainerFirstName() throws Exception {
 		Optional<Trainer> trainer1 = this.trainerService.findTrainerById(1);
 		String oldFirstName, newFirstName;
 		
@@ -95,7 +117,7 @@ public class TrainerServiceTests {
 	
 	@Test
 	@Transactional
-	void shouldDeleteTrainer() {
+	void shouldDeleteTrainerWithCorrectId() {
 		Optional<Trainer> trainer1 = this.trainerService.findTrainerById(1);
 		
 		assertThat(trainer1.isPresent()).isEqualTo(true);

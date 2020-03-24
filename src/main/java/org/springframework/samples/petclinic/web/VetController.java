@@ -87,10 +87,12 @@ public class VetController {
 	@GetMapping("/vets/{vetId}")
 	public ModelAndView showVet(@PathVariable("vetId") final int vetId) {
 		Optional<Vet> vet;
-		ModelAndView mav = new ModelAndView("/vets/vetDetails");
+		ModelAndView mav = new ModelAndView("vets/vetDetails");
 		vet = this.vetService.findVetById(vetId);
 		if (vet.isPresent()) {
 			mav.addObject("vet", vet.get());
+		} else {
+			mav.addObject("message", "Vet not found!");
 		}
 		return mav;
 	}
@@ -103,6 +105,8 @@ public class VetController {
 		vet = this.vetService.findVetById(vetId);
 		if(vet.isPresent()) {
 			mav.addObject("vet", vet.get());
+		} else {
+			mav.addObject("message", "Vet not found!");
 		}
 		return mav;
 	}
@@ -153,6 +157,8 @@ public class VetController {
 		Optional<Vet> vet = this.vetService.findVetById(vetId);
 		if (vet.isPresent()) {
 			modelMap.put("vet", vet.get());
+		} else {
+			modelMap.addAttribute("message", "Vet not found!");
 		}
 		return "admin/vets/vetEdit";
 	}

@@ -1,6 +1,6 @@
 package org.springframework.samples.petclinic.web;
 
-import java.util.Map;
+import java.util.Map; 
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.service.PetService;
+import org.springframework.samples.petclinic.web.HomelessPetController;
 import org.springframework.samples.petclinic.service.VisitService;
 import org.springframework.samples.petclinic.web.validators.VisitValidator;
 import org.springframework.stereotype.Controller;
@@ -64,7 +65,11 @@ public class VisitHomelessPetController {
 	public String initEditVisitHomelessPetForm(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, ModelMap model) {
 		String view = "homelessPets/editVisit";
 		Optional<Visit> visit = this.visitService.findVisitById(visitId);
-		model.addAttribute("visit", visit.get());
+		if(visit.isPresent()) {
+			model.addAttribute("visit", visit.get());
+		} else {
+			model.addAttribute("message", "Visit not found!");
+		}
 		return view;
 	}
 	

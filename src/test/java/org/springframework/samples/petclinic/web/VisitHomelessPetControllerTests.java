@@ -105,6 +105,15 @@ public class VisitHomelessPetControllerTests {
 	
 	@WithMockUser(value = "spring")
 	@Test
+	void testInitEditVisitHomelessPetFormHasErrors() throws Exception {
+		mockMvc.perform(get("/homeless-pets/{petId}/visits/-1/edit", TEST_PET_ID))
+				.andExpect(status().isOk())
+				.andExpect(view().name("homelessPets/editVisit"))
+				.andExpect(model().attributeExists("message"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
 	void testProcessEditVisitHomelessPetFormSuccess() throws Exception {
 		mockMvc.perform(post("/homeless-pets/{petId}/visits/{visitId}/edit", TEST_PET_ID, TEST_VISIT_ID)
 						.with(csrf())
@@ -129,6 +138,15 @@ public class VisitHomelessPetControllerTests {
 	@Test
 	void deleteVisitHomelessPet() throws Exception {
 		mockMvc.perform(get("/homeless-pets/{petId}/visits/{visitId}/delete", TEST_PET_ID, TEST_VISIT_ID)
+						.with(csrf()))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/homeless-pets"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void deleteVisitHomelessPetHasErrors() throws Exception {
+		mockMvc.perform(get("/homeless-pets/{petId}/visits/-1/delete", TEST_PET_ID)
 						.with(csrf()))
 				.andExpect(status().is3xxRedirection())
 				.andExpect(view().name("redirect:/homeless-pets"));

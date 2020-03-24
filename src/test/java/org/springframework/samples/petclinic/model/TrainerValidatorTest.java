@@ -141,7 +141,7 @@ public class TrainerValidatorTest extends ValidatorTests {
 		trainer.setFirstName("testFirstName");
 		trainer.setLastName("testLastName");
 		trainer.setEmail("example@test.com");
-		trainer.setPhone("999999999");
+		trainer.setPhone("34 999999999");
 		User user = new User();
 		user.setUsername("testing");
 		user.setPassword("testing");
@@ -162,7 +162,7 @@ public class TrainerValidatorTest extends ValidatorTests {
 		trainer.setFirstName("");
 		trainer.setLastName("testLastName");
 		trainer.setEmail("example@test.com");
-		trainer.setPhone("999999999");
+		trainer.setPhone("34 999999999");
 		User user = new User();
 		user.setUsername("testing");
 		user.setPassword("testing");
@@ -185,7 +185,7 @@ public class TrainerValidatorTest extends ValidatorTests {
 		trainer.setFirstName("testFirstName");
 		trainer.setLastName("");
 		trainer.setEmail("example@test.com");
-		trainer.setPhone("999999999");
+		trainer.setPhone("34 999999999");
 		User user = new User();
 		user.setUsername("testing");
 		user.setPassword("testing");
@@ -208,7 +208,7 @@ public class TrainerValidatorTest extends ValidatorTests {
 		trainer.setFirstName("testFirstName");
 		trainer.setLastName("testLastName");
 		trainer.setEmail("noEmailPattern");
-		trainer.setPhone("999999999");
+		trainer.setPhone("34 999999999");
 		User user = new User();
 		user.setUsername("testing");
 		user.setPassword("testing");
@@ -244,7 +244,7 @@ public class TrainerValidatorTest extends ValidatorTests {
 		
 		assertThat(errors.hasFieldErrors("phone")).isEqualTo(true);
 		assertThat(errors.getFieldError("phone").getDefaultMessage()) //
-			.startsWith("required and should be added and it should contain only numbers");
+			.startsWith("required and should match the following pattern: 34 123456789");
 	}
 	
 }
