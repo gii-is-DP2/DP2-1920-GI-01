@@ -36,7 +36,7 @@
         <form:form modelAttribute="rehab" class="form-horizontal">
             <div class="form-group has-feedback">
                 <petclinic:inputField label="Date" name="date"/>
-             <petclinic:inputField label="Time" name="description"/>
+		<petclinic:inputField label="Time" name="time"/>
                 <petclinic:inputField label="Description" name="description"/>
             </div>
 
@@ -56,11 +56,11 @@
                 <th>Time</th>
                 <th>Description</th>
             </tr>
-            <c:forEach var="rehab" items="${rehab.pet.rehab}">
+            <c:forEach var="rehab" items="${rehab.pet.rehabs}"> 
                 <c:if test="${!rehab['new']}">
                     <tr>
                         <td><petclinic:localDate date="${rehab.date}" pattern="yyyy/MM/dd"/></td>
-                        <td><c:out value="${rehab.time}"/></td>
+                  		<td><c:out value="${rehab.time}"/></td>
                         <td><c:out value="${rehab.description}"/></td>
                     </tr>
                 </c:if>
@@ -70,4 +70,4 @@
 
 </petclinic:layout>
 
- 
+

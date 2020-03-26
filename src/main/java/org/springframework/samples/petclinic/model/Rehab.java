@@ -23,8 +23,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
-
-import java.sql.Time;
 import java.time.LocalDate;
 
 /**
@@ -36,18 +34,26 @@ import java.time.LocalDate;
 @Table(name = "rehab")
 public class Rehab extends BaseEntity {
 
+	/**
+	 * Holds value of property date.
+	 */	
 	@Column(name = "rehab_date")        
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private LocalDate date;
 
 	@Column(name = "rehab_time")        
-	@DateTimeFormat(pattern = "yyyy/MM/dd")
-	private Time time1;
+	private Integer time;
 
-	@NotEmpty
+
+	
+	/**
+	 * Holds value of property description.
+	 */	
 	@Column(name = "description")
 	private String description;
 
+	
+	
 	/**
 	 * Holds value of property pet.
 	 */
@@ -55,13 +61,14 @@ public class Rehab extends BaseEntity {
 	@JoinColumn(name = "pet_id")
 	private Pet pet;
 
-	private Time time;
-
-	
+	/**
+	 * Creates a new instance of Visit for the current date
+	 */
 	public Rehab() {
 		this.date = LocalDate.now();
 	}
 
+	
 	public LocalDate getDate() {
 		return this.date;
 	}
@@ -71,14 +78,14 @@ public class Rehab extends BaseEntity {
 	}
 
 	
-	public Time getStartTime() {
-		return this.time1;
-			}
-
-	public void setStartTime(Time time1) {
-		this.time = time1;
+	public Integer getTime() {
+		return this.time;
 	}
-		
+	
+	public void setTime(Integer time) {
+		this.time = time;
+	}
+	
 	
 	public String getDescription() {
 		return this.description;
@@ -100,4 +107,7 @@ public class Rehab extends BaseEntity {
 	}
 
 }
+
+
+
 

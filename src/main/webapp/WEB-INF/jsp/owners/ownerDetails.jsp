@@ -94,10 +94,11 @@
         </c:forEach>
     </table>
 
- <h2>Pets and Rehabilitation</h2>
+<h2>Pets and Rehabilitation</h2>
     <table class="table table-striped">
         <c:forEach var="pet" items="${owner.pets}">
-
+        
+        
             <tr>
                 <td valign="top">
                     <dl class="dl-horizontal">
@@ -109,40 +110,40 @@
                         <dd><c:out value="${pet.type.name}"/></dd>
                     </dl>
                 </td>
-                
+
                 <td valign="top">
                     <table class="table-condensed">
                         <thead>
                         <tr>
                             <th>Rehabilitation Date</th>
+                  			<th>Rehabilitation Time</th>
                             <th>Rehabilitation Description</th>
-                            <th>Rehabilitation Time</th>
                         </tr>
                         </thead>
-                        <c:forEach var="rehab" items="${pet.rehab}">
+               
+                            <c:forEach var="rehab" items="${pet.rehabs}">
                             <tr>
-                                <td><petclinic:localDate date="${rehab.rehabDate}" pattern="yyyy-MM-dd"/></td>
-                                <td><c:out value="${rehab.rehabDescription}"/></td>
-                                <td><c:out value="${rehab.rehabTime}"/></td>
+                                <td><petclinic:localDate date="${rehab.date}" pattern="yyyy-MM-dd"/></td>
+                                         <td><c:out value="${rehab.time}"/></td>
+                                <td><c:out value="${rehab.description}"/></td>
                             </tr>
-                        </c:forEach>
+                        </c:forEach>         
+           
                         <tr>
                              <td>
                                 <spring:url value="/owners/{ownerId}/pets/{petId}/rehab/new" var="rehabUrl">
                                     <spring:param name="ownerId" value="${owner.id}"/>
                                     <spring:param name="petId" value="${pet.id}"/>
                                 </spring:url>
-                                <a href="${fn:escapeXml(rehabUrl)}">Add Rehab</a>
+                                <a href="${fn:escapeXml(rehabUrl)}">Add Rehab</a>                         
+                                                                                        
                             </td>
                         </tr>
                     </table>
                 </td>
-                
             </tr>
-
         </c:forEach>
     </table>
-
 </petclinic:layout>
 
 

@@ -84,7 +84,7 @@ public class RehabController {
 
 	@GetMapping(value = "/owners/*/pets/{petId}/rehab")
 	public String showRehabs(@PathVariable int petId, Map<String, Object> model) {
-		model.put("rehab", this.petService.findPetById(petId).getRehabs());
+		model.put("rehabs", this.petService.findPetById(petId).getRehabs());
 		return "rehabList";
 	}
 
