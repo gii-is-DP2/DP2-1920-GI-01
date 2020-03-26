@@ -96,3 +96,4 @@ INSERT INTO medicine VALUES (1, 'Cat medicine', '2023-05-22', 'Maker', 1);
 INSERT INTO medicine VALUES (2, 'Dog medicine', '2023-05-22', 'Maker', 2);
 
 INSERT INTO prescription(id, medicine_id, medical_record_id, dose) VALUES (1, 1, 1, 'Every 24 hours');
+
