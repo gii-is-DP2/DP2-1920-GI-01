@@ -16,30 +16,23 @@
 package org.springframework.samples.petclinic.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows; 
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Optional;
+
+import javax.validation.ConstraintViolationException;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.dao.DataAccessException;
-import org.springframework.samples.petclinic.model.Owner;
-import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.model.PetType;
+import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
-import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.model.User;
-import org.springframework.samples.petclinic.model.Authorities;
-import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
 import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -79,6 +72,22 @@ class VetServiceTests {
 	protected VetService vetService;	
 
 	@Test
+	void shouldNotFindVetWithIncorrectId() {
+		Optional<Vet> noVet = this.vetService.findVetById(-1);
+		
+		assertThat(noVet.isPresent()).isEqualTo(false);
+	}
+	
+	@Test
+	void shouldFindVetWithCorrectId() {
+		Optional<Vet> vet1 = this.vetService.findVetById(1);
+	
+		assertThat(vet1.isPresent()).isEqualTo(true);
+		assertThat(vet1.get().getFirstName()).isEqualTo("James");
+		assertThat(vet1.get().getLastName()).isEqualTo("Carter");
+	}
+	
+	@Test
 	void shouldFindVets() {
 		Collection<Vet> vets = this.vetService.findVets();
 
@@ -89,5 +98,89 @@ class VetServiceTests {
 		assertThat(vet.getSpecialties().get(1).getName()).isEqualTo("surgery");
 	}
 
+	@Test
+	void shouldFindAllSpecialties() {
+		Collection<Specialty> specialties = this.vetService.findAllSpecialty();
+		Specialty specialty1 = EntityUtils.getById(specialties, Specialty.class, 1);
+		Specialty specialty2 = EntityUtils.getById(specialties, Specialty.class, 2);
+		Specialty specialty3 = EntityUtils.getById(specialties, Specialty.class, 3);
+	
+		assertThat(specialty1.getName()).isEqualTo("radiology");
+		assertThat(specialty2.getName()).isEqualTo("surgery");
+		assertThat(specialty3.getName()).isEqualTo("dentistry");
+	}
+	
+	@Test
+	@Transactional
+	void shouldInsertVet() {
+		Collection<Vet> vets = this.vetService.findVets();
+		int found = vets.size();
+		
+		Vet vet = new Vet();
+		vet.setFirstName("testFirstName");
+		vet.setLastName("testLastName");
+		vet.setSpecialties(new ArrayList<Specialty>());
+		User user = new User();
+		user.setUsername("testVetUsername");
+		user.setPassword("testVetPassword");
+		user.setEnabled(true);
+		vet.setUser(user);
+		
+		this.vetService.saveVet(vet);
+		
+		assertThat(vet.getId()).isNotEqualTo(0);
+		vets = this.vetService.findVets();
+		assertThat(vets.size()).isEqualTo(found + 1);
+	}
+	
+	@Test
+	@Transactional
+	void shouldNotInsertVetWithFirstNameBlank() {
+		ConstraintViolationException exception;
+		Vet vet = new Vet();
+		
+		vet.setFirstName("");
+		vet.setLastName("testLastName");
+		vet.setSpecialties(new ArrayList<Specialty>());
+		User user = new User();
+		user.setUsername("testVetUsername");
+		user.setPassword("testVetPassword");
+		user.setEnabled(true);
+		vet.setUser(user);
+		
+		exception = assertThrows(ConstraintViolationException.class, () -> this.vetService.saveVet(vet));
+		assertThat(exception.getMessage()).contains("Validation failed");
+		
+	}
+	
+	@Test
+	@Transactional
+	void shouldUpdateVetName() {
+		Optional<Vet> vet1 = this.vetService.findVetById(1);
+		String oldFirstName, newFirstName;
+		
+		assertThat(vet1.isPresent()).isEqualTo(true);
+		oldFirstName = vet1.get().getFirstName();
+		newFirstName = oldFirstName + "Test";
+		vet1.get().setFirstName(newFirstName);
+		
+		this.vetService.saveVet(vet1.get());
+		
+		vet1 = this.vetService.findVetById(1);
+		assertThat(vet1.isPresent()).isEqualTo(true);
+		assertThat(vet1.get().getFirstName()).isEqualTo(newFirstName);
+	}
+	
+	@Test
+	@Transactional
+	void shouldDeleteVet() {
+		Optional<Vet> vet1 = this.vetService.findVetById(1);
+		
+		assertThat(vet1.isPresent()).isEqualTo(true);
+		this.vetService.deleteVet(vet1.get());
+		
+		vet1 = this.vetService.findVetById(1);
+		assertThat(vet1.isPresent()).isEqualTo(false);
+	}
 
 }

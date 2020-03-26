@@ -18,16 +18,18 @@ package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
 import java.util.List;
-
 import javax.validation.Valid;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.model.Intervention;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Rehab;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.repository.RehabRepository;
+import org.springframework.samples.petclinic.repository.InterventionRepository;
 import org.springframework.samples.petclinic.repository.PetRepository;
 import org.springframework.samples.petclinic.repository.VisitRepository;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
@@ -49,13 +51,16 @@ public class PetService {
 	private VisitRepository			visitRepository;
 
 	private RehabRepository	        rehabRepository;
+  
+	private InterventionRepository	interventionRepository;
 
-
-	@Autowired
-	public PetService(final PetRepository petRepository, final VisitRepository visitRepository, final RehabRepository rehabRepository) {
+		@Autowired
+	public PetService(final PetRepository petRepository, final VisitRepository visitRepository, final InterventionRepository interventionRepository, final RehabRepository rehabRepository) {
 		this.petRepository = petRepository;
 		this.visitRepository = visitRepository;
-		this.rehabRepository = rehabRepository;
+		this.interventionRepository = interventionRepository;
+    this.rehabRepository = rehabRepository;
+
 	}
 
 	@Transactional(readOnly = true)
@@ -76,8 +81,9 @@ public class PetService {
 	@Transactional(rollbackFor = DuplicatedPetNameException.class)
 	public void savePet(final Pet pet) throws DataAccessException, DuplicatedPetNameException {
 		Pet otherPet = new Pet();
+
+		otherPet = pet.getOwner().getPetwithIdDifferent(pet.getName(), pet.getId());
 		if (pet.getOwner() != null && StringUtils.hasLength(pet.getName()) && otherPet != null && otherPet.getId() != pet.getId()) {
-			otherPet = pet.getOwner().getPetwithIdDifferent(pet.getName(), pet.getId());
 			throw new DuplicatedPetNameException();
 		} else {
 			this.petRepository.save(pet);
@@ -96,6 +102,16 @@ public class PetService {
 	//This method allows us to delete a given pet
 	public void deletePet(final Pet pet) throws DataAccessException {
 		this.petRepository.delete(pet);
+	}
+
+	@Transactional
+	public void saveIntervention(final Intervention intervention) throws DataAccessException {
+		this.interventionRepository.save(intervention);
+	}
+
+	public Collection<Intervention> findInterventionsByPetId(final int petId) {
+		return this.interventionRepository.findInterventionByPetId(petId);
+
 	}
 
 	@Transactional

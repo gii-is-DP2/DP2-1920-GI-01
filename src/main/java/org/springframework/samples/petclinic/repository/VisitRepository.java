@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.BaseEntity;
@@ -40,7 +41,12 @@ public interface VisitRepository {
 	 * @see BaseEntity#isNew
 	 */
 	void save(Visit visit) throws DataAccessException;
+	
+	void delete(Visit visit) throws DataAccessException;
 
 	List<Visit> findByPetId(Integer petId);
+	
+	//This method allows us to find a certain visit given an id
+	Optional<Visit> findById(int id) throws DataAccessException;
 
 }

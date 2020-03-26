@@ -16,15 +16,19 @@
 package org.springframework.samples.petclinic.web;
 
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.VetService;
+import org.springframework.samples.petclinic.service.VisitService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -38,11 +42,13 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class VisitController {
 
+	private final VisitService visitService;
 	private final PetService petService;
 
 	@Autowired
-	public VisitController(PetService petService) {
+	public VisitController(PetService petService, VisitService visitService) {
 		this.petService = petService;
+		this.visitService = visitService;
 	}
 
 	@InitBinder

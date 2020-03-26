@@ -22,8 +22,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.Optional;
 
 /**
  * Test class for the {@link VetController}
@@ -32,6 +37,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 		excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class),
 		excludeAutoConfiguration= SecurityConfiguration.class)
 class VetControllerTests {
+	
+	private static final int TEST_VET_ID = 1;
 
 	@Autowired
 	private VetController vetController;
@@ -58,21 +65,170 @@ class VetControllerTests {
 		radiology.setName("radiology");
 		helen.addSpecialty(radiology);
 		given(this.clinicService.findVets()).willReturn(Lists.newArrayList(james, helen));
+		given(this.clinicService.findVetById(TEST_VET_ID)).willReturn(Optional.of(james));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testListVetsAsAdministrator() throws Exception {
+		mockMvc.perform(get("/admin/vets")).andExpect(status().isOk())
+				.andExpect(view().name("admin/vets/vetList"))
+				.andExpect(model().attributeExists("vets"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testListVetsAsUnregisteredUser() throws Exception {
+		mockMvc.perform(get("/vets")).andExpect(status().isOk())
+				.andExpect(view().name("vets/vetList"))
+				.andExpect(model().attributeExists("vets"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testShowVetAsAdministratorHasErrors() throws Exception {
+		mockMvc.perform(get("/admin/vets/-1")).andExpect(status().isOk())
+				.andExpect(view().name("admin/vets/vetShow"))
+				.andExpect(model().attributeExists("message"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testShowVetAsAdministrator() throws Exception {
+		mockMvc.perform(get("/admin/vets/{vetId}", TEST_VET_ID)).andExpect(status().isOk())
+				.andExpect(view().name("admin/vets/vetShow"))
+				.andExpect(model().attributeExists("vet"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testShowVetAsUnregisteredUserHasErrors() throws Exception {
+		mockMvc.perform(get("/vets/-1")).andExpect(status().isOk())
+				.andExpect(view().name("vets/vetDetails"))
+				.andExpect(model().attributeExists("message"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testShowVetAsUnregisteredUser() throws Exception {
+		mockMvc.perform(get("/vets/{vetId}", TEST_VET_ID)).andExpect(status().isOk())
+				.andExpect(view().name("vets/vetDetails"))
+				.andExpect(model().attributeExists("vet"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testInitCreateForm() throws Exception {
+		mockMvc.perform(get("/admin/vets/new")).andExpect(status().isOk())
+				.andExpect(view().name("admin/vets/vetEdit"))
+				.andExpect(model().attributeExists("vet"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testProcessCreateForm() throws Exception {
+		mockMvc.perform(post("/admin/vets/new")
+							.with(csrf())
+							.param("firstName", "testFirstName")
+							.param("lastName", "testLastName")
+							//no specialties
+							.param("user.username", "testing")
+							.param("user.password", "testing"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("admin/vets/vetList"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testProcessCreateFormHasErrors() throws Exception {
+		mockMvc.perform(post("/admin/vets/new")
+							.with(csrf())
+							.param("firstName", "")
+							.param("lastName", "testLastName")
+							//no specialties
+							.param("user.username", "testing")
+							.param("user.password", "testing"))
+				.andExpect(model().attributeHasErrors("vet"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("admin/vets/vetEdit"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testInitUpdateForm() throws Exception {
+		mockMvc.perform(get("/admin/vets/{vetId}/edit", TEST_VET_ID))
+				.andExpect(status().isOk())
+//				.andExpect(model().attributeExists("vet"))
+				.andExpect(view().name("admin/vets/vetEdit"));
+			
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testInitUpdateFormHasErrors() throws Exception {
+		mockMvc.perform(get("/admin/vets/-1/edit"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeExists("message"))
+				.andExpect(view().name("admin/vets/vetEdit"));
+			
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testProcessUpdateFormSuccess() throws Exception {
+		mockMvc.perform(post("/admin/vets/{vetId}/edit", TEST_VET_ID)
+							.with(csrf())
+							.param("firstName", "James")
+							.param("lastName", "Carter")
+							//no specialties
+							.param("user.username", "testing")
+							.param("user.password", "testing"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/admin/vets"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testProcessUpdateFormHasErrors() throws Exception {
+		mockMvc.perform(post("/admin/vets/{vetId}/edit", TEST_VET_ID)
+							.with(csrf())
+							.param("firstName", "")
+							.param("lastName", "Carter")
+							//no specialties
+							.param("user.username", "testing")
+							.param("user.password", "testing"))
+				.andExpect(model().attributeHasErrors("vet"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("admin/vets/vetEdit"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testDelete() throws Exception {
+		mockMvc.perform(get("/admin/vets/{vetId}/delete", TEST_VET_ID)).andExpect(status().isOk())
+				.andExpect(view().name("admin/vets/vetList"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testDeleteHasErrors() throws Exception {
+		mockMvc.perform(get("/admin/vets/-1/delete")).andExpect(status().isOk())
+				.andExpect(model().attributeExists("message"))
+				.andExpect(view().name("admin/vets/vetList"));
 	}
         
     @WithMockUser(value = "spring")
-		@Test
+	@Test
 	void testShowVetListHtml() throws Exception {
 		mockMvc.perform(get("/vets")).andExpect(status().isOk()).andExpect(model().attributeExists("vets"))
 				.andExpect(view().name("vets/vetList"));
 	}	
 
 	@WithMockUser(value = "spring")
-        @Test
+    @Test
 	void testShowVetListXml() throws Exception {
 		mockMvc.perform(get("/vets.xml").accept(MediaType.APPLICATION_XML)).andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_XML_VALUE))
-				.andExpect(content().node(hasXPath("/vets/vetList[id=1]/id")));
+				.andExpect(content().contentType("application/xml;charset=UTF-8"));
 	}
 
 }
