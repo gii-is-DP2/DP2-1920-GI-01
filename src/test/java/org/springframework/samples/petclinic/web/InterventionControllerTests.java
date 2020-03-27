@@ -46,7 +46,11 @@ public class InterventionControllerTests {
 		intervention.setInterventionDescription("Quick intervention");
 		intervention.setInterventionTime(1);
 
-		BDDMockito.given(this.petService.findPetById(InterventionControllerTests.TEST_PET_ID)).willReturn(new Pet());
+		Pet pet = new Pet();
+		pet.setBirthDate(LocalDate.of(2007, 01, 01));
+		pet.setName("Renato");
+
+		BDDMockito.given(this.petService.findPetById(InterventionControllerTests.TEST_PET_ID)).willReturn(pet);
 
 	}
 
@@ -55,7 +59,7 @@ public class InterventionControllerTests {
 	void testListInterventionAsAdministrator() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/*/pets/" + InterventionControllerTests.TEST_PET_ID + "/interventions"))//
 			.andExpect(MockMvcResultMatchers.status().isOk())//
-			.andExpect(MockMvcResultMatchers.view().name("owners/ownerDetails"))//
+			.andExpect(MockMvcResultMatchers.view().name("interventionList"))//
 			.andExpect(MockMvcResultMatchers.model().attributeExists("interventions"));
 	}
 
@@ -73,11 +77,11 @@ public class InterventionControllerTests {
 	void testProcessCreateFormSuccess() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/owners/*/pets/" + InterventionControllerTests.TEST_PET_ID + "/interventions/new")//
 			.with(SecurityMockMvcRequestPostProcessors.csrf())//
-			.param("interventionDate", "2020/26/07")//
+			.param("interventionDate", "2020/07/07")//
 			.param("interventionTime", "1")//
 			.param("interventionDescription", "Test description"))//
 			.andExpect(MockMvcResultMatchers.status().is3xxRedirection())//
-			.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/" + InterventionControllerTests.TEST_OWNER_ID));
+			.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/{ownerId}"));
 	}
 
 	@WithMockUser(value = "spring")
@@ -85,10 +89,10 @@ public class InterventionControllerTests {
 	void testProcessCreateFormHasErrors() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/owners/*/pets/" + InterventionControllerTests.TEST_PET_ID + "/interventions/new")//
 			.with(SecurityMockMvcRequestPostProcessors.csrf())//
-			.param("interventionDate", "2020/07/26")//
+			.param("interventionDate", "")//
 			.param("interventionTime", "1")//
-			.param("interventionDescription", " "))//
-			.andExpect(MockMvcResultMatchers.model().attributeHasErrors("intervention"))//
+			.param("interventionDescription", ""))//
+			.andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("intervention"))//
 			.andExpect(MockMvcResultMatchers.status().isOk())//
 			.andExpect(MockMvcResultMatchers.view().name("pets/createOrUpdateInterventionForm"));//
 	}
