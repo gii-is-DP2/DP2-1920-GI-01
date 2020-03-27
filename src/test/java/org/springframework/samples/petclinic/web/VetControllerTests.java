@@ -1,49 +1,53 @@
-
 package org.springframework.samples.petclinic.web;
 
-import java.util.Optional;
-
 import org.assertj.core.util.Lists;
-import org.hamcrest.xml.HasXPath;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.configuration.SecurityConfiguration;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.VetService;
+import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import static org.hamcrest.xml.HasXPath.hasXPath;
+import static org.mockito.BDDMockito.given;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.Optional;
 
 /**
  * Test class for the {@link VetController}
  */
-@WebMvcTest(controllers = VetController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class), excludeAutoConfiguration = SecurityConfiguration.class)
+@WebMvcTest(controllers=VetController.class,
+		excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class),
+		excludeAutoConfiguration= SecurityConfiguration.class)
 class VetControllerTests {
-
-	private static final int	TEST_VET_ID	= 1;
+	
+	private static final int TEST_VET_ID = 1;
 
 	@Autowired
-	private VetController		vetController;
+	private VetController vetController;
 
 	@MockBean
-	private VetService			clinicService;
+	private VetService clinicService;
 
 	@Autowired
-	private MockMvc				mockMvc;
-
+	private MockMvc mockMvc;
 
 	@BeforeEach
 	void setup() {
@@ -63,13 +67,15 @@ class VetControllerTests {
 		given(this.clinicService.findVets()).willReturn(Lists.newArrayList(james, helen));
 		given(this.clinicService.findVetById(TEST_VET_ID)).willReturn(Optional.of(james));
 	}
-
+	
 	@WithMockUser(value = "spring")
 	@Test
 	void testListVetsAsAdministrator() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/vets")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.view().name("admin/vets/vetList")).andExpect(MockMvcResultMatchers.model().attributeExists("vets"));
+		mockMvc.perform(get("/admin/vets")).andExpect(status().isOk())
+				.andExpect(view().name("admin/vets/vetList"))
+				.andExpect(model().attributeExists("vets"));
 	}
-  
+	
 	@WithMockUser(value = "spring")
 	@Test
 	void testListVetsAsUnregisteredUser() throws Exception {
@@ -109,39 +115,54 @@ class VetControllerTests {
 				.andExpect(view().name("vets/vetDetails"))
 				.andExpect(model().attributeExists("vet"));
 	}
-  
+	
 	@WithMockUser(value = "spring")
 	@Test
 	void testInitCreateForm() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/vets/new")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.view().name("admin/vets/vetEdit")).andExpect(MockMvcResultMatchers.model().attributeExists("vet"));
+		mockMvc.perform(get("/admin/vets/new")).andExpect(status().isOk())
+				.andExpect(view().name("admin/vets/vetEdit"))
+				.andExpect(model().attributeExists("vet"));
 	}
-
+	
 	@WithMockUser(value = "spring")
 	@Test
 	void testProcessCreateForm() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.post("/admin/vets/new").with(SecurityMockMvcRequestPostProcessors.csrf()).param("firstName", "testFirstName").param("lastName", "testLastName")
-			//no specialties
-			.param("user.username", "testing").param("user.password", "testing")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.view().name("admin/vets/vetList"));
+		mockMvc.perform(post("/admin/vets/new")
+							.with(csrf())
+							.param("firstName", "testFirstName")
+							.param("lastName", "testLastName")
+							//no specialties
+							.param("user.username", "testing")
+							.param("user.password", "testing"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("admin/vets/vetList"));
 	}
-
+	
 	@WithMockUser(value = "spring")
 	@Test
 	void testProcessCreateFormHasErrors() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.post("/admin/vets/new").with(SecurityMockMvcRequestPostProcessors.csrf()).param("firstName", "").param("lastName", "testLastName")
-			//no specialties
-			.param("user.username", "testing").param("user.password", "testing")).andExpect(MockMvcResultMatchers.model().attributeHasErrors("vet")).andExpect(MockMvcResultMatchers.status().isOk())
-			.andExpect(MockMvcResultMatchers.view().name("admin/vets/vetEdit"));
+		mockMvc.perform(post("/admin/vets/new")
+							.with(csrf())
+							.param("firstName", "")
+							.param("lastName", "testLastName")
+							//no specialties
+							.param("user.username", "testing")
+							.param("user.password", "testing"))
+				.andExpect(model().attributeHasErrors("vet"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("admin/vets/vetEdit"));
 	}
-
+	
 	@WithMockUser(value = "spring")
 	@Test
 	void testInitUpdateForm() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/vets/{vetId}/edit", VetControllerTests.TEST_VET_ID)).andExpect(MockMvcResultMatchers.status().isOk())
-			//				.andExpect(model().attributeExists("vet"))
-			.andExpect(MockMvcResultMatchers.view().name("admin/vets/vetEdit"));
-
+		mockMvc.perform(get("/admin/vets/{vetId}/edit", TEST_VET_ID))
+				.andExpect(status().isOk())
+//				.andExpect(model().attributeExists("vet"))
+				.andExpect(view().name("admin/vets/vetEdit"));
+			
 	}
-
+	
 	@WithMockUser(value = "spring")
 	@Test
 	void testInitUpdateFormHasErrors() throws Exception {
@@ -155,26 +176,39 @@ class VetControllerTests {
 	@WithMockUser(value = "spring")
 	@Test
 	void testProcessUpdateFormSuccess() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.post("/admin/vets/{vetId}/edit", VetControllerTests.TEST_VET_ID).with(SecurityMockMvcRequestPostProcessors.csrf()).param("firstName", "James").param("lastName", "Carter")
-			//no specialties
-			.param("user.username", "testing").param("user.password", "testing")).andExpect(MockMvcResultMatchers.status().is3xxRedirection()).andExpect(MockMvcResultMatchers.view().name("redirect:/admin/vets"));
+		mockMvc.perform(post("/admin/vets/{vetId}/edit", TEST_VET_ID)
+							.with(csrf())
+							.param("firstName", "James")
+							.param("lastName", "Carter")
+							//no specialties
+							.param("user.username", "testing")
+							.param("user.password", "testing"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/admin/vets"));
 	}
-
+	
 	@WithMockUser(value = "spring")
 	@Test
 	void testProcessUpdateFormHasErrors() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.post("/admin/vets/{vetId}/edit", VetControllerTests.TEST_VET_ID).with(SecurityMockMvcRequestPostProcessors.csrf()).param("firstName", "").param("lastName", "Carter")
-			//no specialties
-			.param("user.username", "testing").param("user.password", "testing")).andExpect(MockMvcResultMatchers.model().attributeHasErrors("vet")).andExpect(MockMvcResultMatchers.status().isOk())
-			.andExpect(MockMvcResultMatchers.view().name("admin/vets/vetEdit"));
+		mockMvc.perform(post("/admin/vets/{vetId}/edit", TEST_VET_ID)
+							.with(csrf())
+							.param("firstName", "")
+							.param("lastName", "Carter")
+							//no specialties
+							.param("user.username", "testing")
+							.param("user.password", "testing"))
+				.andExpect(model().attributeHasErrors("vet"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("admin/vets/vetEdit"));
 	}
-
+	
 	@WithMockUser(value = "spring")
 	@Test
 	void testDelete() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/vets/{vetId}/delete", VetControllerTests.TEST_VET_ID)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.view().name("admin/vets/vetList"));
+		mockMvc.perform(get("/admin/vets/{vetId}/delete", TEST_VET_ID)).andExpect(status().isOk())
+				.andExpect(view().name("admin/vets/vetList"));
 	}
-  
+	
 	@WithMockUser(value = "spring")
 	@Test
 	void testDeleteHasErrors() throws Exception {
@@ -186,13 +220,14 @@ class VetControllerTests {
     @WithMockUser(value = "spring")
 	@Test
 	void testShowVetListHtml() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/vets")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeExists("vets")).andExpect(MockMvcResultMatchers.view().name("vets/vetList"));
-	}
+		mockMvc.perform(get("/vets")).andExpect(status().isOk()).andExpect(model().attributeExists("vets"))
+				.andExpect(view().name("vets/vetList"));
+	}	
 
 	@WithMockUser(value = "spring")
-	@Test
+    @Test
 	void testShowVetListXml() throws Exception {
-		this.mockMvc.perform(get("/vets.xml").accept(MediaType.APPLICATION_XML)).andExpect(status().isOk())
+		mockMvc.perform(get("/vets.xml").accept(MediaType.APPLICATION_XML)).andExpect(status().isOk())
 				.andExpect(content().contentType("application/xml;charset=UTF-8"));
 	}
 
