@@ -63,7 +63,10 @@ public class Pet extends NamedEntity {
 	private Set<Visit>			visits;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
-	private Set<Intervention>	interventions;
+private Set<Intervention>	interventions;
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
+	private Set<Rehab> rehabs;
 
 
 	public void setBirthDate(final LocalDate birthDate) {
@@ -90,6 +93,7 @@ public class Pet extends NamedEntity {
 		this.owner = owner;
 	}
 
+		
 	protected Set<Visit> getVisitsInternal() {
 		if (this.visits == null) {
 			this.visits = new HashSet<>();
@@ -111,6 +115,7 @@ public class Pet extends NamedEntity {
 		this.getVisitsInternal().add(visit);
 		visit.setPet(this);
 	}
+
 
 	public void removeVisit(final Visit visit) {
 		this.getVisitsInternal().remove(visit);
@@ -138,4 +143,25 @@ public class Pet extends NamedEntity {
 		this.interventions = interventions;
 	}
 
+	public void addRehab(Rehab rehab) {
+		getRehabInternal().add(rehab);
+		rehab.setPet(this);
+	}
+	
+	protected void setRehabInternal(Set<Rehab> rehabs) {
+		this.rehabs = rehabs;
+	}
+	 Set<Rehab> getRehabInternal() {
+		if (this.rehabs == null) {
+			this.rehabs = new HashSet<>();
+		}
+		return this.rehabs;
+	}
+
+	public List<Rehab> getRehabs() {
+		List<Rehab> sortedRehabs = new ArrayList<>(getRehabInternal());
+		PropertyComparator.sort(sortedRehabs, new MutableSortDefinition("rehabdate", false, false));
+		return Collections.unmodifiableList(sortedRehabs);
+	}
+  
 }
