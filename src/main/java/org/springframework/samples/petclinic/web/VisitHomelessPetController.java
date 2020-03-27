@@ -1,6 +1,6 @@
 package org.springframework.samples.petclinic.web;
 
-import java.util.Map;
+import java.util.Map; 
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -10,11 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.service.PetService;
+import org.springframework.samples.petclinic.web.HomelessPetController;
 import org.springframework.samples.petclinic.service.VisitService;
+import org.springframework.samples.petclinic.web.validators.VisitValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -23,6 +27,11 @@ public class VisitHomelessPetController {
 	
 	private final VisitService visitService;
 	private final PetService petService;
+	
+	@InitBinder("visit")
+	public void initVisitBinder(WebDataBinder dataBinder) {
+		dataBinder.setValidator(new VisitValidator());
+	}
 
 	@Autowired
 	public VisitHomelessPetController(PetService petService, VisitService visitService) {
@@ -31,7 +40,7 @@ public class VisitHomelessPetController {
 	}
 	
 	@GetMapping("/homeless-pets/{petId}/visits/new")
-	public String initNewVisitFormHomelessPet(@PathVariable("petId") int petId, Map<String, Object> model) {
+	public String initNewVisitHomelessPetForm(@PathVariable("petId") int petId, Map<String, Object> model) {
 		Visit visit = new Visit();
 		Pet pet = this.petService.findPetById(petId);
 		pet.addVisit(visit);
@@ -40,7 +49,7 @@ public class VisitHomelessPetController {
 	}
 	
 	@PostMapping("/homeless-pets/{petId}/visits/new")
-	public String processNewVisitFormHomelessPet(@PathVariable("petId") int petId, @Valid Visit visit, BindingResult result) {
+	public String processNewVisitHomelessPetForm(@PathVariable("petId") int petId, @Valid Visit visit, BindingResult result) {
 		Pet pet = this.petService.findPetById(petId);
 		if (result.hasErrors()) {
 			return "homelessPets/editVisit";
@@ -53,18 +62,22 @@ public class VisitHomelessPetController {
 	}
 	
 	@GetMapping("/homeless-pets/{petId}/visits/{visitId}/edit")
-	public String initEditForm(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, ModelMap model) {
-		String view = "/homelessPets/editVisit";
+	public String initEditVisitHomelessPetForm(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, ModelMap model) {
+		String view = "homelessPets/editVisit";
 		Optional<Visit> visit = this.visitService.findVisitById(visitId);
-		model.addAttribute("visit", visit.get());
+		if(visit.isPresent()) {
+			model.addAttribute("visit", visit.get());
+		} else {
+			model.addAttribute("message", "Visit not found!");
+		}
 		return view;
 	}
 	
 	@PostMapping("/homeless-pets/{petId}/visits/{visitId}/edit")
-	public String processEditForm(@PathVariable("petId") int petId, @Valid Visit visit, BindingResult result, @PathVariable("visitId") int visitId, ModelMap model) {
+	public String processEditVisitHomelessPetForm(@PathVariable("petId") int petId, @Valid Visit visit, BindingResult result, @PathVariable("visitId") int visitId, ModelMap model) {
 		if(result.hasErrors()) {
 			model.put("visit", visit);
-			return "/homelessPets/editVisit";
+			return "homelessPets/editVisit";
 		} else {
 			Optional<Visit> visitToUpdate = this.visitService.findVisitById(visitId);
 			if(visitToUpdate.isPresent()) {
@@ -72,7 +85,7 @@ public class VisitHomelessPetController {
 				try {
 					this.petService.saveVisit(visitToUpdate.get());
 				} catch (Exception e) {
-					return "/homelessPets/editVisit";
+					return "homelessPets/editVisit";
 				}
 			}
 			return "redirect:/homeless-pets";
@@ -80,7 +93,7 @@ public class VisitHomelessPetController {
 	}
 	
 	@GetMapping("/homeless-pets/{petId}/visits/{visitId}/delete")
-	public String deleteVisit(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, ModelMap model) {
+	public String deleteVisitHomelessPet(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, ModelMap model) {
 		String view;
 		Optional<Visit> visit;
 		view = "homelessPets/listPets";

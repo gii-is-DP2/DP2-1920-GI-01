@@ -25,6 +25,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Optional;
+
 /**
  * Test class for the {@link VetController}
  */
@@ -58,9 +60,8 @@ class VetControllerTests {
 		radiology.setId(1);
 		radiology.setName("radiology");
 		helen.addSpecialty(radiology);
-		BDDMockito.given(this.clinicService.findVets()).willReturn(Lists.newArrayList(james, helen));
-		BDDMockito.given(this.clinicService.findVetById(VetControllerTests.TEST_VET_ID)).willReturn(Optional.of(james));
-
+		given(this.clinicService.findVets()).willReturn(Lists.newArrayList(james, helen));
+		given(this.clinicService.findVetById(TEST_VET_ID)).willReturn(Optional.of(james));
 	}
 
 	@WithMockUser(value = "spring")
@@ -68,14 +69,47 @@ class VetControllerTests {
 	void testListVetsAsAdministrator() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/vets")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.view().name("admin/vets/vetList")).andExpect(MockMvcResultMatchers.model().attributeExists("vets"));
 	}
-
-	//	@WithMockUser(value = "spring")
-	//	@Test
-	//	void testShowVetAsAdministrator() throws Exception {
-	//		this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/vets/{vetId}", VetControllerTests.TEST_VET_ID)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.view().name("admin/vets/vetShow"))//
-	//			.andExpect(MockMvcResultMatchers.model().attributeExists("vet"));
-	//	}
-
+  
+	@WithMockUser(value = "spring")
+	@Test
+	void testListVetsAsUnregisteredUser() throws Exception {
+		mockMvc.perform(get("/vets")).andExpect(status().isOk())
+				.andExpect(view().name("vets/vetList"))
+				.andExpect(model().attributeExists("vets"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testShowVetAsAdministratorHasErrors() throws Exception {
+		mockMvc.perform(get("/admin/vets/-1")).andExpect(status().isOk())
+				.andExpect(view().name("admin/vets/vetShow"))
+				.andExpect(model().attributeExists("message"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testShowVetAsAdministrator() throws Exception {
+		mockMvc.perform(get("/admin/vets/{vetId}", TEST_VET_ID)).andExpect(status().isOk())
+				.andExpect(view().name("admin/vets/vetShow"))
+				.andExpect(model().attributeExists("vet"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testShowVetAsUnregisteredUserHasErrors() throws Exception {
+		mockMvc.perform(get("/vets/-1")).andExpect(status().isOk())
+				.andExpect(view().name("vets/vetDetails"))
+				.andExpect(model().attributeExists("message"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testShowVetAsUnregisteredUser() throws Exception {
+		mockMvc.perform(get("/vets/{vetId}", TEST_VET_ID)).andExpect(status().isOk())
+				.andExpect(view().name("vets/vetDetails"))
+				.andExpect(model().attributeExists("vet"));
+	}
+  
 	@WithMockUser(value = "spring")
 	@Test
 	void testInitCreateForm() throws Exception {
@@ -110,6 +144,16 @@ class VetControllerTests {
 
 	@WithMockUser(value = "spring")
 	@Test
+	void testInitUpdateFormHasErrors() throws Exception {
+		mockMvc.perform(get("/admin/vets/-1/edit"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeExists("message"))
+				.andExpect(view().name("admin/vets/vetEdit"));
+			
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
 	void testProcessUpdateFormSuccess() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/admin/vets/{vetId}/edit", VetControllerTests.TEST_VET_ID).with(SecurityMockMvcRequestPostProcessors.csrf()).param("firstName", "James").param("lastName", "Carter")
 			//no specialties
@@ -130,8 +174,16 @@ class VetControllerTests {
 	void testDelete() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/vets/{vetId}/delete", VetControllerTests.TEST_VET_ID)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.view().name("admin/vets/vetList"));
 	}
-
+  
 	@WithMockUser(value = "spring")
+	@Test
+	void testDeleteHasErrors() throws Exception {
+		mockMvc.perform(get("/admin/vets/-1/delete")).andExpect(status().isOk())
+				.andExpect(model().attributeExists("message"))
+				.andExpect(view().name("admin/vets/vetList"));
+	}
+        
+    @WithMockUser(value = "spring")
 	@Test
 	void testShowVetListHtml() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/vets")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeExists("vets")).andExpect(MockMvcResultMatchers.view().name("vets/vetList"));
@@ -140,8 +192,8 @@ class VetControllerTests {
 	@WithMockUser(value = "spring")
 	@Test
 	void testShowVetListXml() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/vets.xml").accept(MediaType.APPLICATION_XML)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_XML_VALUE))
-			.andExpect(MockMvcResultMatchers.content().node(HasXPath.hasXPath("/vets/vetList[id=1]/id")));
+		this.mockMvc.perform(get("/vets.xml").accept(MediaType.APPLICATION_XML)).andExpect(status().isOk())
+				.andExpect(content().contentType("application/xml;charset=UTF-8"));
 	}
 
 }

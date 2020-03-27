@@ -60,9 +60,7 @@ public class VetController {
 		return this.vetService.findAllSpecialty();
 	}
 
-	@GetMapping(value = {
-		"/vets"
-	})
+	@GetMapping("/vets")
 	public String showVetList(final Map<String, Object> model) {
 		// Here we are returning an object of type 'Vets' rather than a collection of Vet
 		// objects
@@ -74,9 +72,7 @@ public class VetController {
 	}
 
 	//This method allows us to list the vets as an admin in a different view
-	@GetMapping(value = {
-		"/admin/vets"
-	})
+	@GetMapping("/admin/vets")
 	public String showVetListAsAdmin(final Map<String, Object> model) {
 		// Here we are returning an object of type 'Vets' rather than a collection of Vet
 		// objects
@@ -88,23 +84,35 @@ public class VetController {
 	}
 
 	//This method allows us to show a certain pet given an id
-	@GetMapping(value = {
-		"/vets/{vetId}"
-	})
+	@GetMapping("/vets/{vetId}")
 	public ModelAndView showVet(@PathVariable("vetId") final int vetId) {
 		Optional<Vet> vet;
-		ModelAndView mav = new ModelAndView("/vets/vetDetails");
+		ModelAndView mav = new ModelAndView("vets/vetDetails");
 		vet = this.vetService.findVetById(vetId);
 		if (vet.isPresent()) {
 			mav.addObject("vet", vet.get());
+		} else {
+			mav.addObject("message", "Vet not found!");
+		}
+		return mav;
+	}
+	
+	//This method allows us to show a certain pet given an id
+	@GetMapping(value = {"/admin/vets/{vetId}"})
+	public ModelAndView showVetAsAdmin(@PathVariable("vetId") int vetId) {
+		Optional<Vet> vet;
+		ModelAndView mav = new ModelAndView("admin/vets/vetShow");
+		vet = this.vetService.findVetById(vetId);
+		if(vet.isPresent()) {
+			mav.addObject("vet", vet.get());
+		} else {
+			mav.addObject("message", "Vet not found!");
 		}
 		return mav;
 	}
 
 	//This method allows us to delete a certain vet given an id
-	@GetMapping(value = {
-		"/admin/vets/{vetId}/delete"
-	})
+	@GetMapping("/admin/vets/{vetId}/delete")
 	public String deleteVet(@PathVariable("vetId") final int vetId, final ModelMap modelMap) {
 		String view;
 		Optional<Vet> vet;
@@ -149,6 +157,8 @@ public class VetController {
 		Optional<Vet> vet = this.vetService.findVetById(vetId);
 		if (vet.isPresent()) {
 			modelMap.put("vet", vet.get());
+		} else {
+			modelMap.addAttribute("message", "Vet not found!");
 		}
 		return "admin/vets/vetEdit";
 	}

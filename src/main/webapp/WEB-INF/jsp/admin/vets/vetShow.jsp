@@ -8,30 +8,35 @@
 
     <h2>Vet Information</h2>
 
+	<c:if test="${message != 'Vet not found!'}">
 
-    <table class="table table-striped">
-        <tr>
-            <th>Name</th>
-            <td><b><c:out value="${vet.firstName} ${vet.lastName}"/></b></td>
-        </tr>
-        <tr>
-            <th>Specialties</th>
-            <td>
-            	<c:forEach var="specialty" items="${vet.specialties}">
-                	<c:out value="${specialty.name} "/>
-                </c:forEach>
-                <c:if test="${vet.nrOfSpecialties == 0}">none</c:if>
-            </td>
-        </tr>
-    </table>
-
-    <spring:url value="/admin/vets/{vetId}/edit" var="vetUrl">
-    	<spring:param name="vetId" value="${vet.id}"/>
-    </spring:url>
-    <a href="${fn:escapeXml(vetUrl)}">Edit</a>
-    <spring:url value="/admin/vets/{vetId}/delete" var="vetUrl2">
-        <spring:param name="vetId" value="${vet.id}"/>
-    </spring:url>
-    <a href="${fn:escapeXml(vetUrl2)}">Delete</a>
+	    <table class="table table-striped">
+	        <tr>
+	            <th>Name</th>
+	            <td><b><c:out value="${vet.firstName} ${vet.lastName}"/></b></td>
+	        </tr>
+	        <tr>
+	            <th>Specialties</th>
+	            <td>
+	            	<c:forEach var="specialty" items="${vet.specialties}">
+	                	<c:out value="${specialty.name} "/>
+	                </c:forEach>
+	                <c:if test="${vet.nrOfSpecialties == 0}">none</c:if>
+	            </td>
+	        </tr>
+	    </table>
+	
+	    <spring:url value="/admin/vets/{vetId}/edit" var="vetUrl">
+	    	<spring:param name="vetId" value="${vet.id}"/>
+	    </spring:url>
+	    <a href="${fn:escapeXml(vetUrl)}">Edit</a>
+	    <spring:url value="/admin/vets/{vetId}/delete" var="vetUrl2">
+	        <spring:param name="vetId" value="${vet.id}"/>
+	    </spring:url>
+	    <a href="${fn:escapeXml(vetUrl2)}">Delete</a>
+	</c:if>
+	<c:if test="${message == 'Vet not found!'}">
+		<h3>Vet not found!</h3>
+	</c:if>
 
 </petclinic:layout>

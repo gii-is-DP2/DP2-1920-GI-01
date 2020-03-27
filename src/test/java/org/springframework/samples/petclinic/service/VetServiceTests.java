@@ -15,11 +15,14 @@
  */
 package org.springframework.samples.petclinic.service;
 
-import static org.assertj.core.api.Assertions.assertThat; 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows; 
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
+
+import javax.validation.ConstraintViolationException;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,6 +131,26 @@ class VetServiceTests {
 		assertThat(vet.getId()).isNotEqualTo(0);
 		vets = this.vetService.findVets();
 		assertThat(vets.size()).isEqualTo(found + 1);
+	}
+	
+	@Test
+	@Transactional
+	void shouldNotInsertVetWithFirstNameBlank() {
+		ConstraintViolationException exception;
+		Vet vet = new Vet();
+		
+		vet.setFirstName("");
+		vet.setLastName("testLastName");
+		vet.setSpecialties(new ArrayList<Specialty>());
+		User user = new User();
+		user.setUsername("testVetUsername");
+		user.setPassword("testVetPassword");
+		user.setEnabled(true);
+		vet.setUser(user);
+		
+		exception = assertThrows(ConstraintViolationException.class, () -> this.vetService.saveVet(vet));
+		assertThat(exception.getMessage()).contains("Validation failed");
+		
 	}
 	
 	@Test
