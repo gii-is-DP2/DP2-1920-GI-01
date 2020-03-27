@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Intervention;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.service.PetService;
+import org.springframework.samples.petclinic.web.validators.InterventionValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -24,6 +25,11 @@ public class InterventionController {
 
 	private final PetService petService;
 
+
+	@InitBinder
+	public void initInterventionBinder(final WebDataBinder dataBinder) {
+		dataBinder.setValidator(new InterventionValidator());
+	}
 
 	@Autowired
 	public InterventionController(final PetService petService) {
@@ -62,7 +68,7 @@ public class InterventionController {
 	@PostMapping(value = "/owners/{ownerId}/pets/{petId}/interventions/new")
 	public String processNewInterventionForm(@Valid final Intervention intervention, final BindingResult result, final ModelMap modelMap) {
 		if (result.hasErrors()) {
-			modelMap.addAttribute("intervention", intervention);
+			modelMap.put("intervention", intervention);
 			return "pets/createOrUpdateInterventionForm";
 		} else {
 			this.petService.saveIntervention(intervention);
