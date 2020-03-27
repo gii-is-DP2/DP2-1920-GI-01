@@ -16,6 +16,7 @@
 
 package org.springframework.samples.petclinic.web;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +29,10 @@ import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Vets;
 import org.springframework.samples.petclinic.service.VetService;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -59,6 +64,19 @@ public class VetController {
 	public Collection<Specialty> populateSpecialties() {
 		return this.vetService.findAllSpecialty();
 	}
+	
+	//This method will let us check security
+	public boolean userHasAuthorities(Collection<SimpleGrantedAuthority> authorities) {
+		Boolean res = false;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if(principal instanceof UserDetails) {
+			Collection<? extends GrantedAuthority> principalAuthorities = ((UserDetails)principal).getAuthorities();
+			if(principalAuthorities.containsAll(authorities)) {
+				res = true;
+			}
+		}
+		return res;
+	}
 
 	@GetMapping("/vets")
 	public String showVetList(final Map<String, Object> model) {
@@ -74,13 +92,24 @@ public class VetController {
 	//This method allows us to list the vets as an admin in a different view
 	@GetMapping("/admin/vets")
 	public String showVetListAsAdmin(final Map<String, Object> model) {
-		// Here we are returning an object of type 'Vets' rather than a collection of Vet
-		// objects
-		// so it is simpler for Object-Xml mapping
-		Vets vets = new Vets();
-		vets.getVetList().addAll(this.vetService.findVets());
-		model.put("vets", vets);
-		return "admin/vets/vetList";
+		String view;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("admin");
+		authorities.add(authorityVeterinarian);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities) {
+			Vets vets = new Vets();
+			vets.getVetList().addAll(this.vetService.findVets());
+			model.put("vets", vets);
+			view = "admin/vets/vetList";
+		} else {
+			view = "redirect:/oups";
+		}
+		return view;
 	}
 
 	//This method allows us to show a certain pet given an id
@@ -100,13 +129,30 @@ public class VetController {
 	//This method allows us to show a certain pet given an id
 	@GetMapping(value = {"/admin/vets/{vetId}"})
 	public ModelAndView showVetAsAdmin(@PathVariable("vetId") int vetId) {
-		Optional<Vet> vet;
-		ModelAndView mav = new ModelAndView("admin/vets/vetShow");
-		vet = this.vetService.findVetById(vetId);
-		if(vet.isPresent()) {
-			mav.addObject("vet", vet.get());
+		
+		String view;
+		ModelAndView mav;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("admin");
+		authorities.add(authorityVeterinarian);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities == true) {
+			view = "admin/vets/vetShow";
+			Optional<Vet> vet;
+			mav = new ModelAndView(view);
+			vet = this.vetService.findVetById(vetId);
+			if(vet.isPresent()) {
+				mav.addObject("vet", vet.get());
+			} else {
+				mav.addObject("message", "Vet not found!");
+			}
 		} else {
-			mav.addObject("message", "Vet not found!");
+			view = "redirect:/oups";
+			mav = new ModelAndView(view);
 		}
 		return mav;
 	}
@@ -115,73 +161,138 @@ public class VetController {
 	@GetMapping("/admin/vets/{vetId}/delete")
 	public String deleteVet(@PathVariable("vetId") final int vetId, final ModelMap modelMap) {
 		String view;
-		Optional<Vet> vet;
-		view = "admin/vets/vetList";
-		vet = this.vetService.findVetById(vetId);
-		if (vet.isPresent()) {
-			this.vetService.deleteVet(vet.get());
-			modelMap.addAttribute("message", "Vet deleted successfully!");
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("admin");
+		authorities.add(authorityVeterinarian);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+
+		if(hasAuthorities == true) {
+			Optional<Vet> vet;
+			view = "admin/vets/vetList";
+			vet = this.vetService.findVetById(vetId);
+			if (vet.isPresent()) {
+				this.vetService.deleteVet(vet.get());
+				modelMap.addAttribute("message", "Vet deleted successfully!");
+			} else {
+				modelMap.addAttribute("message", "Vet not found!");
+			}
 			view = this.showVetListAsAdmin(modelMap);
 		} else {
-			modelMap.addAttribute("message", "Vet not found!");
-			view = this.showVetListAsAdmin(modelMap);
+			view = "redirect:/oups";
 		}
 		return view;
 	}
 
 	@GetMapping("/admin/vets/new")
 	public String initCreateForm(final ModelMap model) {
-		Vet vet = new Vet();
-		model.addAttribute("vet", vet);
-		return "admin/vets/vetEdit";
+		String view;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("admin");
+		authorities.add(authorityVeterinarian);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities == true) {
+			Vet vet = new Vet();
+			model.addAttribute("vet", vet);
+			view = "admin/vets/vetEdit";
+		} else {
+			view = "redirect:/oups";
+		}
+		return view;
 	}
 
 	@PostMapping("/admin/vets/new")
 	public String processCreateForm(@Valid final Vet vet, final BindingResult result, final ModelMap model) {
-		if (result.hasErrors()) {
-			model.addAttribute("vet", vet);
-			return "admin/vets/vetEdit";
-		} else {
-			try {
-				this.vetService.saveVet(vet);
-				return this.showVetListAsAdmin(model);
-			} catch (Exception e) {
-				return "admin/vets/vetEdit";
+		String view;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("admin");
+		authorities.add(authorityVeterinarian);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities == true) {
+			if (result.hasErrors()) {
+				model.addAttribute("vet", vet);
+				view = "admin/vets/vetEdit";
+			} else {
+				try {
+					this.vetService.saveVet(vet);
+					view = this.showVetListAsAdmin(model);
+				} catch (Exception e) {
+					view = "admin/vets/vetEdit";
+				}
 			}
+		} else {
+			view = "redirect:/oups";
 		}
+		return view;
 	}
 
 	//This method allows us to display vet data when trying to update
 	@GetMapping("/admin/vets/{vetId}/edit")
 	public String initUpdateForm(@PathVariable("vetId") final int vetId, final ModelMap modelMap) {
-		Optional<Vet> vet = this.vetService.findVetById(vetId);
-		if (vet.isPresent()) {
-			modelMap.put("vet", vet.get());
+		String view;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("admin");
+		authorities.add(authorityVeterinarian);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities == true) {
+			Optional<Vet> vet = this.vetService.findVetById(vetId);
+			if (vet.isPresent()) {
+				modelMap.put("vet", vet.get());
+			} else {
+				modelMap.addAttribute("message", "Vet not found!");
+			}
+			view = "admin/vets/vetEdit";
 		} else {
-			modelMap.addAttribute("message", "Vet not found!");
+			view = "redirect:/oups";
 		}
-		return "admin/vets/vetEdit";
+		return view;
 	}
 
 	@PostMapping("/admin/vets/{vetId}/edit")
 	public String processUpdateForm(@Valid final Vet vet, final BindingResult result, @PathVariable("vetId") final int vetId, final ModelMap model) {
-		if (result.hasErrors()) {
-			model.put("vet", vet);
-			return "admin/vets/vetEdit";
-		} else {
-			try {
-				vet.setId(vetId);
-				this.vetService.saveVet(vet);
-			} catch (DataAccessException e) {
-				return "admin/vets/vetEdit";
+		String view;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("admin");
+		authorities.add(authorityVeterinarian);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities == true) {
+			if (result.hasErrors()) {
+				model.put("vet", vet);
+				view = "admin/vets/vetEdit";
+			} else {
+				try {
+					vet.setId(vetId);
+					this.vetService.saveVet(vet);
+				} catch (DataAccessException e) {
+					view = "admin/vets/vetEdit";
+				}
+				view = "redirect:/admin/vets";
 			}
-			return "redirect:/admin/vets";
+		} else {
+			view = "redirect:/oups";
 		}
+		return view;
 	}
 
-	@GetMapping(value = {
-		"/vets.xml"
-	})
+	@GetMapping(value = {"/vets.xml"})
 	public @ResponseBody Vets showResourcesVetList() {
 		// Here we are returning an object of type 'Vets' rather than a collection of Vet
 		// objects
