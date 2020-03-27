@@ -33,7 +33,7 @@
                     <c:out value="${organization.phone}"/>
                 </td>
                 <td>
-                    <a href="${organization.url}"><c:out value="Visit this organization!"/></a>
+                    <a href="${organization.url}" target="_blank"><c:out value="Visit this organization!"/></a>
                 </td>
             </tr>
         </c:forEach>

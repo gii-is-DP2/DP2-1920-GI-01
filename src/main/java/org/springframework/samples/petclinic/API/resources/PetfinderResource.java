@@ -1,6 +1,6 @@
 package org.springframework.samples.petclinic.API.resources;
 
-import java.io.UnsupportedEncodingException; 
+import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,8 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.petclinic.API.model.Organization.Organization;
-import org.springframework.samples.petclinic.API.model.Organizations.Organizations;
+import org.springframework.samples.petclinic.API.model.Petfinder.Organization_;
+import org.springframework.samples.petclinic.API.model.Petfinder.Organizations;
 import org.springframework.web.client.RestTemplate;
 
 public class PetfinderResource {
@@ -63,13 +63,13 @@ public class PetfinderResource {
 		return res;
 	}
 	
-	public Organization getOrganizationsById(String id) throws UnsupportedEncodingException {
+	public Organization_ getOrganizationsById(String id) throws UnsupportedEncodingException {
 		ClientResource cr = new ClientResource("https://api.petfinder.com/v2/organizations/".concat(id));
 		String token = getToken();
 		ChallengeResponse challengeResponse = new ChallengeResponse(ChallengeScheme.HTTP_OAUTH_BEARER);
 		challengeResponse.setRawValue(token);
 		cr.setChallengeResponse(challengeResponse);
-		Organization res = cr.get(Organization.class);
+		Organization_ res = cr.get(Organization_.class);
 		log.log(Level.FINE, "Organization search done successfully");
 		return res;
 	}
