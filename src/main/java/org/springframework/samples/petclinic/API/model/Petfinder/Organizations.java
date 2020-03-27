@@ -1,7 +1,8 @@
 
-package org.springframework.samples.petclinic.API.model.Organization;
+package org.springframework.samples.petclinic.API.model.Petfinder;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -12,36 +13,36 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "self",
-    "animals"
+    "organizations",
+    "pagination"
 })
-public class Links {
+public class Organizations {
 
-    @JsonProperty("self")
-    private Self self;
-    @JsonProperty("animals")
-    private Animals animals;
+    @JsonProperty("organizations")
+    private List<Organization> organizations = null;
+    @JsonProperty("pagination")
+    private Pagination pagination;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("self")
-    public Self getSelf() {
-        return self;
+    @JsonProperty("organizations")
+    public List<Organization> getOrganizations() {
+        return organizations;
     }
 
-    @JsonProperty("self")
-    public void setSelf(Self self) {
-        this.self = self;
+    @JsonProperty("organizations")
+    public void setOrganizations(List<Organization> organizations) {
+        this.organizations = organizations;
     }
 
-    @JsonProperty("animals")
-    public Animals getAnimals() {
-        return animals;
+    @JsonProperty("pagination")
+    public Pagination getPagination() {
+        return pagination;
     }
 
-    @JsonProperty("animals")
-    public void setAnimals(Animals animals) {
-        this.animals = animals;
+    @JsonProperty("pagination")
+    public void setPagination(Pagination pagination) {
+        this.pagination = pagination;
     }
 
     @JsonAnyGetter
