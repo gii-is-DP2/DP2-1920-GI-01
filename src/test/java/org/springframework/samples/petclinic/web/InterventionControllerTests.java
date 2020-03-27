@@ -48,7 +48,7 @@ public class InterventionControllerTests {
 
 		Pet pet = new Pet();
 		pet.setBirthDate(LocalDate.of(2007, 01, 01));
-		pet.setName("Renato");
+		pet.setName("Alfred");
 
 		BDDMockito.given(this.petService.findPetById(InterventionControllerTests.TEST_PET_ID)).willReturn(pet);
 
