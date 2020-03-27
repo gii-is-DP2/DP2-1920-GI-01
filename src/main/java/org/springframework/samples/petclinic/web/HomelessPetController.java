@@ -1,9 +1,8 @@
 package org.springframework.samples.petclinic.web;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -15,6 +14,10 @@ import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
 import org.springframework.samples.petclinic.web.validators.PetValidator;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -32,7 +35,7 @@ public class HomelessPetController {
 
 	private final PetService petService;
 
-	private static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = "homelessPets/editPet";
+	private static final String EDIT_FORM = "homelessPets/editPet";
 	
 	@Autowired
 	public HomelessPetController(PetService petService) {
@@ -49,12 +52,42 @@ public class HomelessPetController {
 		dataBinder.setValidator(new PetValidator());
 	}
 	
+	//This method will let us check security
+	public boolean userHasAuthorities(Collection<SimpleGrantedAuthority> authorities) {
+		Boolean res = false;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if(principal instanceof UserDetails) {
+			Collection<? extends GrantedAuthority> principalAuthorities = ((UserDetails)principal).getAuthorities();
+			if(principalAuthorities.containsAll(authorities)) {
+				res = true;
+			}
+		}
+		return res;
+	}
+	
 	@GetMapping()
 	public String listHomelessPets (ModelMap model) {
-		List<Pet> homelessPets = new ArrayList<Pet>();
-		homelessPets = this.petService.findHomelessPets();
-		model.put("homelessPets", homelessPets);
-		return "homelessPets/listPets";
+		
+		String view;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
+		authorities.add(authorityVeterinarian);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities == true) {
+			view = "homelessPets/listPets";
+			List<Pet> homelessPets = new ArrayList<Pet>();
+			homelessPets = this.petService.findHomelessPets();
+			model.put("homelessPets", homelessPets);
+		} else {
+			model.addAttribute("message", "So sorry, no puede usted entrar aquí!");
+			view = "redirect:/oups";
+		}
+			
+		return view;
 	}
 	
 	//This next method is useless because all pet info is displayed in the listing
@@ -69,71 +102,147 @@ public class HomelessPetController {
 //	}
 
 	@GetMapping(value = "/new")
-	public String initCreationForm(Owner owner, ModelMap model) {
-		Pet pet = new Pet();
-		owner.addPet(pet);
-		model.put("pet", pet);
-		return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+	public String initCreationForm(ModelMap model) {
+		
+		String view;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
+		authorities.add(authorityVeterinarian);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities == true) {
+			Pet pet = new Pet();
+			model.put("pet", pet);
+			view = EDIT_FORM;
+		} else {
+			view = "redirect:/oups";
+		}
+		
+		return view;
 	}
 
 	@PostMapping(value = "/new")
-	public String processCreationForm(@Valid Pet pet, BindingResult result, ModelMap model) {		
-		if (result.hasErrors()) {
-			model.put("pet", pet);
-			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+	public String processCreationForm(@Valid Pet pet, BindingResult result, ModelMap model) {
+		
+		String view;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
+		authorities.add(authorityVeterinarian);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities == true) {
+			if (result.hasErrors()) {
+				model.put("pet", pet);
+				view = EDIT_FORM;
+			}
+			else {
+		    	try{
+		        	this.petService.savePet(pet);
+		        }catch(DuplicatedPetNameException ex){
+		        	result.rejectValue("name", "duplicate", "already exists");
+		        	view = EDIT_FORM;
+		        }
+		        view = "redirect:/homeless-pets";
+			}
+		} else {
+			view = "redirect:/oups";
 		}
-		else {
-	    	try{
-	        	this.petService.savePet(pet);
-	        }catch(DuplicatedPetNameException ex){
-	        	result.rejectValue("name", "duplicate", "already exists");
-	        	return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
-	        }
-	        return "redirect:/homeless-pets";
-		}
+		
+		return view;
+		
 	}
 
 	@GetMapping(value = "/{petId}/edit")
 	public String initUpdateForm(@PathVariable("petId") int petId, ModelMap model) {
-		Pet pet = this.petService.findPetById(petId);
-		model.put("pet", pet);
-		return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+		
+		String view;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
+		authorities.add(authorityVeterinarian);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities == true) {
+			Pet pet = this.petService.findPetById(petId);
+			model.put("pet", pet);
+			view = EDIT_FORM;
+		} else {
+			view = "redirect:/oups";
+		}
+
+		return view;
 	}
 	
     @PostMapping(value = "/{petId}/edit")
-    public String processUpdateForm(@Valid Pet pet, BindingResult result, Owner owner,@PathVariable("petId") int petId, ModelMap model) {
-		if (result.hasErrors()) {
-			model.put("pet", pet);
-			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+    public String processUpdateForm(@Valid Pet pet, BindingResult result, Owner owner, @PathVariable("petId") int petId, ModelMap model) {
+		
+    	String view;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
+		authorities.add(authorityVeterinarian);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities == true) {
+    		if (result.hasErrors()) {
+				model.put("pet", pet);
+				view = EDIT_FORM;
+			} else {
+				Pet petToUpdate=this.petService.findPetById(petId);
+				BeanUtils.copyProperties(pet, petToUpdate, "id","visits","interventions");
+		        	try {                    
+		        		this.petService.savePet(petToUpdate);                    
+		            } catch (DuplicatedPetNameException ex) {
+		            	result.rejectValue("name", "duplicate", "already exists");
+		            	view = EDIT_FORM;
+		            }
+				view = "redirect:/homeless-pets";
+			}
+		} else {
+			view = "redirect:/oups";
 		}
-		else {
-			Pet petToUpdate=this.petService.findPetById(petId);
-			BeanUtils.copyProperties(pet, petToUpdate, "id","visits");                                                                                  
-	        	try {                    
-	        		this.petService.savePet(petToUpdate);                    
-	            } catch (DuplicatedPetNameException ex) {
-	            	result.rejectValue("name", "duplicate", "already exists");
-	            	return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
-	            }
-			return "redirect:/homeless-pets";
-		}
+		
+		return view;
 	}
     
     @GetMapping(value = {"/{petId}/delete"})
     public String deleteHomelessPet(@PathVariable("petId") int petId, ModelMap model) {
+    	
     	String view;
-    	Pet pet;
-    	view = "homelessPets/listPets";
-    	pet = this.petService.findPetById(petId);
-    	if(pet != null) {
-    		petService.deletePet(pet);
-    		model.addAttribute("message", "Pet deleted successfully!");
-    		view = listHomelessPets(model);
-    	} else {
-    		model.addAttribute("message", "Pet not found!");
-    		view = listHomelessPets(model);
-    	}
-    	return view;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
+		authorities.add(authorityVeterinarian);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities == true) {
+	    	Pet pet;
+	    	view = "homelessPets/listPets";
+	    	pet = this.petService.findPetById(petId);
+	    	if(pet != null) {
+	    		petService.deletePet(pet);
+	    		model.addAttribute("message", "Pet deleted successfully!");
+	    		view = listHomelessPets(model);
+	    	} else {
+	    		model.addAttribute("message", "Pet not found!");
+	    		view = listHomelessPets(model);
+	    	}
+		} else {
+			view = "redirect:/oups";
+		}
+		return view;
     }
 	
 }

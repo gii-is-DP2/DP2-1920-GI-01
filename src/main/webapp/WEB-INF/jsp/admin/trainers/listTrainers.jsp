@@ -10,7 +10,6 @@
     
     <c:if test="${message != null}"><h3><c:out value="${message}"></c:out></h3><br/></c:if>
 
-	<c:if test="${message == null}">
 	    <table id="trainersTable" class="table table-striped">
 	        <thead>
 	        <tr>
@@ -40,7 +39,6 @@
 	        </c:forEach>
 	        </tbody>
 	    </table>
-    </c:if>
     
     <spring:url value="/admin/trainers/new" var="trainerUrl">
     </spring:url>
