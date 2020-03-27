@@ -79,12 +79,12 @@ public class HomelessPetControllerTests {
 		given(this.petService.findPetById(TEST_PET_ID_2)).willReturn(null);
 	}
 	
-	@WithMockUser(username = "trainer1", authorities = {"trainer"})
-	@Test
-	void testListHomelessPets() throws Exception {
-		mockMvc.perform(get("/homeless-pets")).andExpect(status().isOk())
-				.andExpect(view().name("/oups"));
-	}
+//	@WithMockUser(username = "trainer1", authorities = {"trainer"})
+//	@Test
+//	void testListHomelessPets() throws Exception {
+//		mockMvc.perform(get("/homeless-pets")).andExpect(status().isOk())
+//				.andExpect(view().name("/oups"));
+//	}
 	
 //	@WithMockUser(username = "trainer1", authorities = {"trainer"})
 //	@Test

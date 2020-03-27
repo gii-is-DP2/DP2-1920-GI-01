@@ -53,6 +53,8 @@ public class TrainerController {
 		return res;
 	}
 	
+	// US-020 Unregistered user can see trainers -------------------------------------------------------------------
+	
 	@GetMapping("/trainers")
 	public String listTrainers(ModelMap modelMap) {
 		String view;
@@ -62,6 +64,21 @@ public class TrainerController {
 		modelMap.addAttribute("trainers", trainers);
 		return view;
 	}
+	  
+	@GetMapping("/trainers/{trainerId}")
+	public String showTrainer(@PathVariable("trainerId") int trainerId, ModelMap modelMap) {
+		Optional<Trainer> trainer;
+		String view = "trainers/showTrainer";
+		trainer = this.trainerService.findTrainerById(trainerId);
+		if(trainer.isPresent()) {
+			modelMap.addAttribute("trainer", trainer.get());
+		} else {
+			modelMap.addAttribute("message", "Trainer not found!");
+		}
+		return view;
+	}
+	
+	// US-019 Administrator manages trainers -----------------------------------------------------------------------
   
 	@GetMapping("/admin/trainers")
 	public String listTrainersAsAdmin(ModelMap modelMap) {
@@ -84,19 +101,6 @@ public class TrainerController {
 		}
 		return view;
 			
-	}
-  
-	@GetMapping("/trainers/{trainerId}")
-	public String showTrainer(@PathVariable("trainerId") int trainerId, ModelMap modelMap) {
-		Optional<Trainer> trainer;
-		String view = "trainers/showTrainer";
-		trainer = this.trainerService.findTrainerById(trainerId);
-		if(trainer.isPresent()) {
-			modelMap.addAttribute("trainer", trainer.get());
-		} else {
-			modelMap.addAttribute("message", "Trainer not found!");
-		}
-		return view;
 	}
   
 	@GetMapping("/admin/trainers/{trainerId}")
@@ -131,8 +135,8 @@ public class TrainerController {
 			
 	}
 	
-	@GetMapping("/admin/trainers/{trainerId}/delete")
-	public String deleteTrainer(@PathVariable("trainerId") int trainerId, ModelMap modelMap) {
+	@GetMapping("/admin/trainers/new")
+	public String initCreateForm(ModelMap modelMap) {
 		String view;
 		Boolean hasAuthorities;
 		
@@ -141,23 +145,44 @@ public class TrainerController {
 		authorities.add(authorityVeterinarian);
 		
 		hasAuthorities = userHasAuthorities(authorities);
-
+		
 		if(hasAuthorities == true) {
-			Optional<Trainer> trainer;
-			view = "admin/trainers/listTrainers";
-			trainer = this.trainerService.findTrainerById(trainerId);
-			if(trainer.isPresent()) {
-				this.trainerService.deleteTrainer(trainer.get());
-				modelMap.addAttribute("message", "Trainer deleted successfully!");
-				view = listTrainersAsAdmin(modelMap);
+			Trainer trainer = new Trainer();
+			modelMap.put("trainer", trainer);
+			view = "admin/trainers/editTrainer";
+		} else {
+			view = "redirect:/oups";
+		}
+		return view;	
+	}
+	
+	@PostMapping("/admin/trainers/new")
+	public String processCreateForm(@Valid Trainer trainer, BindingResult result, ModelMap modelMap) {
+		String view;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("admin");
+		authorities.add(authorityVeterinarian);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities == true) {
+		
+			if(result.hasErrors()) {
+				modelMap.put("trainer", trainer);
+				view = "admin/trainers/editTrainer";
 			} else {
-				modelMap.addAttribute("message", "Trainer not found!");
-				view = listTrainersAsAdmin(modelMap);
+				try {
+					this.trainerService.saveTrainer(trainer);
+				} catch (Exception e) {
+					view = "admin/trainers/editTrainer";
+				}
+				view = "redirect:/admin/trainers";
 			}
 		} else {
 			view = "redirect:/oups";
 		}
-		
 		return view;
 	}
 	
@@ -220,8 +245,8 @@ public class TrainerController {
 		return view;
 	}
 	
-	@GetMapping("/admin/trainers/new")
-	public String initCreateForm(ModelMap modelMap) {
+	@GetMapping("/admin/trainers/{trainerId}/delete")
+	public String deleteTrainer(@PathVariable("trainerId") int trainerId, ModelMap modelMap) {
 		String view;
 		Boolean hasAuthorities;
 		
@@ -230,45 +255,23 @@ public class TrainerController {
 		authorities.add(authorityVeterinarian);
 		
 		hasAuthorities = userHasAuthorities(authorities);
-		
+
 		if(hasAuthorities == true) {
-			Trainer trainer = new Trainer();
-			modelMap.put("trainer", trainer);
-			view = "admin/trainers/editTrainer";
-		} else {
-			modelMap.addAttribute("message", "You don't have permission to perform that action. Please contact the administrator.");
-			view = "redirect:/oups";
-		}
-		return view;	
-	}
-	
-	@PostMapping("/admin/trainers/new")
-	public String processCreateForm(@Valid Trainer trainer, BindingResult result, ModelMap modelMap) {
-		String view;
-		Boolean hasAuthorities;
-		
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("admin");
-		authorities.add(authorityVeterinarian);
-		
-		hasAuthorities = userHasAuthorities(authorities);
-		
-		if(hasAuthorities == true) {
-		
-			if(result.hasErrors()) {
-				modelMap.put("trainer", trainer);
-				view = "admin/trainers/editTrainer";
+			Optional<Trainer> trainer;
+			view = "admin/trainers/listTrainers";
+			trainer = this.trainerService.findTrainerById(trainerId);
+			if(trainer.isPresent()) {
+				this.trainerService.deleteTrainer(trainer.get());
+				modelMap.addAttribute("message", "Trainer deleted successfully!");
+				view = listTrainersAsAdmin(modelMap);
 			} else {
-				try {
-					this.trainerService.saveTrainer(trainer);
-				} catch (Exception e) {
-					view = "admin/trainers/editTrainer";
-				}
-				view = "redirect:/admin/trainers";
+				modelMap.addAttribute("message", "Trainer not found!");
+				view = listTrainersAsAdmin(modelMap);
 			}
 		} else {
 			view = "redirect:/oups";
 		}
+		
 		return view;
-  }
+	}
 }
