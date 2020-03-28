@@ -1,5 +1,5 @@
 
-package org.springframework.samples.petclinic.API.model.Organization;
+package org.springframework.samples.petclinic.API.model.Petfinder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,23 +12,23 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "organization"
+    "href"
 })
-public class Organization {
+public class Self {
 
-    @JsonProperty("organization")
-    private Organization_ organization;
+    @JsonProperty("href")
+    private String href;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("organization")
-    public Organization_ getOrganization() {
-        return organization;
+    @JsonProperty("href")
+    public String getHref() {
+        return href;
     }
 
-    @JsonProperty("organization")
-    public void setOrganization(Organization_ organization) {
-        this.organization = organization;
+    @JsonProperty("href")
+    public void setHref(String href) {
+        this.href = href;
     }
 
     @JsonAnyGetter

@@ -1,5 +1,5 @@
 
-package org.springframework.samples.petclinic.API.model.Organizations;
+package org.springframework.samples.petclinic.API.model.Petfinder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({
     "href"
 })
-public class Next {
+public class Animals {
 
     @JsonProperty("href")
     private String href;

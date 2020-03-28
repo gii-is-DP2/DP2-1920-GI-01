@@ -1,9 +1,17 @@
 
-package org.springframework.samples.petclinic.API.model.Organization;
+package org.springframework.samples.petclinic.API.model.Petfinder;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.samples.petclinic.API.model.Petfinder.Address;
+import org.springframework.samples.petclinic.API.model.Petfinder.Adoption;
+import org.springframework.samples.petclinic.API.model.Petfinder.Hours;
+import org.springframework.samples.petclinic.API.model.Petfinder.Links;
+import org.springframework.samples.petclinic.API.model.Petfinder.Photo;
+import org.springframework.samples.petclinic.API.model.Petfinder.SocialMedia;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,7 +36,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "distance",
     "_links"
 })
-public class Organization_ {
+public class Organization {
 
     @JsonProperty("id")
     private String id;

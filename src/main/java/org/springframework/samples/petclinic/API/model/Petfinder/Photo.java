@@ -1,5 +1,5 @@
 
-package org.springframework.samples.petclinic.API.model.Organizations;
+package org.springframework.samples.petclinic.API.model.Petfinder;
 
 import java.util.HashMap;
 import java.util.Map;

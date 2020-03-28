@@ -10,7 +10,6 @@
     
     <c:if test="${message != null}"><h3><c:out value="${message}"></c:out></h3></c:if>
 
-	<c:if test="${message == null}">
 	    <table id="vetsTable" class="table table-striped">
 	        <thead>
 	        <tr>
@@ -37,7 +36,6 @@
 	        </c:forEach>
 	        </tbody>
 	    </table>
-	</c:if>
     
     <spring:url value="/admin/vets/new" var="newVetUrl">
     </spring:url>
