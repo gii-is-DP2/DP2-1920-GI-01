@@ -31,11 +31,14 @@ import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.service.MedicalRecordService;
 import org.springframework.samples.petclinic.service.MedicineService;
 import org.springframework.samples.petclinic.service.PrescriptionService;
+import org.springframework.samples.petclinic.web.formatters.MedicineFormatter;
+import org.springframework.samples.petclinic.web.formatters.PetTypeFormatter;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = PrescriptionHomelessPetController.class,
+		includeFilters = @ComponentScan.Filter(value = MedicineFormatter.class, type = FilterType.ASSIGNABLE_TYPE),
 		excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class),
 		excludeAutoConfiguration= SecurityConfiguration.class)
 public class PrescriptionHomelessPetControllerTests {
@@ -90,7 +93,6 @@ public class PrescriptionHomelessPetControllerTests {
 		Collection<Medicine> medicines = new ArrayList<Medicine>();
 		medicines.add(medicine);
 
-		given(this.medicineService.findMedicineById(1)).willReturn(new Medicine());
 		given(this.medicineService.findManyAll()).willReturn(Lists.newArrayList(medicine));
 		given(this.medicineService.findByPetType(null)).willReturn(Lists.newArrayList(medicine));
 		given(this.medicalRecordService.findMedicalRecordById(TEST_MEDICAL_RECORD_ID)).willReturn(m);
