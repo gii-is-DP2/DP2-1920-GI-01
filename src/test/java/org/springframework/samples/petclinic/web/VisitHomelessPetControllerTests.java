@@ -57,99 +57,152 @@ public class VisitHomelessPetControllerTests {
 		v.setDate(LocalDate.of(2018, 7, 9));
 		v.setDescription("Description 1");
 		Optional<Visit> visit = Optional.of(v);
-		
 		given(this.petService.findPetById(TEST_PET_ID)).willReturn(new Pet());
 		given(this.visitService.findVisitById(TEST_VISIT_ID)).willReturn(visit);
 	}
 	
-//	@WithMockUser(value = "spring")
-//	@Test
-//	void testInitNewVisitHomelessPetForm() throws Exception {
-//		mockMvc.perform(get("/homeless-pets/{petId}/visits/new", TEST_PET_ID)).andExpect(status().isOk())
-//				.andExpect(view().name("homelessPets/editVisit"))
-//				.andExpect(model().attributeExists("visit"));
-//	}
-//	
-//	@WithMockUser(value = "spring")
-//	@Test
-//	void testProcessNewVisitHomelessPetFormSuccess() throws Exception {
-//		mockMvc.perform(post("/homeless-pets/{petId}/visits/new", TEST_PET_ID)
-//						.with(csrf())
-//						.param("date", "2021/04/04")
-//						.param("description", "Test description of a visit of a homeless pet"))
-//				.andExpect(status().is3xxRedirection())
-//				.andExpect(view().name("redirect:/homeless-pets"));
-//	}
-//	
-//	@WithMockUser(value = "spring")
-//	@Test
-//	void testProcessNewVisitHomelessPetFormHasErrors() throws Exception {
-//		mockMvc.perform(post("/homeless-pets/{petId}/visits/new", TEST_PET_ID)
-//						.with(csrf())
-//						.param("date", "2019/01/01")
-//						.param("description", "The date is in the past, this test must fail"))
-//				.andExpect(status().isOk())
-//				.andExpect(view().name("homelessPets/editVisit"));
-//	}
-//	
-//	@WithMockUser(value = "spring")
-//	@Test
-//	void testInitEditVisitHomelessPetForm() throws Exception {
-//		mockMvc.perform(get("/homeless-pets/{petId}/visits/{visitId}/edit", TEST_PET_ID, TEST_VISIT_ID))
-//				.andExpect(status().isOk())
-//				.andExpect(view().name("homelessPets/editVisit"))
-//				.andExpect(model().attributeExists("visit"))
-//				.andExpect(model().attribute("visit", hasProperty("date", is(LocalDate.of(2018, 7, 9)))))
-//				.andExpect(model().attribute("visit", hasProperty("description", is("Description 1"))));
-//	}
-//	
-//	@WithMockUser(value = "spring")
-//	@Test
-//	void testInitEditVisitHomelessPetFormHasErrors() throws Exception {
-//		mockMvc.perform(get("/homeless-pets/{petId}/visits/-1/edit", TEST_PET_ID))
-//				.andExpect(status().isOk())
-//				.andExpect(view().name("homelessPets/editVisit"))
-//				.andExpect(model().attributeExists("message"));
-//	}
-//	
-//	@WithMockUser(value = "spring")
-//	@Test
-//	void testProcessEditVisitHomelessPetFormSuccess() throws Exception {
-//		mockMvc.perform(post("/homeless-pets/{petId}/visits/{visitId}/edit", TEST_PET_ID, TEST_VISIT_ID)
-//						.with(csrf())
-//						.param("date", "2020/12/12")
-//						.param("description", "The attributes have been changed"))
-//				.andExpect(status().is3xxRedirection())
-//				.andExpect(view().name("redirect:/homeless-pets"));
-//	}
-//	
-//	@WithMockUser(value = "spring")
-//	@Test
-//	void testProcessEditVisitHomelessPetHasErrors() throws Exception {
-//		mockMvc.perform(post("/homeless-pets/{petId}/visits/{visitId}/edit", TEST_PET_ID, TEST_VISIT_ID)
-//						.with(csrf())
-//						.param("date", "2010/12/12")
-//						.param("description", "The date is in the past, this test must fail"))
-//				.andExpect(status().isOk())
-//				.andExpect(view().name("homelessPets/editVisit"));
-//	}
-//	
-//	@WithMockUser(value = "spring")
-//	@Test
-//	void deleteVisitHomelessPet() throws Exception {
-//		mockMvc.perform(get("/homeless-pets/{petId}/visits/{visitId}/delete", TEST_PET_ID, TEST_VISIT_ID)
-//						.with(csrf()))
-//				.andExpect(status().is3xxRedirection())
-//				.andExpect(view().name("redirect:/homeless-pets"));
-//	}
-//	
-//	@WithMockUser(value = "spring")
-//	@Test
-//	void deleteVisitHomelessPetHasErrors() throws Exception {
-//		mockMvc.perform(get("/homeless-pets/{petId}/visits/-1/delete", TEST_PET_ID)
-//						.with(csrf()))
-//				.andExpect(status().is3xxRedirection())
-//				.andExpect(view().name("redirect:/homeless-pets"));
-//	}
+	//Creating new visits -------------------------------------------------------------------------------------------------------
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+	@Test
+	void testInitNewVisitHomelessPetForm() throws Exception {
+		mockMvc.perform(get("/homeless-pets/{petId}/visits/new", TEST_PET_ID))
+				.andExpect(status().isOk())
+				.andExpect(view().name("homelessPets/editVisit"))
+				.andExpect(model().attributeExists("visit"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"trainer"})
+	@Test
+	void testInitNewVisitHomelessPetFormHasErrorsWithAuthority() throws Exception {
+		mockMvc.perform(get("/homeless-pets/{petId}/visits/new", TEST_PET_ID))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/oups"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+	@Test
+	void testProcessNewVisitHomelessPetFormSuccess() throws Exception {
+		mockMvc.perform(post("/homeless-pets/{petId}/visits/new", TEST_PET_ID)
+						.with(csrf())
+						.param("date", "2021/04/04")
+						.param("description", "Test description of a visit of a homeless pet"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/homeless-pets/" + TEST_PET_ID));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+	@Test
+	void testProcessNewVisitHomelessPetFormHasErrors() throws Exception {
+		mockMvc.perform(post("/homeless-pets/{petId}/visits/new", TEST_PET_ID)
+						.with(csrf())
+						.param("date", "2019/01/01")
+						.param("description", "The date is in the past, this test must fail"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("homelessPets/editVisit"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"trainer"})
+	@Test
+	void testProcessNewVisitHomelessPetFormHasErrorsWithAuthority() throws Exception {
+		mockMvc.perform(post("/homeless-pets/{petId}/visits/new", TEST_PET_ID)
+						.with(csrf())
+						.param("date", "2021/04/04")
+						.param("description", "Test description of a visit of a homeless pet"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/oups"));
+	}
+	
+	//Editing visits --------------------------------------------------------------------------------------------------------------
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+	@Test
+	void testInitEditVisitHomelessPetForm() throws Exception {
+		mockMvc.perform(get("/homeless-pets/{petId}/visits/{visitId}/edit", TEST_PET_ID, TEST_VISIT_ID))
+				.andExpect(status().isOk())
+				.andExpect(view().name("homelessPets/editVisit"))
+				.andExpect(model().attributeExists("visit"))
+				.andExpect(model().attribute("visit", hasProperty("date", is(LocalDate.of(2018, 7, 9)))))
+				.andExpect(model().attribute("visit", hasProperty("description", is("Description 1"))));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+	@Test
+	void testInitEditVisitHomelessPetFormHasErrors() throws Exception {
+		mockMvc.perform(get("/homeless-pets/{petId}/visits/-1/edit", TEST_PET_ID))
+				.andExpect(status().isOk())
+				.andExpect(view().name("homelessPets/editVisit"))
+				.andExpect(model().attributeExists("message"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"trainer"})
+	@Test
+	void testInitEditVisitHomelessPetFormHasErrorsWithAuthority() throws Exception {
+		mockMvc.perform(get("/homeless-pets/{petId}/visits/{visitId}/edit", TEST_PET_ID, TEST_VISIT_ID))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/oups"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+	@Test
+	void testProcessEditVisitHomelessPetFormSuccess() throws Exception {
+		mockMvc.perform(post("/homeless-pets/{petId}/visits/{visitId}/edit", TEST_PET_ID, TEST_VISIT_ID)
+						.with(csrf())
+						.param("date", "2020/12/12")
+						.param("description", "The attributes have been changed"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/homeless-pets/" + TEST_PET_ID));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+	@Test
+	void testProcessEditVisitHomelessPetHasErrors() throws Exception {
+		mockMvc.perform(post("/homeless-pets/{petId}/visits/{visitId}/edit", TEST_PET_ID, TEST_VISIT_ID)
+						.with(csrf())
+						.param("date", "2010/12/12")
+						.param("description", "The date is in the past, this test must fail"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("homelessPets/editVisit"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"trainer"})
+	@Test
+	void testProcessEditVisitHomelessPetFormHasErrorsWithAuthority() throws Exception {
+		mockMvc.perform(post("/homeless-pets/{petId}/visits/{visitId}/edit", TEST_PET_ID, TEST_VISIT_ID)
+						.with(csrf())
+						.param("date", "2020/12/12")
+						.param("description", "The attributes have been changed"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/oups"));
+	}
+	
+	//Deleting visits ------------------------------------------------------------------------------------------------------------
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+	@Test
+	void deleteVisitHomelessPet() throws Exception {
+		mockMvc.perform(get("/homeless-pets/{petId}/visits/{visitId}/delete", TEST_PET_ID, TEST_VISIT_ID)
+						.with(csrf()))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/homeless-pets/" + TEST_PET_ID));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+	@Test
+	void deleteVisitHomelessPetHasErrors() throws Exception {
+		mockMvc.perform(get("/homeless-pets/{petId}/visits/-1/delete", TEST_PET_ID)
+						.with(csrf()))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/homeless-pets/" + TEST_PET_ID));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"trainer"})
+	@Test
+	void deleteVisitHomelessPetHasErrorsWithAuthority() throws Exception {
+		mockMvc.perform(get("/homeless-pets/{petId}/visits/{visitId}/delete", TEST_PET_ID, TEST_VISIT_ID)
+						.with(csrf()))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/oups"));
+	}
 	
 }

@@ -31,6 +31,7 @@ import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.service.PetService;
+import org.springframework.samples.petclinic.service.VisitService;
 import org.springframework.samples.petclinic.web.formatters.PetTypeFormatter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
@@ -61,6 +62,9 @@ public class HomelessPetControllerTests {
 	@MockBean
 	private PetService petService;
 	
+	@MockBean
+	private VisitService visitService;
+	
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -79,90 +83,194 @@ public class HomelessPetControllerTests {
 		given(this.petService.findPetById(TEST_PET_ID_2)).willReturn(null);
 	}
 	
-//	@WithMockUser(username = "trainer1", authorities = {"trainer"})
-//	@Test
-//	void testListHomelessPets() throws Exception {
-//		mockMvc.perform(get("/homeless-pets")).andExpect(status().isOk())
-//				.andExpect(view().name("/oups"));
-//	}
+	//Listing homeless pets ---------------------------------------------------------------------------------------------------------
 	
-//	@WithMockUser(username = "trainer1", authorities = {"trainer"})
-//	@Test
-//	void testInitCreationForm() throws Exception {
-//		mockMvc.perform(get("/homeless-pets/new")).andExpect(status().isOk())
-//				.andExpect(view().name("homelessPets/editPet")).andExpect(model().attributeExists("pet"));
-//	}
-//	
-//	@WithMockUser(value = "spring")
-//	@Test
-//	void testProcessCreationFormSuccess() throws Exception {
-//		mockMvc.perform(post("/homeless-pets/new")
-//							.with(csrf())
-//							.param("name", "Dawg")
-//							.param("type", "dog")
-//							.param("birthDate", "2019/01/01"))
-//				.andExpect(status().is3xxRedirection())
-//				.andExpect(view().name("redirect:/homeless-pets"));
-//	}
-//	
-//	@WithMockUser(value = "spring")
-//    @Test
-//	void testProcessCreationFormHasErrors() throws Exception {
-//		mockMvc.perform(post("/homeless-pets/new")
-//							.with(csrf())
-//							.param("name", "")
-//							.param("type", "dog")
-//							.param("birthDate", "2015/02/12"))
-//				.andExpect(model().attributeHasErrors("pet"))
-//				.andExpect(status().isOk())
-//				.andExpect(view().name("homelessPets/editPet"));
-//	}
-//	
-//	@WithMockUser(value = "spring")
-//	@Test
-//	void testInitUpdateForm() throws Exception {
-//		mockMvc.perform(get("/homeless-pets/{petId}/edit", TEST_PET_ID))
-//				.andExpect(status().isOk())
-////				.andExpect(model().attributeExists("pet"))
-//				.andExpect(view().name("homelessPets/editPet"));
-//	}
-//	
-//	@WithMockUser(value = "spring")
-//	@Test
-//	void testProcessUpdateFormSuccess() throws Exception {
-//		mockMvc.perform(post("/homeless-pets/{petId}/edit", TEST_PET_ID)
-//							.with(csrf())
-//							.param("name", "DawgTest")
-//							.param("type", "dog")
-//							.param("birthDate", "2019/01/01"))
-//				.andExpect(status().is3xxRedirection())
-//				.andExpect(view().name("redirect:/homeless-pets"));
-//	}
-//	
-//	@WithMockUser(value = "spring")
-//	@Test
-//	void testProcessUpdateFormHasErrors() throws Exception {
-//		mockMvc.perform(post("/homeless-pets/{petId}/edit", TEST_PET_ID)
-//							.with(csrf())
-//							.param("name", "")
-//							.param("type", "dog")
-//							.param("birthDate", "2019/01/01"))
-//				.andExpect(model().attributeHasErrors("pet")).andExpect(status().isOk())
-//				.andExpect(view().name("homelessPets/editPet"));
-//	}
-//	
-//	@WithMockUser(value = "spring")
-//	@Test
-//	void testDelete() throws Exception {
-//		mockMvc.perform(get("/homeless-pets/{petId}/delete", TEST_PET_ID)).andExpect(status().isOk())
-//		.andExpect(view().name("homelessPets/listPets"));
-//	}
-//	
-//	@WithMockUser(value = "spring")
-//	@Test
-//	void testDeleteWithIncorrectId() throws Exception {
-//		mockMvc.perform(get("/homeless-pets/{petId}/delete", TEST_PET_ID_2)).andExpect(status().isOk())
-//		.andExpect(view().name("homelessPets/listPets"));
-//	}
+	@WithMockUser(username = "spring", authorities = {"trainer"})
+	@Test
+	void testListHomelessPetsAsTrainer() throws Exception {
+		mockMvc.perform(get("/homeless-pets"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("homelessPets/listPets"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+	@Test
+	void testListHomelessPetsAsVeterinarian() throws Exception {
+		mockMvc.perform(get("/homeless-pets"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("homelessPets/listPets"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"owner"})
+	@Test
+	void testListHomelessPetsHasErrorsWithAuthority() throws Exception {
+		mockMvc.perform(get("/homeless-pets"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/oups"));
+	}
+	
+	//Showing homeless pets --------------------------------------------------------------------------------------------------------
+	
+	@WithMockUser(username = "spring", authorities = {"trainer"})
+	@Test
+	void testShowHomelessPetAsTrainer() throws Exception {
+		mockMvc.perform(get("/homeless-pets/{petId}", TEST_PET_ID))
+				.andExpect(status().isOk())
+				.andExpect(view().name("homelessPets/showPet"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+	@Test
+	void testShowHomelessPetAsVeterinarian() throws Exception {
+		mockMvc.perform(get("/homeless-pets/{petId}", TEST_PET_ID))
+				.andExpect(status().isOk())
+				.andExpect(view().name("homelessPets/showPet"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"owner"})
+	@Test
+	void testShowHomelessPetHasErrorsWithAuthority() throws Exception {
+		mockMvc.perform(get("/homeless-pets/{petId}", TEST_PET_ID))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/oups"));
+	}
+	
+	//Creating homeless pets --------------------------------------------------------------------------------------------------------
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+	@Test
+	void testInitCreationForm() throws Exception {
+		mockMvc.perform(get("/homeless-pets/new"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("homelessPets/editPet"))
+				.andExpect(model().attributeExists("pet"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"trainer"})
+	@Test
+	void testInitCreationFormHasErrorsWithAuthority() throws Exception {
+		mockMvc.perform(get("/homeless-pets/new"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/oups"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+	@Test
+	void testProcessCreationFormSuccess() throws Exception {
+		mockMvc.perform(post("/homeless-pets/new")
+							.with(csrf())
+							.param("name", "Dawg")
+							.param("type", "dog")
+							.param("birthDate", "2019/01/01"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/homeless-pets"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+    @Test
+	void testProcessCreationFormHasErrors() throws Exception {
+		mockMvc.perform(post("/homeless-pets/new")
+							.with(csrf())
+							.param("name", "")
+							.param("type", "dog")
+							.param("birthDate", "2015/02/12"))
+				.andExpect(model().attributeHasErrors("pet"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("homelessPets/editPet"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"trainer"})
+	@Test
+	void testProcessCreationFormHasErrorsWithAuthority() throws Exception {
+		mockMvc.perform(post("/homeless-pets/new")
+							.with(csrf())
+							.param("name", "Dawg")
+							.param("type", "dog")
+							.param("birthDate", "2019/01/01"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/oups"));
+	}
+	
+	//Updating homeless pets -------------------------------------------------------------------------------------------------------
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+	@Test
+	void testInitUpdateForm() throws Exception {
+		mockMvc.perform(get("/homeless-pets/{petId}/edit", TEST_PET_ID))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeExists("pet"))
+				.andExpect(view().name("homelessPets/editPet"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"trainer"})
+	@Test
+	void testInitUpdateFormHasErrorsWithAuthority() throws Exception {
+		mockMvc.perform(get("/homeless-pets/{petId}/edit", TEST_PET_ID))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/oups"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+	@Test
+	void testProcessUpdateFormSuccess() throws Exception {
+		mockMvc.perform(post("/homeless-pets/{petId}/edit", TEST_PET_ID)
+							.with(csrf())
+							.param("name", "DawgTest")
+							.param("type", "dog")
+							.param("birthDate", "2019/01/01"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/homeless-pets"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+	@Test
+	void testProcessUpdateFormHasErrors() throws Exception {
+		mockMvc.perform(post("/homeless-pets/{petId}/edit", TEST_PET_ID)
+							.with(csrf())
+							.param("name", "")
+							.param("type", "dog")
+							.param("birthDate", "2019/01/01"))
+				.andExpect(model().attributeHasErrors("pet"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("homelessPets/editPet"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"trainer"})
+	@Test
+	void testProcessUpdateFormHasErrorsWithAuthority() throws Exception {
+		mockMvc.perform(post("/homeless-pets/{petId}/edit", TEST_PET_ID)
+							.with(csrf())
+							.param("name", "DawgTest")
+							.param("type", "dog")
+							.param("birthDate", "2019/01/01"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/oups"));
+	}
+	
+	//Deleting homeless pet ---------------------------------------------------------------------------------------------------------
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+	@Test
+	void testDelete() throws Exception {
+		mockMvc.perform(get("/homeless-pets/{petId}/delete", TEST_PET_ID))
+				.andExpect(status().isOk())
+				.andExpect(view().name("homelessPets/listPets"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"veterinarian"})
+	@Test
+	void testDeleteWithIncorrectId() throws Exception {
+		mockMvc.perform(get("/homeless-pets/{petId}/delete", TEST_PET_ID_2))
+				.andExpect(status().isOk())
+				.andExpect(view().name("homelessPets/listPets"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"trainer"})
+	@Test
+	void testDeleteHasErrorsWithAuthority() throws Exception {
+		mockMvc.perform(get("/homeless-pets/{petId}/delete", TEST_PET_ID))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/oups"));
+	}
 	
 }

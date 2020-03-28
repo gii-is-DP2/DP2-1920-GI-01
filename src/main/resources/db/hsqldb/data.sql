@@ -90,10 +90,18 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (5, 14, '2018-07-09'
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (6, 14, '2018-08-09', 'Description 2');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (7, 15, '2017-08-09', 'Description 3');
 
+-- Homeless pets' intervention from now on
+INSERT INTO interventions(id,pet_id, intervention_date, intervention_time, intervention_description) VALUES (1, 14, '2020-09-09', '4', 'Surgery');
+
+-- Homeless pets' rehabs from now on
+INSERT INTO rehab(id, pet_id, rehab_date, rehab_time, description) VALUES (1, 14, '2020-09-11', '2', 'Rehab session 1');
+
 INSERT INTO medical_records VALUES (1, 'Test', 'Se encuentra muy malito', 1);
+INSERT INTO medical_records VALUES (2, 'Test description', 'Test status', 5);
 
 INSERT INTO medicine VALUES (1, 'Cat medicine', '2023-05-22', 'Maker', 1);
 INSERT INTO medicine VALUES (2, 'Dog medicine', '2023-05-22', 'Maker', 2);
 
 INSERT INTO prescription(id, medicine_id, medical_record_id, dose) VALUES (1, 1, 1, 'Every 24 hours');
+INSERT INTO prescription(id, medicine_id, medical_record_id, dose) VALUES (2, 2, 2, 'Every 4 hours');
 
