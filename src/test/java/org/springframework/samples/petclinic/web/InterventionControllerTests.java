@@ -97,4 +97,28 @@ public class InterventionControllerTests {
 			.andExpect(MockMvcResultMatchers.view().name("pets/createOrUpdateInterventionForm"));//
 	}
 
+	@WithMockUser(value = "spring")
+	@Test
+	void testProcessDelete() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/1/pets/1/interventions/1/delete")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.view().name("owners/ownerlist"));
+	}
+
+	@WithMockUser(value = "spring")
+	@Test
+	void testProcessUpdateFormSuccess() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/owners/1/pets/1/interventions/1/edit").with(SecurityMockMvcRequestPostProcessors.csrf()).param("interventionDate", "2020/07/07")//
+			.param("interventionTime", "1")//
+			.param("interventionDescription", "Test description"))//
+			.andExpect(MockMvcResultMatchers.status().is3xxRedirection()).andExpect(MockMvcResultMatchers.view().name("redirect:/owners/ownerList"));
+	}
+
+	@WithMockUser(value = "spring")
+	@Test
+	void testProcessUpdateFormHasErrors() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/owners/1/pets/1/interventions/1/edit").with(SecurityMockMvcRequestPostProcessors.csrf()).param("interventionDate", "")//
+			.param("interventionTime", "1")//
+			.param("interventionDescription", ""))//
+			.andExpect(MockMvcResultMatchers.model().attributeHasErrors("intervention")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.view().name("pets/createOrUpdateInterventionForm"));
+	}
+
 }

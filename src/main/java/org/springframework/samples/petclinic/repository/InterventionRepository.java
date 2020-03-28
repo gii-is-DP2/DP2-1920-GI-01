@@ -11,6 +11,8 @@ public interface InterventionRepository {
 
 	void save(Intervention intervention) throws DataAccessException;
 
+	void delete(Intervention intervention) throws DataAccessException;
+
 	List<Intervention> findInterventionByPetId(Integer petId);
 
 	Optional<Intervention> findById(int id) throws DataAccessException;
