@@ -5,6 +5,7 @@ import org.assertj.core.internal.Iterables;
 import org.assertj.core.util.Objects;
 import org.springframework.samples.petclinic.model.Intervention;
 import org.springframework.samples.petclinic.model.Specialty;
+import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.model.Vet;
 
 /**
@@ -356,7 +357,7 @@ public abstract class AbstractVetAssert<S extends AbstractVetAssert<S, A>, A ext
    * @return this assertion object.
    * @throws AssertionError - if the actual Vet's user is not equal to the given one.
    */
-  public S hasUser(org.springframework.samples.petclinic.model.User user) {
+  public S hasUser(User user) {
     // check that actual Vet we want to make assertions on is not null.
     isNotNull();
 
@@ -364,7 +365,7 @@ public abstract class AbstractVetAssert<S extends AbstractVetAssert<S, A>, A ext
     String assertjErrorMessage = "\nExpecting user of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
 
     // null safe check
-    org.springframework.samples.petclinic.model.User actualUser = actual.getUser();
+    User actualUser = actual.getUser();
     if (!Objects.areEqual(actualUser, user)) {
       failWithMessage(assertjErrorMessage, actual, user, actualUser);
     }
@@ -372,6 +373,5 @@ public abstract class AbstractVetAssert<S extends AbstractVetAssert<S, A>, A ext
     // return the current assertion for method chaining
     return myself;
   }
-
 
 }
