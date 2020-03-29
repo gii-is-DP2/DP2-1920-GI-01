@@ -275,18 +275,20 @@
                 </dependencies>
             </plugin>
             <plugin>
-                <groupId>org.assertj</groupId>
-                <artifactId>assertj-assertions-generator-maven-plugin</artifactId>
-                <version>2.1.0</version>
-                <configuration>
-                    <classes>
-                        <param>org.springframework.samples.petclinic.model.MedicalRecord</param>
-                    </classes>
-                    <generateAssertionsAllFields>true</generateAssertionsAllFields>
-                    <targetDir>src/test/java/generated-assertions</targetDir>
-                    <cleanTargetDir>true</cleanTargetDir>
-                    <generteAssertionsInPackage>customAssertions</generteAssertionsInPackage>
-                </configuration>
+            	<groupId>org.assertj</groupId>
+            	<artifactId>assertj-assertions-generator-maven-plugin</artifactId>
+            	<version>2.1.0</version>
+            	<configuration>
+            		<classes>
+            			<param>org.springframework.samples.petclinic.model.Owner</param>
+            			<param>org.springframework.samples.petclinic.model.Intervention</param>
+                  <param>org.springframework.samples.petclinic.model.MedicalRecord</param>
+            		</classes>
+            		<generateAssertionsAllFields>true</generateAssertionsAllFields>
+            		<targetDir>src/test/java/generated-assertions</targetDir>
+            		<cleanTargetDir>true</cleanTargetDir>
+            		<generteAssertionsInPackage>customAssertions</generteAssertionsInPackage>
+            	</configuration>
             </plugin>
         </plugins>
     </build>
