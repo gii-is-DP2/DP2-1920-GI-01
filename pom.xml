@@ -46,6 +46,16 @@
 
     <dependencies>
     
+    	<!-- AssertJ dependencies -->
+    	
+    	<dependency>
+    		<groupId>org.assertj</groupId>
+    		<artifactId>assertj-core</artifactId>
+    		<scope>test</scope>
+    	</dependency>
+    
+    	<!-- API requires these dependencies -->
+    
     	<dependency>
             <groupId>org.restlet.jse</groupId>
             <artifactId>org.restlet</artifactId>
@@ -269,6 +279,21 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            <plugin>
+            	<groupId>org.assertj</groupId>
+            	<artifactId>assertj-assertions-generator-maven-plugin</artifactId>
+            	<version>2.1.0</version>
+            	<configuration>
+            		<classes>
+            			<param>org.springframework.samples.petclinic.model.Trainer</param>
+            			<param>org.springframework.samples.petclinic.model.Vet</param>
+            		</classes>
+            		<generateAssertionsForAllFields>true</generateAssertionsForAllFields>
+            		<targetDir>src/test/java/generated-assertions</targetDir>
+            		<cleanTargetDir>true</cleanTargetDir>
+            		<generateAssertionsInPackage>customAssertions</generateAssertionsInPackage>
+            	</configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -279,7 +304,5 @@
             <url>https://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
     </licenses>
-
-
 
 </project>

@@ -18,6 +18,8 @@ import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import generatedAssertions.customAssertions.TrainerAssert;
+
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class TrainerServiceTests {
 
@@ -55,6 +57,8 @@ public class TrainerServiceTests {
 		trainer1 = EntityUtils.getById(trainers, Trainer.class, 1);
 		
 		assertThat(trainer1.getFirstName()).startsWith("John");
+		
+		
 	}
 	
 	// US-019 Administrator manages trainers -----------------------------------------------------------------------
@@ -127,6 +131,7 @@ public class TrainerServiceTests {
 		
 		assertThat(trainer1.isPresent()).isEqualTo(true);
 		assertThat(trainer1.get().getFirstName()).isEqualTo(newFirstName);
+		TrainerAssert.assertThat(trainer1.get()).hasEmail("acme@mail.com");
 		
 	}
 	
