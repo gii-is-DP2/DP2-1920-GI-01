@@ -16,6 +16,8 @@ import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import generatedAssertions.customAssertions.MedicalRecordAssert;
+
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class MedicalRecordServiceTests {
 
@@ -44,7 +46,11 @@ public class MedicalRecordServiceTests {
 
 		assertThat(medicalRecord.getId().equals(1));
 		assertThat(medicalRecord.getDescription().equals("Test"));
-		assertThat(medicalRecord.getStatus().equals("Se encuentra muy malito"));
+		assertThat(medicalRecord.getStatus().equals("TestStatus"));
+		
+		MedicalRecordAssert.assertThat(medicalRecord).hasDescription("Test");
+		MedicalRecordAssert.assertThat(medicalRecord).hasVisit(visitService.findVisitById(1).get());
+		MedicalRecordAssert.assertThat(medicalRecord).hasStatus("TestStatus");
 	}
 
 	@Test
