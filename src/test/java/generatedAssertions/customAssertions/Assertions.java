@@ -9,13 +9,17 @@ package generatedAssertions.customAssertions;
 public class Assertions {
 
 	/**
-	 * Creates a new instance of <code>{@link org.springframework.samples.petclinic.model.InterventionAssert}</code>.
 	 *
 	 * @param actual
 	 *            the actual value.
 	 * @return the created assertion object.
 	 */
 	@org.assertj.core.util.CheckReturnValue
+	public static MedicalRecordAssert assertThat(final org.springframework.samples.petclinic.model.MedicalRecord actual) {
+		return new MedicalRecordAssert(actual);
+  }
+
+  @org.assertj.core.util.CheckReturnValue
 	public static InterventionAssert assertThat(final org.springframework.samples.petclinic.model.Intervention actual) {
 		return new InterventionAssert(actual);
 	}

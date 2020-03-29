@@ -171,9 +171,9 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-        	<groupId>org.assertj</groupId>
-        	<artifactId>assertj-core</artifactId>
-        	<scope>test</scope>  	
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -282,6 +282,7 @@
             		<classes>
             			<param>org.springframework.samples.petclinic.model.Owner</param>
             			<param>org.springframework.samples.petclinic.model.Intervention</param>
+                  <param>org.springframework.samples.petclinic.model.MedicalRecord</param>
             		</classes>
             		<generateAssertionsAllFields>true</generateAssertionsAllFields>
             		<targetDir>src/test/java/generated-assertions</targetDir>

@@ -6,7 +6,6 @@ package generatedAssertions.customAssertions;
  * {@link SoftAssertions#assertAll() assertAll()} at the end of each test.
  * <p>
  * Example:
- * 
  * <pre>
  * <code class='java'> public class SoftlyTest {
  *
@@ -45,6 +44,11 @@ public class JUnitSoftAssertions extends org.assertj.core.api.JUnitSoftAssertion
 	 * @return the created "soft" assertion object.
 	 */
 	@org.assertj.core.util.CheckReturnValue
+	public MedicalRecordAssert assertThat(final org.springframework.samples.petclinic.model.MedicalRecord actual) {
+		return this.proxy(MedicalRecordAssert.class, org.springframework.samples.petclinic.model.MedicalRecord.class, actual);
+  }
+
+  @org.assertj.core.util.CheckReturnValue
 	public OwnerAssert assertThat(final org.springframework.samples.petclinic.model.Owner actual) {
 		return this.proxy(OwnerAssert.class, org.springframework.samples.petclinic.model.Owner.class, actual);
 	}
