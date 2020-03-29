@@ -23,6 +23,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 
 /**
@@ -39,6 +41,7 @@ public class Rehab extends BaseEntity {
 	 */	
 	@Column(name = "rehab_date")        
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
+	@NotNull
 	private LocalDate date;
 
 	@Column(name = "rehab_time")        
@@ -50,6 +53,7 @@ public class Rehab extends BaseEntity {
 	 * Holds value of property description.
 	 */	
 	@Column(name = "description")
+	@NotEmpty
 	private String description;
 
 	

@@ -13,4 +13,7 @@ public interface MedicalRecordRepository extends CrudRepository<MedicalRecord, I
 
 	@Query("SELECT med FROM MedicalRecord med WHERE med.visit.pet.id =:id")
 	Collection<MedicalRecord> findByPetId(@Param("id") int id);
+	
+	@Query("SELECT mr FROM MedicalRecord mr WHERE mr.visit.id =:id")
+	MedicalRecord findOneByVisitId(@Param("id") int id);
 }

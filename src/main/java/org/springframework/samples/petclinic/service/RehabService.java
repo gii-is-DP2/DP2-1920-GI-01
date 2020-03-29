@@ -12,12 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class RehabService {
 
-
+	@Autowired
 	private RehabRepository rehabRepository;
 	
 	@Transactional(readOnly = true)
 	public Optional<Rehab> findRehabById(int rehabId) throws DataAccessException{
-		return rehabRepository.findById(rehabId);
+		return this.rehabRepository.findById(rehabId);
 	}
 	
 	@Transactional
@@ -30,4 +30,4 @@ public class RehabService {
 	public void delete(Rehab rehab) throws DataAccessException{
 		this.rehabRepository.delete(rehab);
 	}
-	}
+}

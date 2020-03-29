@@ -84,6 +84,8 @@ public class TrainerControllerTests {
 	
 	// US-019 Administrator manages trainers -----------------------------------------------------------------------
 	
+	// Listing trainers --------------------------------------------------------------------------------------------
+	
 	@WithMockUser(username = "spring", authorities = {"admin"})
 	@Test
 	void testListTrainersAsAdministrator() throws Exception {
@@ -100,6 +102,8 @@ public class TrainerControllerTests {
 				.andExpect(status().is3xxRedirection())
 				.andExpect(view().name("redirect:/oups"));
 	}
+	
+	// Showing trainers ------------------------------------------------------------------------------------------------------
 	
 	@WithMockUser(username = "spring", authorities = {"admin"})
 	@Test
@@ -126,6 +130,8 @@ public class TrainerControllerTests {
 				.andExpect(status().is3xxRedirection())
 				.andExpect(view().name("redirect:/oups"));
 	}
+	
+	// Creating trainers ------------------------------------------------------------------------------------------------------
 	
 	@WithMockUser(username = "spring", authorities = {"admin"})
 	@Test
@@ -189,6 +195,8 @@ public class TrainerControllerTests {
 				.andExpect(status().isOk())
 				.andExpect(view().name("admin/trainers/editTrainer"));
 	}
+	
+	// Updating trainers -----------------------------------------------------------------------------------------------------
 	
 	@WithMockUser(username = "spring", authorities = {"admin"})
 	@Test
@@ -264,6 +272,8 @@ public class TrainerControllerTests {
 				.andExpect(status().isOk())
 				.andExpect(view().name("admin/trainers/editTrainer"));
 	}
+	
+	// Deleting trainers -----------------------------------------------------------------------------------------------------
 	
 	@WithMockUser(username = "spring", authorities = {"admin"})
 	@Test

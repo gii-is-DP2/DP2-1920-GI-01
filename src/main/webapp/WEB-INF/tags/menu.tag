@@ -87,10 +87,10 @@
 											<p>
 												<sec:authorize url="/admin/trainers">
 													<a href="/admin/trainers">Manage trainers</a>
-                        </sec:authorize>
+                        						</sec:authorize>
 												<sec:authorize url="/admin/vets">
 													<a href="/admin/vets">Manage veterinarians</a>
-                        </sec:authorize>
+                        						</sec:authorize>
 												<sec:authorize url="/homeless-pets">
 													<a href="/homeless-pets">Manage homeless pets</a>
 												</sec:authorize>

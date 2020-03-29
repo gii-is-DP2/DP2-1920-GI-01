@@ -1,8 +1,8 @@
 package org.springframework.samples.petclinic.web;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map; 
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -10,10 +10,9 @@ import javax.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.model.Rehab;
 import org.springframework.samples.petclinic.service.PetService;
-import org.springframework.samples.petclinic.service.VisitService;
-import org.springframework.samples.petclinic.web.validators.VisitValidator;
+import org.springframework.samples.petclinic.service.RehabService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,73 +20,66 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-public class VisitHomelessPetController {
-	
-	private final VisitService visitService;
-	private final PetService petService;
+public class RehabHomelessPetController {
 
+	private final PetService petService;
+	private final RehabService rehabService;
+	
 	@Autowired
-	public VisitHomelessPetController(PetService petService, VisitService visitService) {
+	public RehabHomelessPetController(PetService petService, RehabService rehabService) {
 		this.petService = petService;
-		this.visitService = visitService;
+		this.rehabService = rehabService;
 	}
-	
-	@InitBinder("visit")
-	public void initVisitBinder(WebDataBinder dataBinder) {
-		dataBinder.setValidator(new VisitValidator());
-	}
-	
+
 	//This method will let us check security
 	public boolean userHasAuthorities(Collection<SimpleGrantedAuthority> authorities) {
 		Boolean res = false;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if(principal instanceof UserDetails) {
 			Collection<? extends GrantedAuthority> principalAuthorities = ((UserDetails)principal).getAuthorities();
-			if(principalAuthorities.containsAll(authorities)) {
+			if(authorities.containsAll(principalAuthorities)) {
 				res = true;
 			}
 		}
 		return res;
 	}
 	
-	@GetMapping("/homeless-pets/{petId}/visits/new")
-	public String initNewVisitHomelessPetForm(@PathVariable("petId") int petId, Map<String, Object> model) {
+	@GetMapping("/homeless-pets/{petId}/rehabs/new")
+	public String initNewRehabHomelessPetForm(@PathVariable("petId") int petId, Map<String, Object> model) {
 		
 		String view;
 		Boolean hasAuthorities;
 		
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
-		authorities.add(authorityVeterinarian);
+		SimpleGrantedAuthority authorityTrainer = new SimpleGrantedAuthority("trainer");
+		authorities.add(authorityTrainer);
 		
 		hasAuthorities = userHasAuthorities(authorities);
 		
 		if(hasAuthorities == true) {
-			Visit visit = new Visit();
+			Rehab rehab = new Rehab();
 			Pet pet = this.petService.findPetById(petId);
-			pet.addVisit(visit);
-			model.put("visit", visit);
-			view = "homelessPets/editVisit";
+			pet.addRehab(rehab);
+			model.put("rehab", rehab);
+			view = "homelessPets/editRehab";
 		} else {
 			view = "redirect:/oups";
 		}
 		return view;
 	}
 	
-	@PostMapping("/homeless-pets/{petId}/visits/new")
-	public String processNewVisitHomelessPetForm(@PathVariable("petId") int petId, @Valid Visit visit, BindingResult result) {
+	@PostMapping("/homeless-pets/{petId}/rehabs/new")
+	public String processNewRehabHomelessPetForm(@PathVariable("petId") int petId, @Valid Rehab rehab, BindingResult result) {
 		String view;
 		Boolean hasAuthorities;
 		
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("trainer");
 		authorities.add(authorityVeterinarian);
 		
 		hasAuthorities = userHasAuthorities(authorities);
@@ -95,38 +87,37 @@ public class VisitHomelessPetController {
 		if(hasAuthorities == true) {
 			Pet pet = this.petService.findPetById(petId);
 			if (result.hasErrors()) {
-				view = "homelessPets/editVisit";
+				view = "homelessPets/editRehab";
 			}
 			else {
-				pet.addVisit(visit);
-				this.petService.saveVisit(visit);
+				pet.addRehab(rehab);
+				this.rehabService.saveRehab(rehab);
 				view = "redirect:/homeless-pets/" + petId;
 			}
 		} else {
 			view = "redirect:/oups";
 		}
 		return view;
-			
 	}
 	
-	@GetMapping("/homeless-pets/{petId}/visits/{visitId}/edit")
-	public String initEditVisitHomelessPetForm(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, ModelMap model) {
+	@GetMapping("/homeless-pets/{petId}/rehabs/{rehabId}/edit")
+	public String initEditRehabHomelessPetForm(@PathVariable("petId") int petId, @PathVariable("rehabId") int rehabId, ModelMap model) {
 		String view;
 		Boolean hasAuthorities;
 		
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
-		authorities.add(authorityVeterinarian);
+		SimpleGrantedAuthority authorityTrainer = new SimpleGrantedAuthority("trainer");
+		authorities.add(authorityTrainer);
 		
 		hasAuthorities = userHasAuthorities(authorities);
 		
 		if(hasAuthorities == true) {
-			view = "homelessPets/editVisit";
-			Optional<Visit> visit = this.visitService.findVisitById(visitId);
-			if(visit.isPresent()) {
-				model.addAttribute("visit", visit.get());
+			view = "homelessPets/editRehab";
+			Optional<Rehab> rehab = this.rehabService.findRehabById(rehabId);
+			if(rehab.isPresent()) {
+				model.addAttribute("rehab", rehab.get());
 			} else {
-				model.addAttribute("message", "Visit not found!");
+				model.addAttribute("message", "Rehab not found!");
 			}
 		} else {
 			view = "redirect:/oups";
@@ -134,29 +125,29 @@ public class VisitHomelessPetController {
 		return view;
 	}
 	
-	@PostMapping("/homeless-pets/{petId}/visits/{visitId}/edit")
-	public String processEditVisitHomelessPetForm(@PathVariable("petId") int petId, @Valid Visit visit, BindingResult result, @PathVariable("visitId") int visitId, ModelMap model) {
+	@PostMapping("/homeless-pets/{petId}/rehabs/{rehabId}/edit")
+	public String processEditRehabHomelessPetForm(@PathVariable("petId") int petId, @Valid Rehab rehab, BindingResult result, @PathVariable("rehabId") int rehabId, ModelMap model) {
 		String view;
 		Boolean hasAuthorities;
 		
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("trainer");
 		authorities.add(authorityVeterinarian);
 		
 		hasAuthorities = userHasAuthorities(authorities);
 		
 		if(hasAuthorities == true) {
 			if(result.hasErrors()) {
-				model.put("visit", visit);
-				view = "homelessPets/editVisit";
+				model.put("rehab", rehab);
+				view = "homelessPets/editRehab";
 			} else {
-				Optional<Visit> visitToUpdate = this.visitService.findVisitById(visitId);
-				if(visitToUpdate.isPresent()) {
-					BeanUtils.copyProperties(visit, visitToUpdate.get(), "id", "pet");
+				Optional<Rehab> rehabToUpdate = this.rehabService.findRehabById(rehabId);
+				if(rehabToUpdate.isPresent()) {
+					BeanUtils.copyProperties(rehab, rehabToUpdate.get(), "id", "pet");
 					try {
-						this.petService.saveVisit(visitToUpdate.get());
+						this.rehabService.saveRehab(rehabToUpdate.get());
 					} catch (Exception e) {
-						view = "homelessPets/editVisit";
+						view = "homelessPets/editRehab";
 					}
 				}
 				view = "redirect:/homeless-pets/" + petId;
@@ -167,29 +158,29 @@ public class VisitHomelessPetController {
 		return view;
 	}
 	
-	@GetMapping("/homeless-pets/{petId}/visits/{visitId}/delete")
-	public String deleteVisitHomelessPet(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, ModelMap model) {
+	@GetMapping("/homeless-pets/{petId}/rehabs/{rehabId}/delete")
+	public String deleteRehabHomelessPet(@PathVariable("petId") int petId, @PathVariable("rehabId") int rehabId, ModelMap model) {
 		String view;
 		Boolean hasAuthorities;
 		
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("trainer");
 		authorities.add(authorityVeterinarian);
 		
 		hasAuthorities = userHasAuthorities(authorities);
 		
 		if(hasAuthorities == true) {
-			Optional<Visit> visit;
+			Optional<Rehab> rehab;
 			view = "homelessPets/listPets";
-			visit = this.visitService.findVisitById(visitId);
+			rehab = this.rehabService.findRehabById(rehabId);
 			Pet pet = this.petService.findPetById(petId);
-			if(visit.isPresent()) {
-				pet.removeVisit(visit.get());
-				visitService.delete(visit.get());
-				model.addAttribute("message", "Visit deleted successfully!");
+			if(rehab.isPresent()) {
+				pet.removeRehab(rehab.get());
+				this.rehabService.delete(rehab.get());
+				model.addAttribute("message", "Rehab deleted successfully!");
 				view = "redirect:/homeless-pets/" + petId;
 			} else {
-				model.addAttribute("message", "Visit not found!");
+				model.addAttribute("message", "Rehab not found!");
 				view = "redirect:/homeless-pets/" + petId;
 			}
 		} else {
