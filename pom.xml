@@ -283,6 +283,8 @@
             			<param>org.springframework.samples.petclinic.model.Owner</param>
             			<param>org.springframework.samples.petclinic.model.Intervention</param>
                   <param>org.springframework.samples.petclinic.model.MedicalRecord</param>
+                  <param>org.springframework.samples.petclinic.model.Trainer</param>
+            			<param>org.springframework.samples.petclinic.model.Vet</param>
             		</classes>
             		<generateAssertionsAllFields>true</generateAssertionsAllFields>
             		<targetDir>src/test/java/generated-assertions</targetDir>
