@@ -35,6 +35,8 @@ import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import generatedAssertions.customAssertions.VetAssert;
+
 /**
  * Integration test of the Service and the Repository layer.
  * <p>
@@ -91,6 +93,16 @@ class VetServiceTests {
 		assertThat(vet1.isPresent()).isEqualTo(true);
 		assertThat(vet1.get().getFirstName()).isEqualTo("James");
 		assertThat(vet1.get().getLastName()).isEqualTo("Carter");
+		
+		User user = new User();
+		user.setUsername("vet1");
+		user.setPassword("v3t1");
+		user.setEnabled(true);
+		
+		VetAssert.assertThat(vet1.get()).hasNoInterventions();
+		VetAssert.assertThat(vet1.get()).hasNoSpecialties();
+		VetAssert.assertThat(vet1.get()).hasNrOfSpecialties(0);
+		VetAssert.assertThat(vet1.get()).hasUser(user);
 	}
 	
 	@Test

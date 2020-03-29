@@ -46,6 +46,17 @@ public class TrainerServiceTests {
 		assertThat(trainer1.isPresent()).isEqualTo(true);
 		assertThat(trainer1.get().getFirstName()).startsWith("John");
 		assertThat(trainer1.get().getLastName()).startsWith("Doe");
+		
+		User user = new User();
+		user.setUsername("trainer1");
+		user.setPassword("tr41n3r");
+		user.setEnabled(true);
+		
+		// Custom assertions --------------------------------------------------
+		
+		TrainerAssert.assertThat(trainer1.get()).hasPhone("34 111111111");
+		TrainerAssert.assertThat(trainer1.get()).hasEmail("acme@mail.com");
+		TrainerAssert.assertThat(trainer1.get()).hasUser(user);
 	}
 	
 	@Test
@@ -131,7 +142,6 @@ public class TrainerServiceTests {
 		
 		assertThat(trainer1.isPresent()).isEqualTo(true);
 		assertThat(trainer1.get().getFirstName()).isEqualTo(newFirstName);
-		TrainerAssert.assertThat(trainer1.get()).hasEmail("acme@mail.com");
 		
 	}
 	
