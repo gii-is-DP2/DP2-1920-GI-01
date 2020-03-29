@@ -109,6 +109,8 @@ class VetControllerTests {
 	
 	// US-013 Administrator manages vets ---------------------------------------------------------------------------
 	
+	// Listing vets ------------------------------------------------------------------------------------------------
+	
 	@WithMockUser(username = "spring", authorities = {"admin"})
 	@Test
 	void testListVetsAsAdministrator() throws Exception {
@@ -125,6 +127,8 @@ class VetControllerTests {
 				.andExpect(status().is3xxRedirection())
 				.andExpect(view().name("redirect:/oups"));
 	}
+	
+	// Showing vets -----------------------------------------------------------------------------------------------------------
 	
 	@WithMockUser(username = "spring", authorities = {"admin"})
 	@Test
@@ -151,6 +155,8 @@ class VetControllerTests {
 				.andExpect(view().name("admin/vets/vetShow"))
 				.andExpect(model().attributeExists("vet"));
 	}
+	
+	// Creating vets ----------------------------------------------------------------------------------------------------------
 	
 	@WithMockUser(username = "spring", authorities = {"admin"})
 	@Test
@@ -211,6 +217,8 @@ class VetControllerTests {
 				.andExpect(status().isOk())
 				.andExpect(view().name("admin/vets/vetEdit"));
 	}
+	
+	// Updating vets ----------------------------------------------------------------------------------------------------------
 	
 	@WithMockUser(username = "spring", authorities = {"admin"})
 	@Test
@@ -283,6 +291,8 @@ class VetControllerTests {
 				.andExpect(status().isOk())
 				.andExpect(view().name("admin/vets/vetEdit"));
 	}
+	
+	// Deleting vets ----------------------------------------------------------------------------------------------------------
 	
 	@WithMockUser(username = "spring", authorities = {"admin"})
 	@Test
