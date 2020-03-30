@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2002-2013 the original author or authors.
  *
@@ -18,8 +19,7 @@ package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
 import java.util.List;
-import javax.validation.Valid;
-
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -28,9 +28,9 @@ import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Rehab;
 import org.springframework.samples.petclinic.model.Visit;
-import org.springframework.samples.petclinic.repository.RehabRepository;
 import org.springframework.samples.petclinic.repository.InterventionRepository;
 import org.springframework.samples.petclinic.repository.PetRepository;
+import org.springframework.samples.petclinic.repository.RehabRepository;
 import org.springframework.samples.petclinic.repository.VisitRepository;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
 import org.springframework.stereotype.Service;
@@ -50,16 +50,17 @@ public class PetService {
 
 	private VisitRepository			visitRepository;
 
-	private RehabRepository	        rehabRepository;
-  
+	private RehabRepository			rehabRepository;
+
 	private InterventionRepository	interventionRepository;
 
-		@Autowired
+
+	@Autowired
 	public PetService(final PetRepository petRepository, final VisitRepository visitRepository, final InterventionRepository interventionRepository, final RehabRepository rehabRepository) {
 		this.petRepository = petRepository;
 		this.visitRepository = visitRepository;
 		this.interventionRepository = interventionRepository;
-    this.rehabRepository = rehabRepository;
+		this.rehabRepository = rehabRepository;
 
 	}
 
@@ -119,6 +120,16 @@ public class PetService {
 		this.rehabRepository.save(rehab);
 	}
 
+	@Transactional
+	public Optional<Intervention> findInterventionById(final int interventionId) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return this.interventionRepository.findById(interventionId);
+	}
+
+	public void deleteIntervention(final Intervention intervention) throws DataAccessException {
+		// TODO Auto-generated method stub
+		this.interventionRepository.delete(intervention);
+
+	}
 
 }
-

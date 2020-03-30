@@ -35,6 +35,8 @@ import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import generatedAssertions.customAssertions.VetAssert;
+
 /**
  * Integration test of the Service and the Repository layer.
  * <p>
@@ -71,27 +73,46 @@ class VetServiceTests {
 	@Autowired
 	protected VetService vetService;	
 
+	// US-013 Administrator manages vets ---------------------------------------------------------------------------
+	
 	@Test
 	void shouldNotFindVetWithIncorrectId() {
-		Optional<Vet> noVet = this.vetService.findVetById(-1);
+		Optional<Vet> noVet;
+		
+		noVet = this.vetService.findVetById(-1);
 		
 		assertThat(noVet.isPresent()).isEqualTo(false);
 	}
 	
 	@Test
 	void shouldFindVetWithCorrectId() {
-		Optional<Vet> vet1 = this.vetService.findVetById(1);
+		Optional<Vet> vet1;
+		
+		vet1 = this.vetService.findVetById(1);
 	
 		assertThat(vet1.isPresent()).isEqualTo(true);
 		assertThat(vet1.get().getFirstName()).isEqualTo("James");
 		assertThat(vet1.get().getLastName()).isEqualTo("Carter");
+		
+		User user = new User();
+		user.setUsername("vet1");
+		user.setPassword("v3t1");
+		user.setEnabled(true);
+		
+		VetAssert.assertThat(vet1.get()).hasNoInterventions();
+		VetAssert.assertThat(vet1.get()).hasNoSpecialties();
+		VetAssert.assertThat(vet1.get()).hasNrOfSpecialties(0);
+		VetAssert.assertThat(vet1.get()).hasUser(user);
 	}
 	
 	@Test
 	void shouldFindVets() {
-		Collection<Vet> vets = this.vetService.findVets();
-
-		Vet vet = EntityUtils.getById(vets, Vet.class, 3);
+		Collection<Vet> vets;
+		Vet vet;
+		
+		vets = this.vetService.findVets();
+		vet = EntityUtils.getById(vets, Vet.class, 3);
+		
 		assertThat(vet.getLastName()).isEqualTo("Douglas");
 		assertThat(vet.getNrOfSpecialties()).isEqualTo(2);
 		assertThat(vet.getSpecialties().get(0).getName()).isEqualTo("dentistry");
@@ -100,10 +121,13 @@ class VetServiceTests {
 
 	@Test
 	void shouldFindAllSpecialties() {
-		Collection<Specialty> specialties = this.vetService.findAllSpecialty();
-		Specialty specialty1 = EntityUtils.getById(specialties, Specialty.class, 1);
-		Specialty specialty2 = EntityUtils.getById(specialties, Specialty.class, 2);
-		Specialty specialty3 = EntityUtils.getById(specialties, Specialty.class, 3);
+		Collection<Specialty> specialties;
+		Specialty specialty1, specialty2, specialty3;
+		
+		specialties = this.vetService.findAllSpecialty();
+		specialty1 = EntityUtils.getById(specialties, Specialty.class, 1);
+		specialty2 = EntityUtils.getById(specialties, Specialty.class, 2);
+		specialty3 = EntityUtils.getById(specialties, Specialty.class, 3);
 	
 		assertThat(specialty1.getName()).isEqualTo("radiology");
 		assertThat(specialty2.getName()).isEqualTo("surgery");
@@ -113,17 +137,21 @@ class VetServiceTests {
 	@Test
 	@Transactional
 	void shouldInsertVet() {
-		Collection<Vet> vets = this.vetService.findVets();
-		int found = vets.size();
-		
+		Collection<Vet> vets;
 		Vet vet = new Vet();
-		vet.setFirstName("testFirstName");
-		vet.setLastName("testLastName");
-		vet.setSpecialties(new ArrayList<Specialty>());
 		User user = new User();
+		int found;
+		
+		vets = this.vetService.findVets();
+		found = vets.size();
+		
 		user.setUsername("testVetUsername");
 		user.setPassword("testVetPassword");
 		user.setEnabled(true);
+		
+		vet.setFirstName("testFirstName");
+		vet.setLastName("testLastName");
+		vet.setSpecialties(new ArrayList<Specialty>());
 		vet.setUser(user);
 		
 		this.vetService.saveVet(vet);
@@ -138,14 +166,15 @@ class VetServiceTests {
 	void shouldNotInsertVetWithFirstNameBlank() {
 		ConstraintViolationException exception;
 		Vet vet = new Vet();
+		User user = new User();
+		
+		user.setUsername("testVetUsername");
+		user.setPassword("testVetPassword");
+		user.setEnabled(true);
 		
 		vet.setFirstName("");
 		vet.setLastName("testLastName");
 		vet.setSpecialties(new ArrayList<Specialty>());
-		User user = new User();
-		user.setUsername("testVetUsername");
-		user.setPassword("testVetPassword");
-		user.setEnabled(true);
 		vet.setUser(user);
 		
 		exception = assertThrows(ConstraintViolationException.class, () -> this.vetService.saveVet(vet));
@@ -156,8 +185,10 @@ class VetServiceTests {
 	@Test
 	@Transactional
 	void shouldUpdateVetName() {
-		Optional<Vet> vet1 = this.vetService.findVetById(1);
+		Optional<Vet> vet1;
 		String oldFirstName, newFirstName;
+		
+		vet1 = this.vetService.findVetById(1);
 		
 		assertThat(vet1.isPresent()).isEqualTo(true);
 		oldFirstName = vet1.get().getFirstName();
@@ -174,7 +205,9 @@ class VetServiceTests {
 	@Test
 	@Transactional
 	void shouldDeleteVet() {
-		Optional<Vet> vet1 = this.vetService.findVetById(1);
+		Optional<Vet> vet1;
+		
+		vet1 = this.vetService.findVetById(1);
 		
 		assertThat(vet1.isPresent()).isEqualTo(true);
 		this.vetService.deleteVet(vet1.get());

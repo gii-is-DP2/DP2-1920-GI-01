@@ -25,6 +25,23 @@
 	             </td>
 	        </tr>
 	    </table>
+	    
+	    <br>
+	    <h2>Interventions</h2>
+	    <br>
+	    <table class="table table-striped">
+	    	<c:forEach var="intervention" items="${vet.interventions}">
+	    		
+	    	
+                            <th>Intervention Date</th>
+                            <td><petclinic:localDate date="${intervention.interventionDate}" pattern="yyyy-MM-dd"/></td>
+                            <th>Intervention Description</th>
+                             <td><c:out value="${intervention.interventionDescription}"/></td>
+                            <th>Intervention Time</th>
+                            <td><c:out value="${intervention.interventionTime}"/></td>
+        	
+	    	</c:forEach>
+	    </table>
 	</c:if>
 	<c:if test="${message == 'Vet not found!'}">
 		<h3>Vet not found!</h3>

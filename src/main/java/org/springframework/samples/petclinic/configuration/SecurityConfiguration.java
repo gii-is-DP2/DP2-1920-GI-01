@@ -1,6 +1,8 @@
 
 package org.springframework.samples.petclinic.configuration;
 
+import java.util.Arrays;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +13,14 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -44,9 +52,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/organizations", "/organizations/{id}").permitAll()
 				.antMatchers("/admin/**").hasAnyAuthority("admin")
 				.antMatchers("/owners/**").hasAnyAuthority("owner","admin","veterinarian","trainer")
-				.antMatchers("/homeless-pets/**").hasAnyAuthority("veterinarian")
+				.antMatchers("/homeless-pets/**").hasAnyAuthority("veterinarian", "trainer")
 				.antMatchers("/vets/**").authenticated()
-				.antMatchers("/medicine/**").hasAnyAuthority("vet", "admin")
+				.antMatchers("/medicine/**").hasAnyAuthority("veterinarian", "admin")
 				.antMatchers("/medical-record/**").authenticated()
 				.antMatchers("/vets.xml").permitAll()
 				.anyRequest().denyAll()
@@ -76,6 +84,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	public PasswordEncoder passwordEncoder() {
 		PasswordEncoder encoder = NoOpPasswordEncoder.getInstance();
 		return encoder;
+	}
+	
+	@Bean
+	public UserDetailsService userDetailsService() {
+		GrantedAuthority authority = new SimpleGrantedAuthority("trainer");
+		UserDetails userDetailsTrainer = (UserDetails) new User("trainer1", "trainer1", Arrays.asList(authority));
+		
+		return new InMemoryUserDetailsManager(Arrays.asList(userDetailsTrainer));
 	}
 
 }

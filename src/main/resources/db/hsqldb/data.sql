@@ -24,6 +24,11 @@ INSERT INTO authorities VALUES ('vet7','veterinarian');
 INSERT INTO users(username,password,enabled) VALUES ('trainer1','tr41n3r',TRUE);
 INSERT INTO authorities VALUES ('trainer1','trainer');
 
+
+INSERT INTO users(username,password,enabled) VALUES ('trainer2','train333',TRUE);
+INSERT INTO authorities VALUES ('trainer2','trainer');
+
+
 INSERT INTO vets VALUES (1, 'James', 'Carter','vet1');
 INSERT INTO vets VALUES (2, 'Helen', 'Leary','vet2');
 INSERT INTO vets VALUES (3, 'Linda', 'Douglas','vet3');
@@ -84,16 +89,28 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (3, 8, '2013-01-03',
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04', 'spayed');
 
 INSERT INTO trainers VALUES (1, 'John', 'Doe', 'acme@mail.com', '34 111111111', 'trainer1');
+INSERT INTO trainers VALUES (2, 'Thomas', 'Moon', 'thomas@mail.com', '24456756', 'trainer2');
 
 -- Homeless pets' visits from now on
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (5, 14, '2018-07-09', 'Description 1');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (6, 14, '2018-08-09', 'Description 2');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (7, 15, '2017-08-09', 'Description 3');
 
-INSERT INTO medical_records VALUES (1, 'Test', 'Se encuentra muy malito', 1);
+-- Homeless pets' intervention from now on
+INSERT INTO interventions(id,pet_id, intervention_date, intervention_time, intervention_description) VALUES (1, 14, '2020-09-09', '4', 'Surgery');
+INSERT INTO interventions(pet_id, intervention_date, intervention_time, intervention_description, vet_id) VALUES (1, '2020-09-09', '4', 'Surgery',1);
+INSERT INTO interventions(pet_id, intervention_date, intervention_time, intervention_description, vet_id) VALUES (1, '2020-09-09', '4', 'Surgery',2);
+
+
+-- Homeless pets' rehabs from now on
+INSERT INTO rehab(id, pet_id, rehab_date, rehab_time, description) VALUES (1, 14, '2020-09-11', '2', 'Rehab session 1');
+
+INSERT INTO medical_records VALUES (1, 'Test', 'TestStatus', 1);
+INSERT INTO medical_records VALUES (2, 'Test description', 'Test status', 5);
 
 INSERT INTO medicine VALUES (1, 'Cat medicine', '2023-05-22', 'Maker', 1);
 INSERT INTO medicine VALUES (2, 'Dog medicine', '2023-05-22', 'Maker', 2);
 
 INSERT INTO prescription(id, medicine_id, medical_record_id, dose) VALUES (1, 1, 1, 'Every 24 hours');
+INSERT INTO prescription(id, medicine_id, medical_record_id, dose) VALUES (2, 2, 2, 'Every 4 hours');
 

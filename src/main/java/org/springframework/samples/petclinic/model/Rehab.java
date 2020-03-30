@@ -25,6 +25,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 
 /**
@@ -41,23 +43,28 @@ public class Rehab extends BaseEntity {
 	 */	
 	@Column(name = "rehab_date")        
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
+	@NotNull
 	private LocalDate date;
 
 	@Column(name = "rehab_time")        
 	private Integer time;
 
-
 	@Column(name = "description")
+	@NotEmpty
 	private String description;
 
-	
+
 	@ManyToOne
 	@JoinColumn(name = "pet_id")
 	private Pet pet;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	private Trainer			trainer;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private Trainer			trainer;
 	
+
 	public Rehab() {
 		this.date = LocalDate.now();
 	}

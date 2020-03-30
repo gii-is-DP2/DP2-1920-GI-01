@@ -13,8 +13,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class MedicineFormatter implements Formatter<Medicine> {
 
+	private final MedicineService medicineService;
+	
 	@Autowired
-	private MedicineService medicineService;
+	public MedicineFormatter(MedicineService medicineService) {
+		this.medicineService = medicineService;
+	}
 	
 	@Override
 	public String print(Medicine medicine, Locale locale) {

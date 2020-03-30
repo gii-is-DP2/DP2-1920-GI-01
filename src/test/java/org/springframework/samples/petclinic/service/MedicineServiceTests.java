@@ -1,6 +1,6 @@
 package org.springframework.samples.petclinic.service;
 
-import static org.assertj.core.api.Assertions.assertThat; 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
@@ -19,6 +19,8 @@ import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import generatedAssertions.customAssertions.MedicineAssert;
+
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class MedicineServiceTests {
 	
@@ -31,11 +33,16 @@ public class MedicineServiceTests {
 	@Test
 	void shouldFindMedicineWithCorrectId() {
 		Medicine medicine1;
+		PetType petType;
 		
 		medicine1 = medicineService.findMedicineById(1);
+		petType = EntityUtils.getById(petService.findPetTypes(), PetType.class, 1);
 		
 		assertThat(medicine1.getName()).startsWith("Cat medicine");
 		assertThat(medicine1.getMaker()).startsWith("Maker");
+		
+		MedicineAssert.assertThat(medicine1).hasMaker("Maker");
+		MedicineAssert.assertThat(medicine1).hasPetType(petType);
 	}
 	
 	@Test

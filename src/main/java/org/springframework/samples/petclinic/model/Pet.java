@@ -63,7 +63,7 @@ public class Pet extends NamedEntity {
 	private Set<Visit>			visits;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
-private Set<Intervention>	interventions;
+	private Set<Intervention>	interventions;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
 	private Set<Rehab> rehabs;
@@ -133,25 +133,30 @@ private Set<Intervention>	interventions;
 		PropertyComparator.sort(sortedInterventions, new MutableSortDefinition("interventionDate", false, false));
 		return Collections.unmodifiableList(sortedInterventions);
 	}
+	
+	protected void setInterventionsInternal(final Set<Intervention> interventions) {
+		this.interventions = interventions;
+	}
 
 	public void addIntervention(final Intervention intervention) {
 		this.getInterventionsInternal().add(intervention);
 		intervention.setPet(this);
 	}
 
-	protected void setInterventionsInternal(final Set<Intervention> interventions) {
-		this.interventions = interventions;
+	public void removeIntervention(final Intervention intervention) {
+		this.getInterventionsInternal().remove(intervention);
 	}
 
 	public void addRehab(Rehab rehab) {
-		getRehabInternal().add(rehab);
+		getRehabsInternal().add(rehab);
 		rehab.setPet(this);
 	}
 	
-	protected void setRehabInternal(Set<Rehab> rehabs) {
+	protected void setRehabsInternal(Set<Rehab> rehabs) {
 		this.rehabs = rehabs;
 	}
-	 Set<Rehab> getRehabInternal() {
+	 
+	protected Set<Rehab> getRehabsInternal() {
 		if (this.rehabs == null) {
 			this.rehabs = new HashSet<>();
 		}
@@ -159,9 +164,13 @@ private Set<Intervention>	interventions;
 	}
 
 	public List<Rehab> getRehabs() {
-		List<Rehab> sortedRehabs = new ArrayList<>(getRehabInternal());
+		List<Rehab> sortedRehabs = new ArrayList<>(getRehabsInternal());
 		PropertyComparator.sort(sortedRehabs, new MutableSortDefinition("rehabdate", false, false));
 		return Collections.unmodifiableList(sortedRehabs);
+	}
+	
+	public void removeRehab(final Rehab rehab) {
+		this.getRehabsInternal().remove(rehab);
 	}
   
 }

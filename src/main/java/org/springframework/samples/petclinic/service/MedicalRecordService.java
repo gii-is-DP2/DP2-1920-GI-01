@@ -32,6 +32,11 @@ public class MedicalRecordService {
 		return this.repository.findByPetId(id);
 	}
 	
+	@Transactional(readOnly = true)
+	public MedicalRecord findMedicalRecordByVisitId(final Integer visitId) {
+		return this.repository.findOneByVisitId(visitId);
+	}
+	
 	@Transactional
 	public void deleteMedicalRecord(final MedicalRecord medicalRecord) {
 		this.repository.delete(medicalRecord);

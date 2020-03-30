@@ -8,7 +8,7 @@
 	description="Name of the active menu: home, owners, vets or error"%>
 
 <nav class="navbar navbar-default" role="navigation">
-	<div class="container">
+	<div class="container" style="width: 90%">
 		<div class="navbar-header">
 			<a class="navbar-brand"
 				href="<spring:url value="/" htmlEscape="true" />"><span></span></a>
@@ -87,10 +87,10 @@
 											<p>
 												<sec:authorize url="/admin/trainers">
 													<a href="/admin/trainers">Manage trainers</a>
-                        </sec:authorize>
+                        						</sec:authorize>
 												<sec:authorize url="/admin/vets">
 													<a href="/admin/vets">Manage veterinarians</a>
-                        </sec:authorize>
+                        						</sec:authorize>
 												<sec:authorize url="/homeless-pets">
 													<a href="/homeless-pets">Manage homeless pets</a>
 												</sec:authorize>
