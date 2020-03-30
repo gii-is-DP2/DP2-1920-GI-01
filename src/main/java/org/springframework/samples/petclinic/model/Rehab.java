@@ -49,18 +49,11 @@ public class Rehab extends BaseEntity {
 	@Column(name = "rehab_time")        
 	private Integer time;
 
-	
-	/**
-	 * Holds value of property description.
-	 */	
 	@Column(name = "description")
 	@NotEmpty
 	private String description;
 
-	
-	/**
-	 * Holds value of property pet.
-	 */
+
 	@ManyToOne
 	@JoinColumn(name = "pet_id")
 	private Pet pet;
@@ -68,11 +61,10 @@ public class Rehab extends BaseEntity {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Trainer			trainer;
 
+	@OneToOne(cascade = CascadeType.ALL)
+	private Trainer			trainer;
 	
-	
-	/**
-	 * Creates a new instance of Visit for the current date
-	 */
+
 	public Rehab() {
 		this.date = LocalDate.now();
 	}
