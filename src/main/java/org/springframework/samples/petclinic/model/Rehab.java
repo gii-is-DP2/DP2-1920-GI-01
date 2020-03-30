@@ -17,12 +17,16 @@ package org.springframework.samples.petclinic.model;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 
 /**
@@ -39,31 +43,25 @@ public class Rehab extends BaseEntity {
 	 */	
 	@Column(name = "rehab_date")        
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
+	@NotNull
 	private LocalDate date;
 
 	@Column(name = "rehab_time")        
 	private Integer time;
 
-
-	
-	/**
-	 * Holds value of property description.
-	 */	
 	@Column(name = "description")
+	@NotEmpty
 	private String description;
 
-	
-	
-	/**
-	 * Holds value of property pet.
-	 */
+
 	@ManyToOne
 	@JoinColumn(name = "pet_id")
 	private Pet pet;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	private Trainer			trainer;
 
-	/**
-	 * Creates a new instance of Visit for the current date
-	 */
+
 	public Rehab() {
 		this.date = LocalDate.now();
 	}
@@ -106,6 +104,9 @@ public class Rehab extends BaseEntity {
 		this.pet = pet;
 	}
 
+	public void setTrainer(Trainer trainer) {
+		this.trainer = trainer;
+	}
 }
 
 

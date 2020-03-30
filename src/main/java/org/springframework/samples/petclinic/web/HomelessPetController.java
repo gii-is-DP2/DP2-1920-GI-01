@@ -3,6 +3,8 @@ package org.springframework.samples.petclinic.web;
 import java.util.ArrayList; 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -11,9 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
+import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.service.PetService;
+import org.springframework.samples.petclinic.service.VisitService;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
 import org.springframework.samples.petclinic.web.validators.PetValidator;
+import org.springframework.samples.petclinic.web.validators.VisitValidator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,12 +39,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HomelessPetController {
 
 	private final PetService petService;
+	private final VisitService visitService;
 
 	private static final String EDIT_FORM = "homelessPets/editPet";
 	
 	@Autowired
-	public HomelessPetController(PetService petService) {
+	public HomelessPetController(PetService petService, VisitService visitService) {
 		this.petService = petService;
+		this.visitService = visitService;
 	}
 
 	@ModelAttribute("types")
@@ -52,13 +59,18 @@ public class HomelessPetController {
 		dataBinder.setValidator(new PetValidator());
 	}
 	
+	@InitBinder("visit")
+	public void initVisitBinder(WebDataBinder dataBinder) {
+		dataBinder.setValidator(new VisitValidator());
+	}
+	
 	//This method will let us check security
 	public boolean userHasAuthorities(Collection<SimpleGrantedAuthority> authorities) {
 		Boolean res = false;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if(principal instanceof UserDetails) {
 			Collection<? extends GrantedAuthority> principalAuthorities = ((UserDetails)principal).getAuthorities();
-			if(principalAuthorities.containsAll(authorities)) {
+			if(authorities.containsAll(principalAuthorities)) {
 				res = true;
 			}
 		}
@@ -73,7 +85,9 @@ public class HomelessPetController {
 		
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
 		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
+		SimpleGrantedAuthority authorityTrainer = new SimpleGrantedAuthority("trainer");
 		authorities.add(authorityVeterinarian);
+		authorities.add(authorityTrainer);
 		
 		hasAuthorities = userHasAuthorities(authorities);
 		
@@ -83,10 +97,34 @@ public class HomelessPetController {
 			homelessPets = this.petService.findHomelessPets();
 			model.put("homelessPets", homelessPets);
 		} else {
-			model.addAttribute("message", "So sorry, no puede usted entrar aquí!");
+			model.addAttribute("message", "You are not authorised.");
 			view = "redirect:/oups";
 		}
 			
+		return view;
+	}
+	
+	@GetMapping("/{petId}")
+	public String showHomelessPet(@PathVariable("petId") int petId, ModelMap model) {
+		String view;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
+		SimpleGrantedAuthority authorityTrainer = new SimpleGrantedAuthority("trainer");
+		authorities.add(authorityVeterinarian);
+		authorities.add(authorityTrainer);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities == true) {
+			Pet homelessPet = this.petService.findPetById(petId);
+			model.addAttribute("homelessPet", homelessPet);
+			view = "homelessPets/showPet";
+		} else {
+			model.addAttribute("message", "You are not authorised.");
+			view = "redirect:/oups";
+		}
 		return view;
 	}
 	

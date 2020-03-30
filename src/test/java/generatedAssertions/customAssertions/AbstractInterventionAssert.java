@@ -15,7 +15,7 @@ public abstract class AbstractInterventionAssert<S extends AbstractInterventionA
 
 	/**
 	 * Creates a new <code>{@link AbstractInterventionAssert}</code> to make assertions on actual Intervention.
-	 *
+	 * 
 	 * @param actual
 	 *            the Intervention we want to make assertions on.
 	 */
@@ -25,7 +25,7 @@ public abstract class AbstractInterventionAssert<S extends AbstractInterventionA
 
 	/**
 	 * Verifies that the actual Intervention's interventionDate is equal to the given one.
-	 *
+	 * 
 	 * @param interventionDate
 	 *            the given interventionDate to compare the actual Intervention's interventionDate to.
 	 * @return this assertion object.
@@ -51,7 +51,7 @@ public abstract class AbstractInterventionAssert<S extends AbstractInterventionA
 
 	/**
 	 * Verifies that the actual Intervention's interventionDescription is equal to the given one.
-	 *
+	 * 
 	 * @param interventionDescription
 	 *            the given interventionDescription to compare the actual Intervention's interventionDescription to.
 	 * @return this assertion object.
@@ -77,7 +77,7 @@ public abstract class AbstractInterventionAssert<S extends AbstractInterventionA
 
 	/**
 	 * Verifies that the actual Intervention's interventionTime is equal to the given one.
-	 *
+	 * 
 	 * @param interventionTime
 	 *            the given interventionTime to compare the actual Intervention's interventionTime to.
 	 * @return this assertion object.
@@ -103,7 +103,7 @@ public abstract class AbstractInterventionAssert<S extends AbstractInterventionA
 
 	/**
 	 * Verifies that the actual Intervention's pet is equal to the given one.
-	 *
+	 * 
 	 * @param pet
 	 *            the given pet to compare the actual Intervention's pet to.
 	 * @return this assertion object.
@@ -129,7 +129,7 @@ public abstract class AbstractInterventionAssert<S extends AbstractInterventionA
 
 	/**
 	 * Verifies that the actual Intervention's vet is equal to the given one.
-	 *
+	 * 
 	 * @param vet
 	 *            the given vet to compare the actual Intervention's vet to.
 	 * @return this assertion object.

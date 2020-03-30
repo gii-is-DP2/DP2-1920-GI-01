@@ -41,6 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 
+
 	protected void configure(final HttpSecurity http) throws Exception {
 		http.authorizeRequests()//
 			.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll()//
@@ -70,6 +71,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		// se sirve desde esta misma página.
 		http.csrf().ignoringAntMatchers("/h2-console/**");
 		http.headers().frameOptions().sameOrigin();
+
 
 	}
 

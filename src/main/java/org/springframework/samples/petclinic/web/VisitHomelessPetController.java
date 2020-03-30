@@ -32,16 +32,16 @@ public class VisitHomelessPetController {
 	
 	private final VisitService visitService;
 	private final PetService petService;
-	
-	@InitBinder("visit")
-	public void initVisitBinder(WebDataBinder dataBinder) {
-		dataBinder.setValidator(new VisitValidator());
-	}
 
 	@Autowired
 	public VisitHomelessPetController(PetService petService, VisitService visitService) {
 		this.petService = petService;
 		this.visitService = visitService;
+	}
+	
+	@InitBinder("visit")
+	public void initVisitBinder(WebDataBinder dataBinder) {
+		dataBinder.setValidator(new VisitValidator());
 	}
 	
 	//This method will let us check security
@@ -100,7 +100,7 @@ public class VisitHomelessPetController {
 			else {
 				pet.addVisit(visit);
 				this.petService.saveVisit(visit);
-				view = "redirect:/homeless-pets";
+				view = "redirect:/homeless-pets/" + petId;
 			}
 		} else {
 			view = "redirect:/oups";
@@ -159,7 +159,7 @@ public class VisitHomelessPetController {
 						view = "homelessPets/editVisit";
 					}
 				}
-				view = "redirect:/homeless-pets";
+				view = "redirect:/homeless-pets/" + petId;
 			}
 		} else {
 			view = "redirect:/oups";
@@ -187,10 +187,10 @@ public class VisitHomelessPetController {
 				pet.removeVisit(visit.get());
 				visitService.delete(visit.get());
 				model.addAttribute("message", "Visit deleted successfully!");
-				view = "redirect:/homeless-pets";
+				view = "redirect:/homeless-pets/" + petId;
 			} else {
 				model.addAttribute("message", "Visit not found!");
-				view = "redirect:/homeless-pets";
+				view = "redirect:/homeless-pets/" + petId;
 			}
 		} else {
 			view = "redirect:/oups";

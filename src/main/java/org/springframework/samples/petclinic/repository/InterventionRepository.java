@@ -11,9 +11,9 @@ import org.springframework.samples.petclinic.model.Vet;
 
 public interface InterventionRepository {
 
-	void save(Intervention intervention) throws DataAccessException;
-
 	void delete(Intervention intervention) throws DataAccessException;
+	
+	void save(Intervention intervention) throws DataAccessException;
 
 	List<Intervention> findInterventionByPetId(Integer petId);
 
