@@ -27,6 +27,7 @@ import org.springframework.samples.petclinic.model.Intervention;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Rehab;
+import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.repository.InterventionRepository;
 import org.springframework.samples.petclinic.repository.PetRepository;
@@ -130,6 +131,11 @@ public class PetService {
 		// TODO Auto-generated method stub
 		this.interventionRepository.delete(intervention);
 
+	}
+
+	@Transactional
+	public Optional<Vet> findVetByName(final String name) {
+		return this.interventionRepository.findByUsername(name);
 	}
 
 }

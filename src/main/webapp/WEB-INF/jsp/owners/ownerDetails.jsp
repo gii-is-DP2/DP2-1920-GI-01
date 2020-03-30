@@ -134,6 +134,7 @@
                             <th>Intervention Date</th>
                             <th>Intervention Description</th>
                             <th>Intervention Time</th>
+                            <th>Intervention Vet</th>
                         </tr>
                         </thead>
                         <c:forEach var="intervention" items="${pet.interventions}">
@@ -141,6 +142,7 @@
                                 <td><petclinic:localDate date="${intervention.interventionDate}" pattern="yyyy-MM-dd"/></td>
                                 <td><c:out value="${intervention.interventionDescription}"/></td>
                                 <td><c:out value="${intervention.interventionTime}"/></td>
+                                <td><c:out value="${intervention.vet.firstName} ${intervention.vet.lastName}"/></td>
                             </tr>
                         </c:forEach>
                         <tr>
