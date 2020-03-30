@@ -13,7 +13,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Medical record</label>
                     <div class="col-sm-10">
-                        Medical report of <c:out value="${prescription.medicalRecord.visit.date}"/>
+                        Medical record of <c:out value="${prescription.medicalRecord.visit.pet.name}, ${prescription.medicalRecord.visit.date}"/>
                     </div>
                 </div>		
 				<div class="control-group">
