@@ -22,6 +22,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.samples.petclinic.configuration.SecurityConfiguration;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.service.MedicalRecordService;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.VisitService;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
@@ -46,6 +47,9 @@ public class VisitHomelessPetControllerTests {
 	
 	@MockBean
 	private PetService		petService;
+	
+	@MockBean
+	private MedicalRecordService medicalRecordService;
 	
 	@Autowired
 	private MockMvc mockMvc;

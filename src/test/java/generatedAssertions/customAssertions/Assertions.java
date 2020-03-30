@@ -7,7 +7,7 @@ package generatedAssertions.customAssertions;
  */
 @javax.annotation.Generated(value = "assertj-assertions-generator")
 public class Assertions {
-
+  
 	/**
 	 * Creates a new instance of <code>{@link org.springframework.samples.petclinic.model.InterventionAssert}</code>.
 	 *
@@ -103,6 +103,29 @@ public class Assertions {
 	public static VisitAssert assertThat(final org.springframework.samples.petclinic.model.Visit actual) {
 		return new VisitAssert(actual);
 	}
+  
+  
+  /**
+   * Creates a new instance of <code>{@link org.springframework.samples.petclinic.model.PetAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  @org.assertj.core.util.CheckReturnValue
+  public static PetAssert assertThat(org.springframework.samples.petclinic.model.Pet actual) {
+    return new PetAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link org.springframework.samples.petclinic.model.RehabAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  @org.assertj.core.util.CheckReturnValue
+  public static RehabAssert assertThat(org.springframework.samples.petclinic.model.Rehab actual) {
+    return new RehabAssert(actual);
+  }
 
 	/**
 	 * Creates a new <code>{@link Assertions}</code>.

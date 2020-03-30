@@ -16,6 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import generatedAssertions.customAssertions.VisitAssert;
 
@@ -96,6 +97,7 @@ public class VisitServiceTests {
 	}
 	
 	@Test
+	@Transactional
 	void shouldDeleteVisit() {
 		Optional<Visit> visit1 = this.visitService.findVisitById(1);
 		

@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Specialty;
+import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.model.Vet;
 
 /**
@@ -53,5 +54,7 @@ public interface VetRepository {
 	
 	//This method allows us to save a certain vet
 	void save(Vet vet) throws DataAccessException;
+	
+	Optional<Vet> findByUsername(String username) throws DataAccessException;
 
 }

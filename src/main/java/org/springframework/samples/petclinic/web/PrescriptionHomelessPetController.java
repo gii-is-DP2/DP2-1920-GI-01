@@ -99,6 +99,8 @@ public class PrescriptionHomelessPetController {
 	@PostMapping("/homeless-pets/{petId}/visits/{visitId}/medical-record/{medicalRecordId}/prescriptions/new")
 	public String processCreationForm(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, @PathVariable("medicalRecordId") int medicalRecordId, Prescription prescription, BindingResult result, ModelMap model) {
 		MedicalRecord medicalRecord;
+		Collection<Medicine> medicines;
+		PetType petType;
 		PrescriptionValidator validator;
 		String view;
 		Boolean hasAuthorities;
@@ -116,7 +118,10 @@ public class PrescriptionHomelessPetController {
 			validator.validate(prescription, result);
 			
 			if(result.hasErrors()) {
+				petType = medicalRecord.getVisit().getPet().getType();
+				medicines = this.medicineService.findByPetType(petType);
 				model.addAttribute("prescription", prescription);
+				model.addAttribute("medicines", medicines);
 				view = "homelessPets/editPrescription";
 			} else {
 				this.prescriptionService.savePrescription(prescription);

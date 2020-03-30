@@ -16,8 +16,10 @@
 
 package org.springframework.samples.petclinic.web;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,6 +27,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.model.Intervention;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Vets;
@@ -302,8 +305,19 @@ public class VetController {
 			view = "admin/vets/vetList";
 			vet = this.vetService.findVetById(vetId);
 			if (vet.isPresent()) {
-				this.vetService.deleteVet(vet.get());
-				modelMap.addAttribute("message", "Vet deleted successfully!");
+				List<Intervention> interventions = vet.get().getInterventions();
+				if(interventions == null || interventions.isEmpty()) {
+					this.vetService.deleteVet(vet.get());
+					modelMap.addAttribute("message", "Vet deleted successfully!");
+				} else {
+					boolean res = interventions.stream().anyMatch(i -> i.getInterventionDate().isAfter(LocalDate.now()));
+					if(res == true) {
+						modelMap.addAttribute("message", "You can't delete a vet that has future interventions.");
+					} else {
+						modelMap.addAttribute("message", "Vet deleted successfully!");
+						this.vetService.deleteVet(vet.get());
+					}
+				}
 			} else {
 				modelMap.addAttribute("message", "Vet not found!");
 			}

@@ -1,6 +1,7 @@
 
 package org.springframework.samples.petclinic.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -22,7 +23,7 @@ public class MedicalRecord extends BaseEntity {
 	@NotBlank
 	private String	status;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "visit_id")
 	private Visit	visit;
 

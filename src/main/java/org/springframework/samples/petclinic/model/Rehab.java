@@ -28,6 +28,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import java.time.LocalDate;
+import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -49,7 +51,7 @@ public class Rehab extends BaseEntity {
 
 	@Column(name = "rehab_time")
 	@NotNull
-	private Integer		time;
+	private Integer time;
 
 	@Column(name = "description")
 	@NotEmpty
@@ -97,6 +99,14 @@ public class Rehab extends BaseEntity {
 
 	public void setPet(final Pet pet) {
 		this.pet = pet;
+	}
+	
+	public Trainer getTrainer() {
+		return this.trainer;
+	}
+	
+	public void setTrainer(Trainer trainer) {
+		this.trainer = trainer;
 	}
 
 	public void setTrainer(final Trainer trainer) {

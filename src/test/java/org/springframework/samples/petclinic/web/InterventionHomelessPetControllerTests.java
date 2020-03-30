@@ -12,7 +12,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,9 +27,12 @@ import org.springframework.samples.petclinic.configuration.SecurityConfiguration
 import org.springframework.samples.petclinic.model.Intervention;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
+import org.springframework.samples.petclinic.model.User;
+import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.service.InterventionService;
 import org.springframework.samples.petclinic.service.PetService;
+import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.samples.petclinic.service.VisitService;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -50,6 +55,9 @@ public class InterventionHomelessPetControllerTests {
 	@MockBean
 	private PetService				petService;
 	
+	@MockBean
+	private VetService				vetService;
+	
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -64,11 +72,27 @@ public class InterventionHomelessPetControllerTests {
 		pet.setBirthDate(LocalDate.of(2020, Month.APRIL, 4));
 		pet.setType(petType);
 		
+		User user = new User();
+		user.setUsername("testing");
+		user.setPassword("testing");
+		user.setEnabled(true);
+		
+		Vet vet = new Vet();
+		vet.setFirstName("testFirstName");
+		vet.setLastName("testLastName");
+		vet.setUser(user);
+		
 		Intervention i = new Intervention();
 		i.setInterventionDate(LocalDate.of(2020, Month.SEPTEMBER, 9));
 		i.setInterventionTime(2);
 		i.setInterventionDescription("Test");
 		i.setPet(pet);
+		i.setVet(vet);
+		
+		Set<Intervention> interventions = new HashSet<Intervention>();
+		interventions.add(i);
+		
+		vet.setInterventionsInternal(interventions);
 		
 		Optional<Intervention> intervention = Optional.of(i);
 		given(this.petService.findPetById(TEST_PET_ID)).willReturn(new Pet());
