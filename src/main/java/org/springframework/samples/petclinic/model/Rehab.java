@@ -61,9 +61,6 @@ public class Rehab extends BaseEntity {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Trainer			trainer;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	private Trainer			trainer;
-	
 
 	public Rehab() {
 		this.date = LocalDate.now();
