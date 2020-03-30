@@ -104,10 +104,6 @@ public class Rehab extends BaseEntity {
 	public Trainer getTrainer() {
 		return this.trainer;
 	}
-	
-	public void setTrainer(Trainer trainer) {
-		this.trainer = trainer;
-	}
 
 	public void setTrainer(final Trainer trainer) {
 		this.trainer = trainer;
