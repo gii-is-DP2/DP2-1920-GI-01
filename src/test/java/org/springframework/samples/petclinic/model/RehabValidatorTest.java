@@ -1,6 +1,5 @@
-package org.springframework.samples.petclinic.model;
 
-import static org.assertj.core.api.Assertions.assertThat;
+package org.springframework.samples.petclinic.model;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -17,49 +16,48 @@ import org.springframework.samples.petclinic.web.validators.RehabValidator;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 
-public class RehabValidatorTest extends ValidatorTests{
+public class RehabValidatorTest extends ValidatorTests {
 
-	
 	@Test
 	void TestWhenEvrythingIsCorrect() {
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
 		Rehab rehab = new Rehab();
-		
-		/* information about the rehab*/
+
+		/* information about the rehab */
 		rehab.setDate(LocalDate.of(2020, Month.MARCH, 31));
 		rehab.setTime(3);
 		rehab.setDescription("RehabDescriptionTesting");
-		
-		/* information about the pet*/
+
+		/* information about the pet */
 		Pet pet = new Pet();
 		pet.setName("Duksis");
 		pet.setBirthDate(LocalDate.of(2020, Month.MARCH, 12));
 		rehab.setPet(pet);
-		
-		/* information about the trainer*/
+
+		/* information about the trainer */
 		Trainer trainer = new Trainer();
 		trainer.setFirstName("Marco");
 		trainer.setLastName("Polo");
 		rehab.setTrainer(trainer);
-		
+
 		Validator validator = this.createValidator();
 		Set<ConstraintViolation<Rehab>> constraintViolations = validator.validate(rehab);
 
-		assertThat(constraintViolations.size()).isEqualTo(0);
+		Assertions.assertThat(constraintViolations.size()).isEqualTo(0);
 	}
-	
-	/* Unit test for rehabilitation date, date cannot be an empty field*/
-	
+
+	/* Unit test for rehabilitation date, date cannot be an empty field */
+
 	@Test
-	void rehabDateIsNotSet(){
+	void rehabDateIsNotSet() {
 
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
 		Rehab rehab = new Rehab();
-		
+
 		rehab.setDate(null);
 		rehab.setTime(3);
 		rehab.setDescription("RehabDescriptionTesting");
-		
+
 		Pet pet = new Pet();
 		pet.setName("Duksis");
 		pet.setBirthDate(LocalDate.of(2020, Month.MARCH, 12));
@@ -69,26 +67,26 @@ public class RehabValidatorTest extends ValidatorTests{
 		trainer.setFirstName("Marco");
 		trainer.setLastName("Polo");
 		rehab.setTrainer(trainer);
-		
+
 		RehabValidator rehabValidator = new RehabValidator();
 		Errors errors = new BeanPropertyBindingResult(rehab, "rehab");
 		rehabValidator.validate(rehab, errors);
-					
+
 		Assertions.assertThat(errors.hasFieldErrors("date")).isEqualTo(true);
 	}
-	
-	/* Unit test for rehabilitation date, date has to be current date, cannot be an after date*/
-	
+
+	/* Unit test for rehabilitation date, date has to be current date, cannot be an after date */
+
 	@Test
-	void rehabDateIsSetAsABeforeDate(){
+	void rehabDateIsSetAsABeforeDate() {
 
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
 		Rehab rehab = new Rehab();
-		
+
 		rehab.setDate(LocalDate.of(2019, Month.JANUARY, 1));
 		rehab.setTime(3);
 		rehab.setDescription("RehabDescriptionTesting");
-		
+
 		Pet pet = new Pet();
 		pet.setName("Duksis");
 		pet.setBirthDate(LocalDate.of(2020, Month.MARCH, 12));
@@ -98,27 +96,27 @@ public class RehabValidatorTest extends ValidatorTests{
 		trainer.setFirstName("Marco");
 		trainer.setLastName("Polo");
 		rehab.setTrainer(trainer);
-		
+
 		RehabValidator rehabValidator = new RehabValidator();
 		Errors errors = new BeanPropertyBindingResult(rehab, "rehab");
 		rehabValidator.validate(rehab, errors);
-		
-		assertThat(errors.hasFieldErrors("date")).isEqualTo(true);
-		assertThat(errors.getFieldError("date").getDefaultMessage()).startsWith("required is after current date");
+
+		Assertions.assertThat(errors.hasFieldErrors("date")).isEqualTo(true);
+		Assertions.assertThat(errors.getFieldError("date").getDefaultMessage()).startsWith("required is after current date");
 	}
-	
-	/* Unit test for rehabilitation date, date has to be current date, cannot be a before date*/
-	
+
+	/* Unit test for rehabilitation date, date has to be current date, cannot be a before date */
+
 	@Test
-	void rehabDateIsSetAsAnAfterDate(){
+	void rehabDateIsSetAsAnAfterDate() {
 
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
 		Rehab rehab = new Rehab();
-		
+
 		rehab.setDate(LocalDate.of(2021, Month.JANUARY, 1));
 		rehab.setTime(3);
 		rehab.setDescription("RehabDescriptionTesting");
-		
+
 		Pet pet = new Pet();
 		pet.setName("Duksis");
 		pet.setBirthDate(LocalDate.of(2020, Month.MARCH, 12));
@@ -128,28 +126,26 @@ public class RehabValidatorTest extends ValidatorTests{
 		trainer.setFirstName("Marco");
 		trainer.setLastName("Polo");
 		rehab.setTrainer(trainer);
-		
+
 		RehabValidator rehabValidator = new RehabValidator();
 		Errors errors = new BeanPropertyBindingResult(rehab, "rehab");
 		rehabValidator.validate(rehab, errors);
-		
-		assertThat(errors.hasFieldErrors("date")).isEqualTo(true);
-		assertThat(errors.getFieldError("date").getDefaultMessage()).startsWith("required is after current date");
+
+		Assertions.assertThat(errors.hasFieldErrors("date")).isEqualTo(true);
+		Assertions.assertThat(errors.getFieldError("date").getDefaultMessage()).startsWith("required is after current date");
 	}
-	
-	
+
 	/* Unit test for rehabilitation time, time cannot be an empty field */
-	
+
 	@Test
-	void rehabTimeIsNotSet(){
+	void rehabTimeIsNotSet() {
 
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
 		Rehab rehab = new Rehab();
-		
+
 		rehab.setDate(LocalDate.of(2020, Month.MARCH, 29));
-		rehab.setTime(null);
 		rehab.setDescription("RehabDescription");
-		
+
 		Pet pet = new Pet();
 		pet.setName("Duksis");
 		pet.setBirthDate(LocalDate.of(2020, Month.MARCH, 12));
@@ -159,7 +155,6 @@ public class RehabValidatorTest extends ValidatorTests{
 		trainer.setFirstName("Marco");
 		trainer.setLastName("Polo");
 		rehab.setTrainer(trainer);
-		
 
 		Validator validator = this.createValidator();
 		Set<ConstraintViolation<Rehab>> constraintViolations = validator.validate(rehab);
@@ -167,19 +162,19 @@ public class RehabValidatorTest extends ValidatorTests{
 		Assertions.assertThat(constraintViolations.size()).isEqualTo(1);
 		ConstraintViolation<Rehab> violation = constraintViolations.iterator().next();
 		Assertions.assertThat(violation.getPropertyPath().toString()).isEqualTo("time");
-		}
-	
-	/* Unit test for rehabilitation description, it cannot be an empty field*/
-	
-	void rehabDescriptionIsNotSet(){
+	}
+
+	/* Unit test for rehabilitation description, it cannot be an empty field */
+
+	void rehabDescriptionIsNotSet() {
 
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
 		Rehab rehab = new Rehab();
-		
+
 		rehab.setDate(LocalDate.of(2020, Month.MARCH, 29));
 		rehab.setTime(2);
 		rehab.setDescription(null);
-		
+
 		Pet pet = new Pet();
 		pet.setName("Duksis");
 		pet.setBirthDate(LocalDate.of(2020, Month.MARCH, 12));
@@ -189,7 +184,7 @@ public class RehabValidatorTest extends ValidatorTests{
 		trainer.setFirstName("Marco");
 		trainer.setLastName("Polo");
 		rehab.setTrainer(trainer);
-		
+
 		RehabValidator rehabValidator = new RehabValidator();
 		Errors errors = new BeanPropertyBindingResult(rehab, "rehab");
 		rehabValidator.validate(rehab, errors);
@@ -201,8 +196,5 @@ public class RehabValidatorTest extends ValidatorTests{
 		ConstraintViolation<Rehab> violation = constraintViolations.iterator().next();
 		Assertions.assertThat(violation.getPropertyPath().toString()).isEqualTo("rehabDescription");
 	}
-	
-	
-	}
-	
-	
+
+}
