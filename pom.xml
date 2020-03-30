@@ -289,6 +289,7 @@
             			<param>org.springframework.samples.petclinic.model.Prescription</param>
             			<param>org.springframework.samples.petclinic.model.Rehab</param>
             			<param>org.springframework.samples.petclinic.model.Pet</param>
+            			<param>org.springframework.samples.petclinic.model.Visit</param>
             		</classes>
             		<generateAssertionsAllFields>true</generateAssertionsAllFields>
             		<targetDir>src/test/java/generated-assertions</targetDir>

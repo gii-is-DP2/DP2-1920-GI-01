@@ -58,7 +58,7 @@ public class PrescriptionController {
 		petType = medicalRecord.getVisit().getPet().getType();
 		medicines = medicineService.findByPetType(petType);
 		
-		//prescription.setMedicalRecord(medicalRecord);
+		prescription.setMedicalRecord(medicalRecord);
 		model.put("prescription", prescription);
 		model.put("medicines", medicines);
 		
@@ -81,7 +81,14 @@ public class PrescriptionController {
 		validator.validate(prescription, result);
 		
 		if(result.hasErrors()) {
+			Collection<Medicine> medicines;
+			PetType petType;
+			
+			petType = medicalRecord.getVisit().getPet().getType();
+			medicines = medicineService.findByPetType(petType);
+			
 			model.put("prescription", prescription);
+			model.put("medicines", medicines);
 			return CREATE_VIEW;
 		}
 		

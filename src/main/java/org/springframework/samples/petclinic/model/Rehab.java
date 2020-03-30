@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.samples.petclinic.model;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -29,6 +30,7 @@ import javax.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * Simple JavaBean domain object representing a rehab.
@@ -41,11 +43,11 @@ public class Rehab extends BaseEntity {
 
 	/**
 	 * Holds value of property date.
-	 */	
-	@Column(name = "rehab_date")        
+	 */
+	@Column(name = "rehab_date")
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	@NotNull
-	private LocalDate date;
+	private LocalDate	date;
 
 	@Column(name = "rehab_time")
 	@NotNull
@@ -53,56 +55,49 @@ public class Rehab extends BaseEntity {
 
 	@Column(name = "description")
 	@NotEmpty
-	private String description;
-
+	private String		description;
 
 	@ManyToOne
 	@JoinColumn(name = "pet_id")
-	private Pet pet;
-	
+	private Pet			pet;
+
 	@OneToOne(cascade = CascadeType.ALL)
-	private Trainer			trainer;
+	private Trainer		trainer;
 
 
 	public Rehab() {
 		this.date = LocalDate.now();
 	}
 
-	
 	public LocalDate getDate() {
 		return this.date;
 	}
 
-	public void setDate(LocalDate date) {
+	public void setDate(final LocalDate date) {
 		this.date = date;
 	}
 
-	
 	public Integer getTime() {
 		return this.time;
 	}
-	
-	public void setTime(Integer time) {
+
+	public void setTime(final Integer time) {
 		this.time = time;
 	}
-	
-	
+
 	public String getDescription() {
 		return this.description;
 	}
 
-	
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 	}
 
-	
 	public Pet getPet() {
 		return this.pet;
 	}
 
-	
-	public void setPet(Pet pet) {
+	public void setPet(final Pet pet) {
 		this.pet = pet;
 	}
 	
@@ -114,8 +109,7 @@ public class Rehab extends BaseEntity {
 		this.trainer = trainer;
 	}
 
+	public void setTrainer(final Trainer trainer) {
+		this.trainer = trainer;
+	}
 }
-
-
-
-
