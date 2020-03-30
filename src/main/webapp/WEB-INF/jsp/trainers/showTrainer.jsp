@@ -28,4 +28,27 @@
 		<h3>Trainer not found!</h3>
 	</c:if>
 
+<br>
+	    <h2>Trainer's rehabilitations</h2>
+	         
+	    
+	          <table class="table-condensed">
+                        <thead>
+                        <tr>
+                            <th>Rehabilitation Date</th>
+                  			<th>Rehabilitation Time</th>
+                            <th>Rehabilitation Description</th>
+                        </tr>
+                        </thead>
+               
+                            <c:forEach var="rehab" items="${trainers.rehabs}">
+                            <tr>
+                                <td><petclinic:localDate date="${rehab.date}" pattern="yyyy-MM-dd"/></td>
+                                         <td><c:out value="${rehab.time}"/></td>
+                                <td><c:out value="${rehab.description}"/></td>
+                            </tr>
+                        </c:forEach>         
+                        </table>
+	    
+
 </petclinic:layout>
