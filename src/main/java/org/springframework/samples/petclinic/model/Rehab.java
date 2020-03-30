@@ -28,6 +28,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Simple JavaBean domain object representing a rehab.
@@ -46,7 +47,8 @@ public class Rehab extends BaseEntity {
 	@NotNull
 	private LocalDate date;
 
-	@Column(name = "rehab_time")        
+	@Column(name = "rehab_time")
+	@NotNull
 	private Integer time;
 
 	@Column(name = "description")
@@ -102,6 +104,14 @@ public class Rehab extends BaseEntity {
 	
 	public void setPet(Pet pet) {
 		this.pet = pet;
+	}
+	
+	public Trainer getTrainer() {
+		return this.trainer;
+	}
+	
+	public void setTrainer(Trainer trainer) {
+		this.trainer = trainer;
 	}
 
 }

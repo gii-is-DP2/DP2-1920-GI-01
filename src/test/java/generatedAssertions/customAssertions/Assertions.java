@@ -94,6 +94,28 @@ public class Assertions {
   public static VetAssert assertThat(Vet actual) {
     return new VetAssert(actual);
   }
+  
+  /**
+   * Creates a new instance of <code>{@link org.springframework.samples.petclinic.model.PetAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  @org.assertj.core.util.CheckReturnValue
+  public static PetAssert assertThat(org.springframework.samples.petclinic.model.Pet actual) {
+    return new PetAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link org.springframework.samples.petclinic.model.RehabAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  @org.assertj.core.util.CheckReturnValue
+  public static RehabAssert assertThat(org.springframework.samples.petclinic.model.Rehab actual) {
+    return new RehabAssert(actual);
+  }
 
   /**
    * Creates a new <code>{@link Assertions}</code>.

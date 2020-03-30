@@ -1,13 +1,17 @@
 package org.springframework.samples.petclinic.web;
 
+import java.time.LocalDate;
 import java.util.ArrayList; 
 import java.util.Collection;
-import java.util.Optional; 
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.model.Rehab;
 import org.springframework.samples.petclinic.model.Trainer;
 import org.springframework.samples.petclinic.service.TrainerService;
 import org.springframework.samples.petclinic.web.validators.TrainerValidator;
@@ -261,13 +265,23 @@ public class TrainerController {
 			view = "admin/trainers/listTrainers";
 			trainer = this.trainerService.findTrainerById(trainerId);
 			if(trainer.isPresent()) {
-				this.trainerService.deleteTrainer(trainer.get());
-				modelMap.addAttribute("message", "Trainer deleted successfully!");
-				view = listTrainersAsAdmin(modelMap);
+				Set<Rehab> rehabs = trainer.get().getRehabs();
+				if(rehabs == null || rehabs.isEmpty()) {
+					this.trainerService.deleteTrainer(trainer.get());
+					modelMap.addAttribute("message", "Trainer deleted successfully!");
+				} else {
+					boolean res = rehabs.stream().anyMatch(r -> r.getDate().isAfter(LocalDate.now()));
+					if(res == true) {
+						modelMap.addAttribute("message", "You can't delete a trainer that has future rehab sessions.");
+					} else {
+						this.trainerService.deleteTrainer(trainer.get());
+						modelMap.addAttribute("message", "Trainer deleted successfully!");
+					}
+				}
 			} else {
 				modelMap.addAttribute("message", "Trainer not found!");
-				view = listTrainersAsAdmin(modelMap);
 			}
+			view = listTrainersAsAdmin(modelMap);
 		} else {
 			view = "redirect:/oups";
 		}

@@ -89,7 +89,7 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (3, 8, '2013-01-03',
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04', 'spayed');
 
 INSERT INTO trainers VALUES (1, 'John', 'Doe', 'acme@mail.com', '34 111111111', 'trainer1');
-INSERT INTO trainers VALUES (2, 'Thomas', 'Moon', 'thomas@mail.com', '24456756', 'trainer2');
+INSERT INTO trainers VALUES (2, 'Thomas', 'Moon', 'thomas@mail.com', '35 824456756', 'trainer2');
 
 -- Homeless pets' visits from now on
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (5, 14, '2018-07-09', 'Description 1');
@@ -97,13 +97,13 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (6, 14, '2018-08-09'
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (7, 15, '2017-08-09', 'Description 3');
 
 -- Homeless pets' intervention from now on
-INSERT INTO interventions(id,pet_id, intervention_date, intervention_time, intervention_description) VALUES (1, 14, '2020-09-09', '4', 'Surgery');
-INSERT INTO interventions(pet_id, intervention_date, intervention_time, intervention_description, vet_id) VALUES (1, '2020-09-09', '4', 'Surgery',1);
-INSERT INTO interventions(pet_id, intervention_date, intervention_time, intervention_description, vet_id) VALUES (1, '2020-09-09', '4', 'Surgery',2);
+INSERT INTO interventions(id,pet_id, intervention_date, intervention_time, intervention_description, vet_id) VALUES (1, 14, '2020-09-09', '4', 'Surgery',3);
+INSERT INTO interventions(id,pet_id, intervention_date, intervention_time, intervention_description, vet_id) VALUES (2, 1, '2020-09-09', '4', 'Surgery',1);
+INSERT INTO interventions(id,pet_id, intervention_date, intervention_time, intervention_description, vet_id) VALUES (3, 1, '2020-09-09', '4', 'Surgery',2);
 
 
 -- Homeless pets' rehabs from now on
-INSERT INTO rehab(id, pet_id, rehab_date, rehab_time, description) VALUES (1, 14, '2020-09-11', '2', 'Rehab session 1');
+INSERT INTO rehab(id, pet_id, rehab_date, rehab_time, description, trainer_id) VALUES (1, 14, '2020-09-11', '2', 'Rehab session 1', 1);
 
 INSERT INTO medical_records VALUES (1, 'Test', 'TestStatus', 1);
 INSERT INTO medical_records VALUES (2, 'Test description', 'Test status', 5);

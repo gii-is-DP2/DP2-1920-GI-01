@@ -11,8 +11,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Rehab;
+import org.springframework.samples.petclinic.model.Trainer;
+import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.RehabService;
+import org.springframework.samples.petclinic.service.TrainerService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,11 +32,13 @@ public class RehabHomelessPetController {
 
 	private final PetService petService;
 	private final RehabService rehabService;
+	private final TrainerService trainerService;
 	
 	@Autowired
-	public RehabHomelessPetController(PetService petService, RehabService rehabService) {
+	public RehabHomelessPetController(PetService petService, RehabService rehabService, TrainerService trainerService) {
 		this.petService = petService;
 		this.rehabService = rehabService;
+		this.trainerService = trainerService;
 	}
 
 	//This method will let us check security
@@ -90,8 +95,14 @@ public class RehabHomelessPetController {
 				view = "homelessPets/editRehab";
 			}
 			else {
-				pet.addRehab(rehab);
-				this.rehabService.saveRehab(rehab);
+				Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				String username = ((UserDetails)principal).getUsername();
+				Optional<Trainer> trainer = this.trainerService.findTrainerByUsername(username);
+				if(trainer.isPresent()) {
+					pet.addRehab(rehab);
+					rehab.setTrainer(trainer.get());
+					this.rehabService.saveRehab(rehab);
+				}
 				view = "redirect:/homeless-pets/" + petId;
 			}
 		} else {
@@ -143,7 +154,7 @@ public class RehabHomelessPetController {
 			} else {
 				Optional<Rehab> rehabToUpdate = this.rehabService.findRehabById(rehabId);
 				if(rehabToUpdate.isPresent()) {
-					BeanUtils.copyProperties(rehab, rehabToUpdate.get(), "id", "pet");
+					BeanUtils.copyProperties(rehab, rehabToUpdate.get(), "id", "pet", "trainer");
 					try {
 						this.rehabService.saveRehab(rehabToUpdate.get());
 					} catch (Exception e) {
@@ -175,6 +186,8 @@ public class RehabHomelessPetController {
 			rehab = this.rehabService.findRehabById(rehabId);
 			Pet pet = this.petService.findPetById(petId);
 			if(rehab.isPresent()) {
+				Trainer trainer = rehab.get().getTrainer();
+				trainer.removeRehab(rehab.get());
 				pet.removeRehab(rehab.get());
 				this.rehabService.delete(rehab.get());
 				model.addAttribute("message", "Rehab deleted successfully!");

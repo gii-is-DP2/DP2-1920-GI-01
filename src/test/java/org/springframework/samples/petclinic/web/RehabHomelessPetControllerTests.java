@@ -12,7 +12,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,8 +27,11 @@ import org.springframework.samples.petclinic.configuration.SecurityConfiguration
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Rehab;
+import org.springframework.samples.petclinic.model.Trainer;
+import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.RehabService;
+import org.springframework.samples.petclinic.service.TrainerService;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -48,6 +53,9 @@ public class RehabHomelessPetControllerTests {
 	@MockBean
 	private PetService		petService;
 	
+	@MockBean
+	private TrainerService 	trainerService;
+	
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -62,11 +70,28 @@ public class RehabHomelessPetControllerTests {
 		pet.setBirthDate(LocalDate.of(2020, Month.APRIL, 4));
 		pet.setType(petType);
 		
+		User user = new User();
+		user.setUsername("testing");
+		user.setPassword("testing");
+		user.setEnabled(true);
+		
+		Trainer t = new Trainer();
+		t.setFirstName("testFirstName");
+		t.setLastName("testLastName");
+		t.setEmail("email@mail.com");
+		t.setPhone("34 999999999");
+		t.setUser(user);
+		
 		Rehab r = new Rehab();
 		r.setDate(LocalDate.of(2020, Month.DECEMBER, 24));
 		r.setTime(2);
 		r.setDescription("Test");
 		r.setPet(pet);
+		r.setTrainer(t);
+		
+		Set<Rehab> rehabs = new HashSet<Rehab>();
+		rehabs.add(r);
+		t.setRehabs(rehabs);
 
 		given(this.petService.findPetById(TEST_PET_ID)).willReturn(new Pet());
 		given(this.rehabService.findRehabById(TEST_REHAB_ID)).willReturn(Optional.of(r));

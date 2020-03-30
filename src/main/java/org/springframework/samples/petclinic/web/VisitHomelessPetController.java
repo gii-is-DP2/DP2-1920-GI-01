@@ -9,8 +9,10 @@ import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.model.MedicalRecord;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.service.MedicalRecordService;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.VisitService;
 import org.springframework.samples.petclinic.web.validators.VisitValidator;
@@ -32,11 +34,13 @@ public class VisitHomelessPetController {
 	
 	private final VisitService visitService;
 	private final PetService petService;
+	private final MedicalRecordService medicalRecordService;
 
 	@Autowired
-	public VisitHomelessPetController(PetService petService, VisitService visitService) {
+	public VisitHomelessPetController(PetService petService, VisitService visitService, MedicalRecordService medicalRecordService) {
 		this.petService = petService;
 		this.visitService = visitService;
+		this.medicalRecordService = medicalRecordService;
 	}
 	
 	@InitBinder("visit")
@@ -185,6 +189,10 @@ public class VisitHomelessPetController {
 			Pet pet = this.petService.findPetById(petId);
 			if(visit.isPresent()) {
 				pet.removeVisit(visit.get());
+				MedicalRecord mr = this.medicalRecordService.findMedicalRecordByVisitId(visit.get().getId());
+				if(mr != null) {
+					this.medicalRecordService.deleteMedicalRecord(mr);
+				}
 				visitService.delete(visit.get());
 				model.addAttribute("message", "Visit deleted successfully!");
 				view = "redirect:/homeless-pets/" + petId;

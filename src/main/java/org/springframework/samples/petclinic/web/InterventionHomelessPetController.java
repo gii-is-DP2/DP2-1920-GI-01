@@ -1,5 +1,6 @@
 package org.springframework.samples.petclinic.web;
 
+import java.security.Principal; 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -11,8 +12,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Intervention;
 import org.springframework.samples.petclinic.model.Pet;
+import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.InterventionService;
 import org.springframework.samples.petclinic.service.PetService;
+import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.samples.petclinic.web.validators.InterventionValidator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,11 +35,13 @@ public class InterventionHomelessPetController {
 
 	private final PetService petService;
 	private final InterventionService interventionService;
+	private final VetService vetService;
 	
 	@Autowired
-	public InterventionHomelessPetController(PetService petService, InterventionService interventionService) {
+	public InterventionHomelessPetController(PetService petService, InterventionService interventionService, VetService vetService) {
 		this.petService = petService;
 		this.interventionService = interventionService;
+		this.vetService = vetService;
 	}
 	
 	@InitBinder("intervention")
@@ -82,7 +87,7 @@ public class InterventionHomelessPetController {
 	}
 	
 	@PostMapping("/homeless-pets/{petId}/interventions/new")
-	public String processNewInterventionHomelessPetForm(@PathVariable("petId") int petId, @Valid Intervention intervention, BindingResult result) {
+	public String processNewInterventionHomelessPetForm(@PathVariable("petId") int petId, @Valid Intervention intervention, BindingResult result, ModelMap model) {
 		String view;
 		Boolean hasAuthorities;
 		
@@ -94,12 +99,19 @@ public class InterventionHomelessPetController {
 		
 		if(hasAuthorities == true) {
 			Pet pet = this.petService.findPetById(petId);
+			pet.addIntervention(intervention);
 			if (result.hasErrors()) {
+				model.addAttribute("intervention", intervention);
 				view = "homelessPets/editIntervention";
 			}
 			else {
-				pet.addIntervention(intervention);
-				this.interventionService.saveIntervention(intervention);
+				Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				String username = ((UserDetails)principal).getUsername();
+				Optional<Vet> vet = this.vetService.findVetByUsername(username);
+				if(vet.isPresent()) {
+					intervention.setVet(vet.get());
+					this.interventionService.saveIntervention(intervention);
+				}
 				view = "redirect:/homeless-pets/" + petId;
 			}
 		} else {
@@ -151,7 +163,7 @@ public class InterventionHomelessPetController {
 			} else {
 				Optional<Intervention> interventionToUpdate = this.interventionService.findInterventionById(interventionId);
 				if(interventionToUpdate.isPresent()) {
-					BeanUtils.copyProperties(intervention, interventionToUpdate.get(), "id", "pet");
+					BeanUtils.copyProperties(intervention, interventionToUpdate.get(), "id", "pet", "vet");
 					try {
 						this.interventionService.saveIntervention(interventionToUpdate.get());
 					} catch (Exception e) {
@@ -184,6 +196,8 @@ public class InterventionHomelessPetController {
 			Pet pet = this.petService.findPetById(petId);
 			if(intervention.isPresent()) {
 				pet.removeIntervention(intervention.get());
+				Vet vet = intervention.get().getVet();
+				vet.removeIntervention(intervention.get());
 				this.interventionService.delete(intervention.get());
 				model.addAttribute("message", "Intervention deleted successfully!");
 				view = "redirect:/homeless-pets/" + petId;

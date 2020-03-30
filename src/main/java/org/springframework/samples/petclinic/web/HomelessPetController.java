@@ -237,7 +237,7 @@ public class HomelessPetController {
 				view = EDIT_FORM;
 			} else {
 				Pet petToUpdate=this.petService.findPetById(petId);
-				BeanUtils.copyProperties(pet, petToUpdate, "id","visits","interventions");
+				BeanUtils.copyProperties(pet, petToUpdate, "id","visits","interventions", "rehabs");
 		        	try {                    
 		        		this.petService.savePet(petToUpdate);                    
 		            } catch (DuplicatedPetNameException ex) {

@@ -25,6 +25,7 @@ import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Specialty;
+import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
@@ -72,6 +73,13 @@ public class VetService {
 	public Optional<Vet> findVetById(int vetId){
 		Optional<Vet> res;
 		res = vetRepository.findById(vetId);
+		return res;
+	}
+	
+	@Transactional
+	public Optional<Vet> findVetByUsername(String username) {
+		Optional<Vet> res;
+		res = vetRepository.findByUsername(username);
 		return res;
 	}
 	
