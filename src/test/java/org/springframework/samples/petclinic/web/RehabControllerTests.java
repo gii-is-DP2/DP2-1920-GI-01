@@ -106,7 +106,8 @@ class RehabControllerTests {
 					mockMvc.perform(get("/owners/*/pets/{petId}/rehab", TEST_PET_ID)).andExpect(status().isOk())
 							.andExpect(model().attributeExists("rehab")).andExpect(view().name("rehabList"));
 				}
-
+				
+		
 }
 
 				/* when trying to add new rehabilitation, but someone other than trainer
