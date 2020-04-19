@@ -18,7 +18,6 @@
         </h2>
 		<form:form modelAttribute="medicine" class="form-horizontal">
 			<div class="form-group has-feedback">
-				<input type="hidden" name="id" value="${pet.id}" />
 				<petclinic:inputField label="Product name" name="name" />
 				<petclinic:inputField label="Expiration Date" name="expirationDate" />
 				<petclinic:inputField label="Maker" name="maker" />
