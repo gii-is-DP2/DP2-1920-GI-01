@@ -21,7 +21,8 @@ public class Adoption extends BaseEntity {
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private LocalDate date;
 	
-	@ManyToOne
+	@ManyToOne(optional = false)
+	@NotNull
 	@JoinColumn(name = "pet_id")
 	private Pet pet;
 	

@@ -114,3 +114,5 @@ INSERT INTO medicine VALUES (2, 'Dog medicine', '2023-05-22', 'Maker', 2);
 INSERT INTO prescription(id, medicine_id, medical_record_id, dose) VALUES (1, 1, 1, 'Every 24 hours');
 INSERT INTO prescription(id, medicine_id, medical_record_id, dose) VALUES (2, 2, 2, 'Every 4 hours');
 
+INSERT INTO adoption(id, date, pet_id, owner_id) VALUES (1, '2020-03-03', 1, 1);
+
