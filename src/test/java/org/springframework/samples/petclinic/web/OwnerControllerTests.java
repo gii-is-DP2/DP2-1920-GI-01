@@ -192,6 +192,7 @@ class OwnerControllerTests {
 				.andExpect(view().name("owners/ownerDetails"));
 	}
         
+      /*  ------------- US-23 -------------- */
 
 		@WithMockUser(value = "spring")
 		@Test
@@ -201,5 +202,15 @@ class OwnerControllerTests {
 					.andExpect(model().attributeExists("owner"));
 		}
 
-
+		/*
+		@WithMockUser(value = "spring")
+		@Test
+		void ownerCanSeePetsRehabSessionsWithError() throws Exception {
+			mockMvc.perform(get("/owners/-3")).andExpect(status().isOk())
+					.andExpect(view().name("owners/ownerDetails"))
+					.andExpect(model().attributeExists("message"));
+		}
+		*/
+	
+		
 }
