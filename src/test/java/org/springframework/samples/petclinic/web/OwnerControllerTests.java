@@ -191,5 +191,15 @@ class OwnerControllerTests {
 				.andExpect(model().attribute("owner", hasProperty("telephone", is("6085551023"))))
 				.andExpect(view().name("owners/ownerDetails"));
 	}
+        
+
+		@WithMockUser(value = "spring")
+		@Test
+		void ownerCanSeePetsRehabSessions() throws Exception {
+			mockMvc.perform(get("/owners/{ownerId}", TEST_OWNER_ID)).andExpect(status().isOk())
+					.andExpect(view().name("owners/ownerDetails"))
+					.andExpect(model().attributeExists("owner"));
+		}
+
 
 }
