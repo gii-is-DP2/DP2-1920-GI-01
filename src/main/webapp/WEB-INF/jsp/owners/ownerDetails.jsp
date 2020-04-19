@@ -108,6 +108,11 @@
                 <spring:param name="petId" value="${pet.id}"/>
                 </spring:url>
             <a href="${fn:escapeXml(medicalHistoryUrl)}">Medical History</a>
+            <spring:url value="/owners/{ownerId}/pets/{petId}/adoption-history" var="adoptionHistoryUrl">
+                <spring:param name="ownerId" value="${owner.id}"/>
+                <spring:param name="petId" value="${pet.id}"/>
+            </spring:url>
+            <a href="${fn:escapeXml(adoptionHistoryUrl)}">Adoption History</a>
             </td>
         </c:forEach>
     </table>
