@@ -10,7 +10,9 @@ import static org.hamcrest.CoreMatchers.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -29,8 +31,9 @@ public class VetManagesHomelessPetNegativeUITest {
 	  
 	  @BeforeEach
 	  public void setUp() throws Exception {
-		System.setProperty("webdriver.chrome.driver", System.getenv("webdriver.chrome.driver"));
-		driver = new ChromeDriver();
+		String pathToGeckoDriver = "./src/test/resources/geckodriver.exe";
+		System.setProperty("webdriver.gecko.driver", pathToGeckoDriver);
+		driver = new FirefoxDriver();
 	    baseUrl = "https://www.google.com/";
 	    driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	  }
@@ -39,32 +42,58 @@ public class VetManagesHomelessPetNegativeUITest {
 	  public void testVetShouldNotAddNewPet() throws Exception {
 		  
 		driver.manage().window().maximize();
-		  
-	    driver.get("http://localhost:" + port);
-	    driver.findElement(By.linkText("Login")).click();
-	    driver.findElement(By.id("username")).clear();
-	    driver.findElement(By.id("username")).sendKeys("vet1");
-	    driver.findElement(By.id("password")).clear();
-	    driver.findElement(By.id("password")).sendKeys("v3t1");
-	    driver.findElement(By.xpath("//button[@type='submit']")).click();
-	    driver.findElement(By.linkText("vet1")).click();
-	    driver.findElement(By.linkText("Manage homeless pets")).click();
-	    driver.findElement(By.linkText("Add a Pet")).click();
-	    driver.findElement(By.id("name")).click();
-	    driver.findElement(By.id("name")).clear();
-	    driver.findElement(By.id("name")).sendKeys("Ernie");
-	    driver.findElement(By.id("birthDate")).click();
-	    driver.findElement(By.id("birthDate")).clear();
-	    driver.findElement(By.id("birthDate")).sendKeys("2200/02/20");
-	    driver.findElement(By.linkText("20")).click();
-	    new Select(driver.findElement(By.id("type"))).selectByVisibleText("hamster");
-	    driver.findElement(By.xpath("//option[@value='hamster']")).click();
-	    driver.findElement(By.xpath("//button[@type='submit']")).click();
+		
+		loginAsVet(driver, port);
+
+		goToForm(driver);
+		
+		fillTheForm(driver);
+
 	    try {
 	      assertEquals("required and before current date", driver.findElement(By.xpath("//form[@id='pet']/div/div[2]/div/span[2]")).getText());
 	    } catch (Error e) {
 	      verificationErrors.append(e.toString());
 	    }
+	  }
+	  
+	  public static void loginAsVet(WebDriver driver, int port) {
+		  driver.get("http://localhost:" + port);
+		  new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(),'Login')]")));
+		  driver.findElement(By.xpath("//a[contains(text(),'Login')]")).click();
+		  WebDriverWait wait = new WebDriverWait(driver, 200);
+		  wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@type='submit']")));
+		  WebElement usernameInput = driver.findElement(By.xpath("//input[@id='username']"));
+		  usernameInput.clear();
+		  usernameInput.click();
+		  wait.until(ExpectedConditions.visibilityOf(usernameInput));
+		  usernameInput.sendKeys("vet1");
+		  WebElement passwordInput = driver.findElement(By.xpath("//input[@id='password']"));
+		  passwordInput.clear();
+		  passwordInput.click();
+		  wait.until(ExpectedConditions.visibilityOf(passwordInput));
+		  passwordInput.sendKeys("v3t1");
+		  wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@type='submit']")));
+		  driver.findElement(By.xpath("//button[@type='submit']")).click();
+	  }
+	  
+	  public static void goToForm(WebDriver driver) {
+		  new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("a.dropdown-toggle")));
+		  driver.findElement(By.cssSelector("a.dropdown-toggle")).click();
+		  driver.findElement(By.xpath("//a[contains(text(),'Manage homeless pets')]")).click();
+		  driver.findElement(By.xpath("//a[contains(text(),'Add a Pet')]")).click();
+	  }
+	  
+	  public static void fillTheForm(WebDriver driver) {
+		  driver.findElement(By.id("name")).click();
+		  driver.findElement(By.id("name")).clear();
+		  driver.findElement(By.id("name")).sendKeys("Ernie");
+		  driver.findElement(By.id("birthDate")).click();
+		  driver.findElement(By.id("birthDate")).clear();
+		  driver.findElement(By.id("birthDate")).sendKeys("2200/02/20");
+		  driver.findElement(By.linkText("20")).click();
+		  new Select(driver.findElement(By.id("type"))).selectByVisibleText("hamster");
+		  driver.findElement(By.xpath("//option[@value='hamster']")).click();
+		  driver.findElement(By.xpath("//button[@type='submit']")).click();
 	  }
 
 	  @AfterEach

@@ -10,7 +10,9 @@ import static org.hamcrest.CoreMatchers.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -29,26 +31,55 @@ public class AdminManagesTrainerPositiveUITest {
 	  
 	  @BeforeEach
 	  public void setUp() throws Exception {
-		System.setProperty("webdriver.chrome.driver", System.getenv("webdriver.chrome.driver"));
-		driver = new ChromeDriver();
+		String pathToGeckoDriver = "./src/test/resources/geckodriver.exe";
+		System.setProperty("webdriver.gecko.driver", pathToGeckoDriver);
+		driver = new FirefoxDriver();
 	    baseUrl = "https://www.google.com/";
 	    driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	  }
 
 	  @Test
 	  public void testAdminShouldDeleteAnExistingTrainer() throws Exception {
-	    driver.get("http://localhost:" + port);
-	    driver.findElement(By.linkText("Login")).click();
-	    driver.findElement(By.id("username")).clear();
-	    driver.findElement(By.id("username")).sendKeys("admin1");
-	    driver.findElement(By.id("password")).clear();
-	    driver.findElement(By.id("password")).sendKeys("4dm1n");
-	    driver.findElement(By.xpath("//button[@type='submit']")).click();
-	    driver.findElement(By.xpath("//div[@id='main-navbar']/ul[2]/li/a/strong")).click();
-	    driver.findElement(By.linkText("Manage trainers")).click();
-	    driver.findElement(By.linkText("Thomas Moon")).click();
-	    driver.findElement(By.linkText("Delete")).click();
-	    assertEquals("Trainer deleted successfully!", driver.findElement(By.xpath("//h3")).getText());
+
+		  driver.manage().window().maximize();
+		  
+		  loginAsAdmin(driver, port);
+		  
+		  deleteTrainer(driver);
+		  
+		  checkTheTrainerHasBeenDeleted(driver);
+		  
+	  }
+	  
+	  public static void loginAsAdmin(WebDriver driver, int port) {
+		  driver.get("http://localhost:" + port);
+		  new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(),'Login')]")));
+		  driver.findElement(By.xpath("//a[contains(text(),'Login')]")).click();
+		  WebDriverWait wait = new WebDriverWait(driver, 200);
+		  wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@type='submit']")));
+		  WebElement usernameInput = driver.findElement(By.xpath("//input[@id='username']"));
+		  usernameInput.clear();
+		  usernameInput.click();
+		  wait.until(ExpectedConditions.visibilityOf(usernameInput));
+		  usernameInput.sendKeys("admin1");
+		  WebElement passwordInput = driver.findElement(By.xpath("//input[@id='password']"));
+		  passwordInput.clear();
+		  passwordInput.click();
+		  wait.until(ExpectedConditions.visibilityOf(passwordInput));
+		  passwordInput.sendKeys("4dm1n");
+		  wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@type='submit']")));
+		  driver.findElement(By.xpath("//button[@type='submit']")).click();
+	  }
+	  
+	  public static void deleteTrainer(WebDriver driver) {
+		  driver.findElement(By.xpath("//div[@id='main-navbar']/ul[2]/li/a/strong")).click();
+		  driver.findElement(By.xpath("//a[contains(text(),'Manage trainers')]")).click();
+		  driver.findElement(By.xpath("//a[contains(text(),'Thomas Moon')]")).click();
+		  driver.findElement(By.xpath("//a[contains(text(),'Delete')]")).click();
+	  }
+	  
+	  public static void checkTheTrainerHasBeenDeleted(WebDriver driver) {
+		  assertEquals("Trainer deleted successfully!", driver.findElement(By.xpath("//h3")).getText());
 	  }
 
 	  @AfterEach
