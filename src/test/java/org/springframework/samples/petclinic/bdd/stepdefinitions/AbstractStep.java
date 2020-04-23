@@ -14,7 +14,8 @@ public class AbstractStep {
 	
 	public WebDriver getDriver() {
 		if(driver == null) {
-			
+			String pathToGeckoDriver = "./src/test/resources/geckodriver.exe";
+			System.setProperty("webdriver.gecko.driver", pathToGeckoDriver);
 			driver = new FirefoxDriver();
 			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		}

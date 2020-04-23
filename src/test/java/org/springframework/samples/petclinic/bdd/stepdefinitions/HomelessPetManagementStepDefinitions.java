@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
 import io.cucumber.java.en.Given;
@@ -14,6 +15,7 @@ import io.cucumber.java.en.When;
 import lombok.extern.java.Log;
 
 @Log
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class HomelessPetManagementStepDefinitions extends AbstractStep{
 
 	@LocalServerPort

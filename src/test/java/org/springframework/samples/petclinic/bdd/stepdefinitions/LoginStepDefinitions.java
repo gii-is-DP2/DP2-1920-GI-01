@@ -8,7 +8,6 @@ import org.springframework.boot.web.server.LocalServerPort;
 import lombok.extern.java.Log;
 
 @Log
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class LoginStepDefinitions extends AbstractStep {
 
 	@LocalServerPort

@@ -7,7 +7,6 @@ import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(features = {"src/test/java/org/springframework/samples/petclinic/bdd"},
-				glue = {"src/test/java/org/springframework/samples/petclinic/bdd/stepdefinitions"},
 				tags = {"not @ignore"},
 				plugin = {"pretty", "json:target/cucumber-reports/cucumber-report.json"}, 
 				monochrome=true)
