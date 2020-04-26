@@ -76,7 +76,7 @@ public class AdminManagesVetNegativeUITest {
 	  public static void goToForm(WebDriver driver) {
 		  driver.findElement(By.cssSelector("a.dropdown-toggle")).click();
 		  driver.findElement(By.xpath("//a[contains(text(),'Manage veterinarians')]")).click();
-		  driver.findElement(By.xpath("//a[contains(text(),'James Carter')]")).click();
+		  driver.findElement(By.xpath("//a[contains(text(),'Test Dummy')]")).click();
 		  driver.findElement(By.xpath("//a[contains(text(),'Edit')]")).click();
 	  }
 	  
