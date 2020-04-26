@@ -15,16 +15,10 @@ import io.cucumber.java.en.When;
 import lombok.extern.java.Log;
 
 @Log
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class HomelessPetManagementStepDefinitions extends AbstractStep{
+public class HomelessPetManagementStepDefinitions extends AbstractStep {
 
 	@LocalServerPort
 	private int port;
-	
-	@Given("I am logged in the system as {string} with password {string}")
-	public void i_am_logged_in_the_system_as_with_password(String username, String password) {
-		LoginStepDefinitions.loginAs(username, password, port, getDriver());
-	}
 	
 	@When("I add a new homeless pet called {string} born on {string} of type {string}")
 	public void i_add_a_new_homeless_pet_called_born_on_of_type(String name, String birthdate, String type) {
@@ -48,6 +42,13 @@ public class HomelessPetManagementStepDefinitions extends AbstractStep{
 	@Then("the new homeless pet called {string} appears in the listing")
 	public void the_new_homeless_pet_appears_in_the_listing(String name) {
 		assertEquals(name, getDriver().findElement(By.xpath("//tr[3]/td/a")).getText());
+		stopDriver();
+	}
+	
+	@Then("an error appears in the homeless pet form")
+	public void an_error_appears_in_the_homeless_pet_form() {
+		assertEquals("required and before current date", getDriver().findElement(By.xpath("//form[@id='pet']/div/div[2]/div/span[2]")).getText());
+		stopDriver();
 	}
 	
 }
