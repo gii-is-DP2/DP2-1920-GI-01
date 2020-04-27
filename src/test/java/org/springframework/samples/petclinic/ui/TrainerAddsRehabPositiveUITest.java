@@ -37,8 +37,17 @@ public class TrainerAddsRehabPositiveUITest {
   }
 
   @Test
-  public void testTrainerAddingRehab() throws Exception {
-    driver.get("http://localhost:8080/");
+  
+  public void testAdminShouldUpdateAnExistingVet() throws Exception {
+	  
+	  driver.manage().window().maximize();
+	  loginAsTrainer(driver, port);
+	  testTrainerAddingRehab ();
+  }
+  
+  
+  public void loginAsTrainer(WebDriver driver, int port) {
+    driver.get("http://localhost:" + port);
     new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(),'Login')]")));
 	driver.findElement(By.xpath("//a[contains(text(),'Login')]")).click();
 	WebDriverWait wait = new WebDriverWait(driver, 200);
@@ -55,11 +64,15 @@ public class TrainerAddsRehabPositiveUITest {
 	passwordInput.sendKeys("tr41n3r");
 	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@type='submit']")));
 	driver.findElement(By.xpath("//button[@type='submit']")).click();
-    driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[2]/a/span[2]")).click();
-    driver.findElement(By.name("lastName")).click();
-    driver.findElement(By.name("lastName")).clear();
-    driver.findElement(By.name("lastName")).sendKeys("Rodriquez");
-    driver.findElement(By.xpath("//button[@type='submit']")).click();
+
+    
+  }
+  public void testTrainerAddingRehab() {
+	    driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[2]/a/span[2]")).click();
+	    driver.findElement(By.name("lastName")).click();
+	    driver.findElement(By.name("lastName")).clear();
+	    driver.findElement(By.name("lastName")).sendKeys("Rodriquez");
+	    driver.findElement(By.xpath("//button[@type='submit']")).click();
     driver.findElement(By.linkText("Add Rehab")).click();
     driver.findElement(By.id("time")).click();
     driver.findElement(By.id("time")).clear();
