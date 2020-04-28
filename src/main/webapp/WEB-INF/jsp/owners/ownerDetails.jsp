@@ -10,7 +10,7 @@
 
     <h2>Owner Information</h2>
 
-
+<c:if test="${message != 'Owner not found!'}">
     <table class="table table-striped">
         <tr>
             <th>Name</th>
@@ -217,6 +217,11 @@
             </tr>
         </c:forEach>
     </table>
+    
+     </c:if>
+	    <c:if test="${message == 'Owner not found!'}">
+			<h3>Owner not found!</h3>
+		</c:if>
 </petclinic:layout>
 
 
