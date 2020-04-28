@@ -194,7 +194,7 @@ class OwnerControllerTests {
         
       /*  ------------- US-23 Owner sees rehabilitation session  -------------- */
 
-		@WithMockUser(value = "spring")
+		@WithMockUser(value = "spring" , authorities = {"owner"})
 		@Test
 		void ownerCanSeePetsRehabSessions() throws Exception {
 			mockMvc.perform(get("/owners/{ownerId}", TEST_OWNER_ID)).andExpect(status().isOk())
@@ -202,25 +202,8 @@ class OwnerControllerTests {
 					.andExpect(model().attributeExists("owner"));
 		}
 
-	
-		
-		/*  US-18-Testing Vet sees pet’s visits, pets visits are located in the owners detail page as a table,
-		 *  so that we need to test whether a trainer has access to this page in order to see these visits
-		 *  */
 
-		/* Positive case  */
-		
-		@WithMockUser(username = "spring", authorities = {"veterinarian"})
-		@Test
-		void testVetSeesPetsVisits() throws Exception {
-			mockMvc.perform(get("/owners/{ownerId}", TEST_OWNER_ID))
-					.andExpect(status().isOk())
-					.andExpect(view().name("owners/ownerDetails"))
-					.andExpect(model().attributeExists("owner"));
-		}
 	
-		
-	 
-		
+
 		
 }
