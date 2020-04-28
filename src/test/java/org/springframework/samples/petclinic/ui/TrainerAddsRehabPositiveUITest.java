@@ -65,7 +65,7 @@ public class TrainerAddsRehabPositiveUITest {
 	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@type='submit']")));
 	driver.findElement(By.xpath("//button[@type='submit']")).click();
 
-    
+   
   }
   public void testTrainerAddingRehab() {
 	    driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[2]/a/span[2]")).click();
