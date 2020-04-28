@@ -2,6 +2,7 @@ package org.springframework.samples.petclinic.model;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -20,6 +21,7 @@ public class Medicine extends NamedEntity {
 	
 	@NotNull
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
+	@Column(name = "expiration_date")
 	private LocalDate expirationDate;
 	
 	@NotBlank
