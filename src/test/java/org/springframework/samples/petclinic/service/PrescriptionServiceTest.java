@@ -84,7 +84,6 @@ public class PrescriptionServiceTest {
 		medicalRecord = EntityUtils.getById(medicalRecordService.findMedicalHistory(), MedicalRecord.class, 1);
 		prescriptions = prescriptionService.findManyByMedicalRecord(medicalRecord);
 		
-		assertThat(prescriptions).isNotEmpty();
 		assertThat(prescriptions).isNotNull();
 	}
 	
