@@ -1,5 +1,6 @@
 package org.springframework.samples.petclinic.ui;
 
+import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,16 +18,16 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TrainerAddsRehabPositiveUITest {
+public class TrainerAddsRehabNegativeUITest {
 	
   private WebDriver driver;
   private String baseUrl;
   private boolean acceptNextAlert = true;
   private StringBuffer verificationErrors = new StringBuffer();
-
+  
   @LocalServerPort
   private int port;
-  
+
   @BeforeEach
   public void setUp() throws Exception {
 	String pathToGeckoDriver = "./src/test/resources/geckodriver.exe";
@@ -36,17 +37,18 @@ public class TrainerAddsRehabPositiveUITest {
     driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
   }
 
-  @Test
+  
+@Test
   
   public void testTrainerAddsRehab () throws Exception {
 	  
 	  driver.manage().window().maximize();
 	  loginAsTrainer(driver, port);
-	  testTrainerAddingRehab ();
+	  testTrainerAddingRehabWithoutAllInputs ();
   }
   
-  
-  public void loginAsTrainer(WebDriver driver, int port) {
+
+public void loginAsTrainer(WebDriver driver, int port) {
     driver.get("http://localhost:" + port);
     new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(),'Login')]")));
 	driver.findElement(By.xpath("//a[contains(text(),'Login')]")).click();
@@ -64,22 +66,17 @@ public class TrainerAddsRehabPositiveUITest {
 	passwordInput.sendKeys("tr41n3r");
 	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@type='submit']")));
 	driver.findElement(By.xpath("//button[@type='submit']")).click();
+ }
+  
 
-   
-  }
-  public void testTrainerAddingRehab() {
-	    driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[2]/a/span[2]")).click();
-	    driver.findElement(By.name("lastName")).click();
-	    driver.findElement(By.name("lastName")).clear();
-	    driver.findElement(By.name("lastName")).sendKeys("Rodriquez");
-	    driver.findElement(By.xpath("//button[@type='submit']")).click();
+ public void testTrainerAddingRehabWithoutAllInputs() throws Exception {
+    
+    driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[2]/a/span[2]")).click();
+    driver.findElement(By.name("lastName")).click();
+    driver.findElement(By.name("lastName")).clear();
+    driver.findElement(By.name("lastName")).sendKeys("Rodriquez");
+    driver.findElement(By.xpath("//button[@type='submit']")).click();
     driver.findElement(By.linkText("Add Rehab")).click();
-    driver.findElement(By.id("time")).click();
-    driver.findElement(By.id("time")).clear();
-    driver.findElement(By.id("time")).sendKeys("6");
-    driver.findElement(By.id("description")).click();
-    driver.findElement(By.id("description")).clear();
-    driver.findElement(By.id("description")).sendKeys("Trainer adds rehab positive UI test");
     driver.findElement(By.xpath("//button[@type='submit']")).click();
   }
 
@@ -125,4 +122,3 @@ public class TrainerAddsRehabPositiveUITest {
     }
   }
 }
-
