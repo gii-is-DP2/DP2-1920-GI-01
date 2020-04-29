@@ -86,12 +86,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		PasswordEncoder encoder = NoOpPasswordEncoder.getInstance();
 		return encoder;
 	}
-	
+
+	@Override
 	@Bean
 	public UserDetailsService userDetailsService() {
 		GrantedAuthority authority = new SimpleGrantedAuthority("trainer");
-		UserDetails userDetailsTrainer = (UserDetails) new User("trainer1", "trainer1", Arrays.asList(authority));
-		
+		UserDetails userDetailsTrainer = new User("trainer1", "trainer1", Arrays.asList(authority));
+
 		return new InMemoryUserDetailsManager(Arrays.asList(userDetailsTrainer));
 	}
 

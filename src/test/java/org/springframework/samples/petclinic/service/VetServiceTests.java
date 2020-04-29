@@ -99,7 +99,6 @@ class VetServiceTests {
 		user.setPassword("v3t1");
 		user.setEnabled(true);
 		
-		VetAssert.assertThat(vet1.get()).hasNoInterventions();
 		VetAssert.assertThat(vet1.get()).hasNoSpecialties();
 		VetAssert.assertThat(vet1.get()).hasNrOfSpecialties(0);
 		VetAssert.assertThat(vet1.get()).hasUser(user);

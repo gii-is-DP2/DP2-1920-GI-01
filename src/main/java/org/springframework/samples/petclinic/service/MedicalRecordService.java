@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.MedicalRecord;
 import org.springframework.samples.petclinic.repository.MedicalRecordRepository;
+import org.springframework.samples.petclinic.repository.PrescriptionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,9 @@ public class MedicalRecordService {
 
 	@Autowired
 	private MedicalRecordRepository repository;
+	
+	@Autowired
+	private PrescriptionRepository prescriptionRepository;
 
 
 	@Transactional
@@ -39,6 +43,7 @@ public class MedicalRecordService {
 	
 	@Transactional
 	public void deleteMedicalRecord(final MedicalRecord medicalRecord) {
+		this.prescriptionRepository.deleteAllAssociated(medicalRecord);
 		this.repository.delete(medicalRecord);
 	}
 	

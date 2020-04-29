@@ -10,8 +10,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Intervention;
 import org.springframework.samples.petclinic.model.Pet;
+import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.web.validators.InterventionValidator;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -73,6 +76,13 @@ public class InterventionController {
 			modelMap.put("intervention", intervention);
 			return "pets/createOrUpdateInterventionForm";
 		} else {
+			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			String username = ((UserDetails) principal).getUsername();
+			Optional<Vet> vet = this.petService.findVetByName(username);
+
+			if (vet.isPresent()) {
+				intervention.setVet(vet.get());
+			}
 			this.petService.saveIntervention(intervention);
 			return "redirect:/owners/{ownerId}";
 		}

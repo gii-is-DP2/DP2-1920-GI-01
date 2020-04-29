@@ -46,7 +46,11 @@
 	                    	<spring:url value="/homeless-pets/{petId}/delete" var="petDeleteUrl">
 	                        	<spring:param name="petId" value="${pet.id}"/>
 	                        </spring:url>
-	                    	<a href="${fn:escapeXml(petDeleteUrl)}">Delete Pet</a>
+	                    	<a href="${fn:escapeXml(petDeleteUrl)}">Delete Pet</a><br/>
+	                    	<spring:url value="/homeless-pets/{petId}/adopt" var="adoptUrl">
+	                        	<spring:param name="petId" value="${pet.id}"/>
+	                        </spring:url>
+	                    	<a href="${fn:escapeXml(adoptUrl)}">Adopt</a><br/>
 	                	</td>
 	                </sec:authorize>
             	</tr>

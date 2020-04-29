@@ -29,6 +29,8 @@
 	    <br>
 	    <h2>Interventions</h2>
 	    <br>
+	    <c:if test="${message2 != 'This vet has no interventions'}">
+	    
 	    <table class="table table-striped">
 	    	<c:forEach var="intervention" items="${vet.interventions}">
 	    		
@@ -42,6 +44,10 @@
         	
 	    	</c:forEach>
 	    </table>
+	    </c:if>
+	    <c:if test="${message2 != 'This vet has no interventions'}">
+	    <h4>This vet has no Interventions</h4>
+	    </c:if>
 	</c:if>
 	<c:if test="${message == 'Vet not found!'}">
 		<h3>Vet not found!</h3>

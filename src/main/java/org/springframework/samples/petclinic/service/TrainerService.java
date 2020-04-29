@@ -38,6 +38,13 @@ public class TrainerService {
 		res = trainerRepository.findById(trainerId);
 		return res;
 	}
+	
+	@Transactional
+	public Optional<Trainer> findTrainerByUsername(String username) {
+		Optional<Trainer> res;
+		res = this.trainerRepository.findByUsername(username);
+		return res;
+	}
   
 	//This method allows us to delete a given trainer
 	@Transactional

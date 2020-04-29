@@ -108,6 +108,11 @@
                 <spring:param name="petId" value="${pet.id}"/>
                 </spring:url>
             <a href="${fn:escapeXml(medicalHistoryUrl)}">Medical History</a>
+            <spring:url value="/owners/{ownerId}/pets/{petId}/adoption-history" var="adoptionHistoryUrl">
+                <spring:param name="ownerId" value="${owner.id}"/>
+                <spring:param name="petId" value="${pet.id}"/>
+            </spring:url>
+            <a href="${fn:escapeXml(adoptionHistoryUrl)}">Adoption History</a>
             </td>
         </c:forEach>
     </table>
@@ -134,6 +139,7 @@
                             <th>Intervention Date</th>
                             <th>Intervention Description</th>
                             <th>Intervention Time</th>
+                            <th>Intervention Vet</th>
                         </tr>
                         </thead>
                         <c:forEach var="intervention" items="${pet.interventions}">
@@ -141,6 +147,7 @@
                                 <td><petclinic:localDate date="${intervention.interventionDate}" pattern="yyyy-MM-dd"/></td>
                                 <td><c:out value="${intervention.interventionDescription}"/></td>
                                 <td><c:out value="${intervention.interventionTime}"/></td>
+                                <td><c:out value="${intervention.vet.firstName} ${intervention.vet.lastName}"/></td>
                             </tr>
                         </c:forEach>
                         <tr>
@@ -205,6 +212,36 @@
                                                                                         
                             </td>
                         </tr>
+                    </table>
+                </td>
+            </tr>
+        </c:forEach>
+    </table>
+    
+<h2>Adoptions</h2>
+    <table class="table table-striped">
+        <c:forEach var="adoption" items="${owner.adoptions}">
+            <tr>
+                <td valign="top">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><c:out value="${adoption.pet.name}"/></dd>
+                        <dt>Birth Date</dt>
+                        <dd><petclinic:localDate date="${adoption.pet.birthDate}" pattern="yyyy-MM-dd"/></dd>
+                        <dt>Type</dt>
+                        <dd><c:out value="${adoption.pet.type.name}"/></dd>
+                    </dl>
+                </td>
+                <td valign="top">
+                    <table class="table-condensed">
+                        <thead>
+                        	<tr>
+                            	<th>Adoption Date</th>
+                        	</tr>
+                        </thead>
+                            <tr>
+                                <td><petclinic:localDate date="${adoption.date}" pattern="yyyy-MM-dd"/></td>
+                            </tr>
                     </table>
                 </td>
             </tr>

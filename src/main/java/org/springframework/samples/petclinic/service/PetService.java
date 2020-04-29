@@ -27,6 +27,7 @@ import org.springframework.samples.petclinic.model.Intervention;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Rehab;
+import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.repository.InterventionRepository;
 import org.springframework.samples.petclinic.repository.PetRepository;
@@ -82,8 +83,13 @@ public class PetService {
 	@Transactional(rollbackFor = DuplicatedPetNameException.class)
 	public void savePet(final Pet pet) throws DataAccessException, DuplicatedPetNameException {
 		Pet otherPet = new Pet();
-
-		otherPet = pet.getOwner().getPetwithIdDifferent(pet.getName(), pet.getId());
+		
+		if(pet.getOwner() != null) {
+			otherPet = pet.getOwner().getPetwithIdDifferent(pet.getName(), pet.getId());
+		} else {
+			otherPet = null;
+		}
+		
 		if (pet.getOwner() != null && StringUtils.hasLength(pet.getName()) && otherPet != null && otherPet.getId() != pet.getId()) {
 			throw new DuplicatedPetNameException();
 		} else {
@@ -102,6 +108,8 @@ public class PetService {
 
 	//This method allows us to delete a given pet
 	public void deletePet(final Pet pet) throws DataAccessException {
+		this.interventionRepository.findInterventionByPetId(pet.getId()).stream().forEach(i -> this.interventionRepository.delete(i));
+		this.rehabRepository.findByPetId(pet.getId()).stream().forEach(r -> this.rehabRepository.delete(r));
 		this.petRepository.delete(pet);
 	}
 
@@ -130,6 +138,11 @@ public class PetService {
 		// TODO Auto-generated method stub
 		this.interventionRepository.delete(intervention);
 
+	}
+
+	@Transactional
+	public Optional<Vet> findVetByName(final String name) {
+		return this.interventionRepository.findByUsername(name);
 	}
 
 }

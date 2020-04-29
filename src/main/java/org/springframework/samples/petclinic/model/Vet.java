@@ -115,8 +115,12 @@ public class Vet extends Person {
 		this.getInterventionsInternal().add(intervention);
 		intervention.setVet(this);
 	}
+	
+	public void removeIntervention(final Intervention intervention) {
+		this.getInterventionsInternal().remove(intervention);
+	}
 
-	protected void setInterventionsInternal(final Set<Intervention> interventions) {
+	public void setInterventionsInternal(final Set<Intervention> interventions) {
 		this.interventions = interventions;
 	}
 

@@ -16,6 +16,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import generatedAssertions.customAssertions.VisitAssert;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class VisitServiceTests {
@@ -36,6 +39,10 @@ public class VisitServiceTests {
 	@Test
 	void shouldFindVisitWithCorrectId() {
 		Optional<Visit> visit = this.visitService.findVisitById(1);
+		
+		VisitAssert.assertThat(visit.get()).hasDate(LocalDate.of(2013, 1, 1));
+		VisitAssert.assertThat(visit.get()).hasDescription("rabies shot");
+		VisitAssert.assertThat(visit.get()).hasPet(petService.findPetById(7));
 		
 		assertThat(visit.isPresent()).isEqualTo(true);
 		assertThat(visit.get().getDescription()).startsWith("rabies shot");
@@ -90,6 +97,7 @@ public class VisitServiceTests {
 	}
 	
 	@Test
+	@Transactional
 	void shouldDeleteVisit() {
 		Optional<Visit> visit1 = this.visitService.findVisitById(1);
 		

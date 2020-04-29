@@ -1,5 +1,6 @@
 package org.springframework.samples.petclinic.model;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -57,6 +58,22 @@ public class Trainer extends Person{
 	
 	public void setUser(User user) {
 		this.user = user;
+	}
+	
+	public void addRehab(Rehab rehab) {
+		this.rehabs.add(rehab);
+	}
+	
+	public void removeRehab(Rehab rehab) {
+		this.rehabs.remove(rehab);
+	}
+	
+	public Set<Rehab> getRehabs(){
+		return this.rehabs;
+	}
+	
+	public void setRehabs(Set<Rehab> rehabs) {
+		this.rehabs = rehabs;
 	}
 	
 }

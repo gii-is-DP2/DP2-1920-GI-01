@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.configuration.SecurityConfiguration;
+import org.springframework.samples.petclinic.model.Intervention;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.VetService;
@@ -24,7 +25,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Test class for the {@link VetController}
@@ -35,6 +42,8 @@ import java.util.Optional;
 class VetControllerTests {
 	
 	private static final int TEST_VET_ID = 1;
+	private static final int TEST_VET_ID_2 = 100;
+	private static final int TEST_VET_ID_3 = 101;
 
 	@Autowired
 	private VetController vetController;
@@ -60,8 +69,31 @@ class VetControllerTests {
 		radiology.setId(1);
 		radiology.setName("radiology");
 		helen.addSpecialty(radiology);
+		
+		Vet v1 = new Vet();
+		Vet v2 = new Vet();
+		Set<Intervention> i1 = new HashSet<Intervention>();
+		Set<Intervention> i2 = new HashSet<Intervention>();
+		Intervention intervention1 = new Intervention();
+		Intervention intervention2 = new Intervention();
+		
+		intervention1.setVet(v1);
+		intervention1.setInterventionDate(LocalDate.of(2019, Month.APRIL, 4));
+		intervention1.setInterventionTime(2);
+		intervention1.setInterventionDescription("Test");
+		intervention2.setVet(v2);
+		intervention2.setInterventionDate(LocalDate.of(2021, Month.APRIL, 4));
+		intervention2.setInterventionTime(2);
+		intervention2.setInterventionDescription("Test");
+		i1.add(intervention1);
+		i2.add(intervention2);
+		v1.setInterventionsInternal(i1);
+		v2.setInterventionsInternal(i2);
+		
 		given(this.clinicService.findVets()).willReturn(Lists.newArrayList(james, helen));
 		given(this.clinicService.findVetById(TEST_VET_ID)).willReturn(Optional.of(james));
+		given(this.clinicService.findVetById(TEST_VET_ID_2)).willReturn(Optional.of(v1));
+		given(this.clinicService.findVetById(TEST_VET_ID_3)).willReturn(Optional.of(v2));
 	}
 	
     @WithMockUser(value = "spring")
@@ -298,6 +330,23 @@ class VetControllerTests {
 	@Test
 	void testDeleteAsAdministrator() throws Exception {
 		mockMvc.perform(get("/admin/vets/{vetId}/delete", TEST_VET_ID))
+				.andExpect(status().isOk())
+				.andExpect(view().name("admin/vets/vetList"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"admin"})
+	@Test
+	void testDeleteAsAdministratorHasErrorsBecauseVetHasFutureInterventions() throws Exception {
+		mockMvc.perform(get("/admin/vets/{vetId}/delete", TEST_VET_ID_2))
+				.andExpect(status().isOk())
+				.andExpect(view().name("admin/vets/vetList"))
+				.andExpect(model().attributeExists("message"));
+	}
+	
+	@WithMockUser(username = "spring", authorities = {"admin"})
+	@Test
+	void testDeleteAsAdministratorVetHasNoFutureInterventions() throws Exception {
+		mockMvc.perform(get("/admin/vets/{vetId}/delete", TEST_VET_ID_3))
 				.andExpect(status().isOk())
 				.andExpect(view().name("admin/vets/vetList"));
 	}
