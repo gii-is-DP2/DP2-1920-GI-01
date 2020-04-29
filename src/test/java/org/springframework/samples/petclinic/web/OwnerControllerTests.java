@@ -192,4 +192,53 @@ class OwnerControllerTests {
 				.andExpect(view().name("owners/ownerDetails"));
 	}
 
+		/*  US-18-Testing Vet sees pet’s visits, pets visits are located in the owners detail page as a table,
+		 *  so that we need to test whether a trainer has access to this page in order to see these visits
+		 *  */
+
+		/* Positive case  */
+		
+		@WithMockUser(username = "spring", authorities = {"veterinarian"})
+		@Test
+		void testVetSeesPetsVisits() throws Exception {
+			mockMvc.perform(get("/owners/{ownerId}", TEST_OWNER_ID))
+					.andExpect(status().isOk())
+					.andExpect(view().name("owners/ownerDetails"))
+					.andExpect(model().attributeExists("owner"));
+		}
+	
+		/* Negative case */
+		
+		@WithMockUser(username = "spring", authorities = {"veterinarian"})
+		@Test
+		void testVetSeesPetsVisitsWithError() throws Exception {
+			mockMvc.perform(get("/owners/-1", TEST_OWNER_ID))
+			.andExpect(status().isOk())
+			.andExpect(view().name("exception"));
+		}
+			
+	      /*  ------------- US-23 Owner sees rehabilitation session  -------------- */
+
+			/* Positive case */
+		
+			@WithMockUser(value = "spring")
+			@Test
+			void ownerCanSeePetsRehabSessions() throws Exception {
+				mockMvc.perform(get("/owners/{ownerId}", TEST_OWNER_ID)).andExpect(status().isOk())
+						.andExpect(view().name("owners/ownerDetails"))
+						.andExpect(model().attributeExists("owner"));
+			}
+			
+			/* Negative case */
+			
+			@WithMockUser(username = "spring", authorities = {"veterinarian"})
+			@Test
+			void testInitEditInterventionHomelessPetFormHasErrors() throws Exception {
+				mockMvc.perform(get("/owners/-1", TEST_OWNER_ID))
+				.andExpect(status().isOk())
+				.andExpect(view().name("exception"));
+			}
+				
+
+   
 }

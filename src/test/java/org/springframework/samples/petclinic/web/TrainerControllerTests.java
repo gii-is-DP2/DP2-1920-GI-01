@@ -346,4 +346,29 @@ public class TrainerControllerTests {
 				.andExpect(view().name("admin/trainers/listTrainers"));
 	}
 	
+	
+/* -------  US-24 Owner sees trainer’s personal information ------- */
+	@WithMockUser(username = "spring", authorities = {"owner"})
+	@Test
+	void testOwnerSeesTrainersPersonalInformation() throws Exception {
+		mockMvc.perform(get("/trainers/{trainerId}", TEST_TRAINER_ID))
+				.andExpect(status().isOk())
+				.andExpect(view().name("trainers/showTrainer"))
+				.andExpect(model().attributeExists("trainer"));
+	}
+	
+	
+	@WithMockUser(username = "spring", authorities = {"owner"})
+	@Test
+	void testOwnerSeesTrainersPersonalInformationWithError() throws Exception {
+		mockMvc.perform(get("/trainers/-2", TEST_TRAINER_ID))
+				.andExpect(status().isOk())		
+				.andExpect(view().name("trainers/showTrainer"))
+				.andExpect(model().attributeExists("message"));
+	}
+	
+	
+
+	
+	
 }
