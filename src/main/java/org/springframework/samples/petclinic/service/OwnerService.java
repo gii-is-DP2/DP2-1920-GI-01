@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
@@ -33,42 +34,48 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class OwnerService {
 
-	private OwnerRepository ownerRepository;	
-	
-	@Autowired
-	private UserService userService;
-	
-	@Autowired
-	private AuthoritiesService authoritiesService;
+	private OwnerRepository		ownerRepository;
 
 	@Autowired
-	public OwnerService(OwnerRepository ownerRepository) {
+	private UserService			userService;
+
+	@Autowired
+	private AuthoritiesService	authoritiesService;
+
+
+	@Autowired
+	public OwnerService(final OwnerRepository ownerRepository) {
 		this.ownerRepository = ownerRepository;
-	}	
-
-	@Transactional(readOnly = true)
-	public Owner findOwnerById(int id) throws DataAccessException {
-		return ownerRepository.findById(id);
 	}
 
 	@Transactional(readOnly = true)
-	public Collection<Owner> findOwnerByLastName(String lastName) throws DataAccessException {
-		return ownerRepository.findByLastName(lastName);
+	public Owner findOwnerById(final int id) throws DataAccessException {
+		return this.ownerRepository.findById(id);
 	}
+
+	@Transactional(readOnly = true)
+	public Collection<Owner> findOwnerByLastName(final String lastName) throws DataAccessException {
+		return this.ownerRepository.findByLastName(lastName);
+	}
+
+	//	@Transactional(readOnly = true)
+	//	public Collection<Adoption> findByOwnerId(final Integer ownerId) {
+	//		return this.ownerRepository.findByOwnerId(ownerId);
+	//	}
 
 	@Transactional
-	public void saveOwner(Owner owner) throws DataAccessException {
+	public void saveOwner(final Owner owner) throws DataAccessException {
 		//creating owner
-		ownerRepository.save(owner);		
+		this.ownerRepository.save(owner);
 		//creating user
-		userService.saveUser(owner.getUser());
+		this.userService.saveUser(owner.getUser());
 		//creating authorities
-		authoritiesService.saveAuthorities(owner.getUser().getUsername(), "owner");
-	}		
-	
+		this.authoritiesService.saveAuthorities(owner.getUser().getUsername(), "owner");
+	}
+
 	@Transactional(readOnly = true)
 	public Collection<Owner> findAll() {
-		return ownerRepository.findAll();
+		return this.ownerRepository.findAll();
 	}
 
 }
