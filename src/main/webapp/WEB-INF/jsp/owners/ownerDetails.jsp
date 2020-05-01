@@ -217,6 +217,36 @@
             </tr>
         </c:forEach>
     </table>
+    
+<h2>Adoptions</h2>
+    <table class="table table-striped">
+        <c:forEach var="adoption" items="${owner.adoptions}">
+            <tr>
+                <td valign="top">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><c:out value="${adoption.pet.name}"/></dd>
+                        <dt>Birth Date</dt>
+                        <dd><petclinic:localDate date="${adoption.pet.birthDate}" pattern="yyyy-MM-dd"/></dd>
+                        <dt>Type</dt>
+                        <dd><c:out value="${adoption.pet.type.name}"/></dd>
+                    </dl>
+                </td>
+                <td valign="top">
+                    <table class="table-condensed">
+                        <thead>
+                        	<tr>
+                            	<th>Adoption Date</th>
+                        	</tr>
+                        </thead>
+                            <tr>
+                                <td><petclinic:localDate date="${adoption.date}" pattern="yyyy-MM-dd"/></td>
+                            </tr>
+                    </table>
+                </td>
+            </tr>
+        </c:forEach>
+    </table>
 </petclinic:layout>
 
 

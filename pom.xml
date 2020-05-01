@@ -154,7 +154,7 @@
         </dependency>
         
         <!-- Selenium dependences -->
-
+      
         <dependency>
     		<groupId>org.seleniumhq.selenium</groupId>
     		<artifactId>selenium-remote-driver</artifactId>
@@ -175,9 +175,9 @@
     		<artifactId>selenium-support</artifactId>
     		<version>${selenium.version}</version>
     	</dependency>
-
+    	
     	<!-- Cucumber dependences -->
-
+    	
     	<dependency>
     		<groupId>io.cucumber</groupId>
     		<artifactId>cucumber-java</artifactId>
@@ -211,9 +211,9 @@
     		<artifactId>reporting-plugin</artifactId>
     		<version>4.0.36</version>
     	</dependency>
-
+    
     	<!-- Dependences for API integration -->
-
+    
     	<dependency>
             <groupId>org.restlet.jse</groupId>
             <artifactId>org.restlet</artifactId>
@@ -225,9 +225,9 @@
             <artifactId>org.restlet.ext.jackson</artifactId>
             <version>${restlet.version}</version>
         </dependency>
-
+        
         <!-- AssertJ dependences -->
-
+        
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
@@ -244,11 +244,7 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
+        
     </dependencies>
 
     <build>
@@ -368,7 +364,17 @@
             		<generateAssertionsAllFields>true</generateAssertionsAllFields>
             		<targetDir>src/test/java/generated-assertions</targetDir>
             		<cleanTargetDir>true</cleanTargetDir>
-            		<generteAssertionsInPackage>customAssertions</generteAssertionsInPackage>
+            		<generateAssertionsInPackage>customAssertions</generateAssertionsInPackage>
+            	</configuration>
+            </plugin>
+            <plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+            	<artifactId>maven-surefire-plugin</artifactId>
+            	<configuration>
+            		<excludes>
+            			<exclude>**/*UITest.java</exclude>
+            			<exclude>**/*APITest.java</exclude>
+            		</excludes>
             	</configuration>
             </plugin>
 			<plugin>
@@ -417,7 +423,7 @@
 						</executions>
 						<configuration>
 							<includes>
-								<include>**/CucumberUITest.java</include>
+								<include>**/*CucumberUITest.java</include>
 							</includes>
 						</configuration>
 					</plugin>
