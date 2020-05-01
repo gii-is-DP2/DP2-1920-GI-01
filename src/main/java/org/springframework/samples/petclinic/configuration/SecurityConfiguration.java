@@ -41,15 +41,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 
+
 	protected void configure(final HttpSecurity http) throws Exception {
 		http.authorizeRequests().antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll()//
 			.antMatchers(HttpMethod.GET, "/", "/oups").permitAll()//
 			.antMatchers("/users/new").permitAll()//
-			.antMatchers("/trainers").permitAll()//
-			.antMatchers("/trainers/{trainerId}").permitAll()//
+			.antMatchers("/trainers/**").authenticated()//
 			.antMatchers("/organizations", "/organizations/{id}").permitAll()//
 			.antMatchers("/admin/**").hasAnyAuthority("admin")//
-			.antMatchers("/owners/**").hasAnyAuthority("owner", "admin", "veterinarian", "trainer")//
+			.antMatchers("/owners/**").hasAnyAuthority("owner", "veterinarian", "trainer")//
 			.antMatchers("/owners/{ownerId}").hasAnyAuthority("owner", "admin", "veterinarian", "trainer")//
 			.antMatchers("/owners/{ownerId}/pets/{petId}/rehab/new").hasAnyAuthority("trainer")//
 			.antMatchers("/homeless-pets/**").hasAnyAuthority("veterinarian", "trainer")//
