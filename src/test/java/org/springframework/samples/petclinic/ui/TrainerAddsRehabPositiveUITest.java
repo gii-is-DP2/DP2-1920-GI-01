@@ -68,19 +68,26 @@ public class TrainerAddsRehabPositiveUITest {
    
   }
   public void testTrainerAddingRehab() {
-	    driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[2]/a/span[2]")).click();
+	  	driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[2]/a/span[2]")).click();
 	    driver.findElement(By.name("lastName")).click();
 	    driver.findElement(By.name("lastName")).clear();
 	    driver.findElement(By.name("lastName")).sendKeys("Rodriquez");
 	    driver.findElement(By.xpath("//button[@type='submit']")).click();
-    driver.findElement(By.linkText("Add Rehab")).click();
-    driver.findElement(By.id("time")).click();
-    driver.findElement(By.id("time")).clear();
-    driver.findElement(By.id("time")).sendKeys("6");
-    driver.findElement(By.id("description")).click();
-    driver.findElement(By.id("description")).clear();
-    driver.findElement(By.id("description")).sendKeys("Trainer adds rehab positive UI test");
-    driver.findElement(By.xpath("//button[@type='submit']")).click();
+	    driver.findElement(By.xpath("(//a[contains(text(),'Add Rehab')])[2]")).click();
+	    driver.findElement(By.id("time")).click();
+	    driver.findElement(By.id("time")).click();
+	    driver.findElement(By.id("time")).clear();
+	    driver.findElement(By.id("time")).sendKeys("1");
+	    driver.findElement(By.id("rehab")).click();
+	    driver.findElement(By.id("description")).click();
+	    driver.findElement(By.id("description")).clear();
+	    driver.findElement(By.id("description")).sendKeys("Test trainer adds rehab");
+	    driver.findElement(By.xpath("//form[@id='rehab']/div[2]")).click();
+	    driver.findElement(By.xpath("//button[@type='submit']")).click();
+	    assertEquals("1", driver.findElement(By.xpath("//tr[2]/td[2]/table/tbody/tr/td[2]")).getText());
+	    assertEquals("Test trainer adds rehab", driver.findElement(By.xpath("//td[3]")).getText());
+	    assertEquals("FIND OWNERS", driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[2]/a/span[2]")).getText());
+
   }
 
   @AfterEach
