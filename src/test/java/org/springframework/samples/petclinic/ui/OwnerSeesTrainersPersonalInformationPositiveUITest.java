@@ -69,9 +69,12 @@ public class OwnerSeesTrainersPersonalInformationPositiveUITest {
   
   public void  OwnerSeesTrainer() throws Exception {
 	   
-	  driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[4]/a/span[2]")).click();
+	    driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[4]/a/span[2]")).click();
 	    driver.findElement(By.linkText("John Doe")).click();
-	  
+	    driver.findElement(By.id("main-navbar")).click();
+	    driver.findElement(By.xpath("//div[@id='main-navbar']/ul[2]/li/a/span[2]")).click();
+	    assertEquals("John Doe", driver.findElement(By.xpath("//td")).getText());
+	    assertEquals("Trainer Information", driver.findElement(By.xpath("//h2")).getText());
 	  }
 
 

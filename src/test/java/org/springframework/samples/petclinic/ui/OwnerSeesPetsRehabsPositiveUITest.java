@@ -68,11 +68,14 @@ public class OwnerSeesPetsRehabsPositiveUITest {
   
   public void SeeRehabs() throws Exception {
       	    
-    driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[2]/a/span[2]")).click();
-    driver.findElement(By.name("lastName")).click();
-    driver.findElement(By.name("lastName")).clear();
-    driver.findElement(By.name("lastName")).sendKeys("Coleman");
-    driver.findElement(By.xpath("//button[@type='submit']")).click();
+	  driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[2]/a/span[2]")).click();
+	    driver.findElement(By.name("lastName")).click();
+	    driver.findElement(By.name("lastName")).clear();
+	    driver.findElement(By.name("lastName")).sendKeys("McTavish");
+	    driver.findElement(By.xpath("//button[@type='submit']")).click();
+	    assertEquals("Pets and Rehabilitation", driver.findElement(By.xpath("//h2[3]")).getText());
+	    assertEquals("2020-09-11", driver.findElement(By.xpath("//table[4]/tbody/tr/td[2]/table/tbody/tr/td")).getText());
+	 
   }
 
   @AfterEach
