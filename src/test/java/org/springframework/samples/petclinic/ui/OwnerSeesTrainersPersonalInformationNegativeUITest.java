@@ -46,6 +46,7 @@ public class OwnerSeesTrainersPersonalInformationNegativeUITest {
   public void testOwnerSeesTrainersPersonalInforError(WebDriver driver, int port) throws Exception {
 	    driver.get("http://localhost:" + port);
     driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[4]/a/span[2]")).click();
+    assertEquals("Please sign in", driver.findElement(By.xpath("//h2")).getText());
   }
 
   @AfterEach

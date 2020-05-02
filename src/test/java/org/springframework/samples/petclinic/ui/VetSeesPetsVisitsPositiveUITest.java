@@ -67,11 +67,13 @@ public void loginAsVet(WebDriver driver, int port) {
  }
 
   public void SeeVisits() throws Exception {
-	  driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[2]/a/span[2]")).click();
-    driver.findElement(By.name("lastName")).click();
-    driver.findElement(By.name("lastName")).clear();
-    driver.findElement(By.name("lastName")).sendKeys("Coleman");
-    driver.findElement(By.xpath("//button[@type='submit']")).click();
+	   driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[2]/a/span[2]")).click();
+	    driver.findElement(By.name("lastName")).click();
+	    driver.findElement(By.name("lastName")).clear();
+	    driver.findElement(By.name("lastName")).sendKeys("Coleman");
+	    driver.findElement(By.xpath("//button[@type='submit']")).click();
+	    assertEquals("Pets and Visits", driver.findElement(By.xpath("//h2[2]")).getText());
+	    assertEquals("2013-01-03", driver.findElement(By.xpath("//td[2]/table/tbody/tr/td")).getText());
    
   }
 

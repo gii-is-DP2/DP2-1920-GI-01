@@ -78,6 +78,10 @@ public void loginAsTrainer(WebDriver driver, int port) {
     driver.findElement(By.xpath("//button[@type='submit']")).click();
     driver.findElement(By.linkText("Add Rehab")).click();
     driver.findElement(By.xpath("//button[@type='submit']")).click();
+    driver.findElement(By.xpath("//form[@id='rehab']/div/div[2]/div")).click();
+    driver.findElement(By.xpath("//form[@id='rehab']/div/div[3]/div")).click();
+    assertEquals("must not be null", driver.findElement(By.xpath("//form[@id='rehab']/div/div[2]/div")).getText());
+    assertEquals("must not be empty", driver.findElement(By.xpath("//form[@id='rehab']/div/div[3]/div")).getText());
   }
 
   @AfterEach
