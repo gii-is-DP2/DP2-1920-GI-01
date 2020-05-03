@@ -104,6 +104,7 @@ INSERT INTO interventions(id,pet_id, intervention_date, intervention_time, inter
 
 -- Homeless pets' rehabs from now on
 INSERT INTO rehab(id, pet_id, rehab_date, rehab_time, description, trainer_id) VALUES (1, 14, '2020-09-11', '2', 'Rehab session 1', 1);
+INSERT INTO rehab(id, pet_id, rehab_date, rehab_time, description, trainer_id) VALUES (2, 6, '2020-09-11', '2', 'Rehab session 1', 1);
 
 INSERT INTO medical_records VALUES (1, 'Test', 'TestStatus', 1);
 INSERT INTO medical_records VALUES (2, 'Test description', 'Test status', 5);

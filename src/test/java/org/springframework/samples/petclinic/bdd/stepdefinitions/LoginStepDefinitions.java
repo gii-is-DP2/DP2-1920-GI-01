@@ -1,4 +1,3 @@
-
 package org.springframework.samples.petclinic.bdd.stepdefinitions;
 
 import org.openqa.selenium.By;
@@ -15,15 +14,15 @@ public class LoginStepDefinitions extends AbstractStep {
 
 	@LocalServerPort
 	private int port;
-
-
+	
 	@Given("I am logged in the system as {string} with password {string}")
-	public void i_am_logged_in_the_system_as_with_password(final String username, final String password) {
-		this.getDriver().manage().window().maximize();
-		LoginStepDefinitions.loginAs(username, password, this.port, this.getDriver());
+	public void i_am_logged_in_the_system_as_with_password(String username, String password) {
+		getDriver().manage().window().maximize();
+		LoginStepDefinitions.loginAs(username, password, port, getDriver());
 	}
-
-	public static void loginAs(final String username, final String password, final int port, final WebDriver driver) {
+	
+	public static void loginAs(String username,String password,int port, WebDriver driver) {
+    
 		driver.get("http://localhost:" + port);
 		driver.findElement(By.xpath("//div[@id='main-navbar']/ul[2]/li/a")).click();
 		driver.findElement(By.id("password")).clear();
@@ -32,5 +31,6 @@ public class LoginStepDefinitions extends AbstractStep {
 		driver.findElement(By.id("username")).sendKeys(username);
 		driver.findElement(By.xpath("//button[@type='submit']")).click();
 	}
-
+	
 }
+

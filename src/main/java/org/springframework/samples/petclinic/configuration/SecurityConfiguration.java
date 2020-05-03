@@ -43,18 +43,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
 	protected void configure(final HttpSecurity http) throws Exception {
-		http.authorizeRequests()//
-			.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll()//
+		http.authorizeRequests().antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll()//
 			.antMatchers(HttpMethod.GET, "/", "/oups").permitAll()//
 			.antMatchers("/users/new").permitAll()//
-			.antMatchers("/trainers").permitAll()//
-			.antMatchers("/trainers/{trainerId}").permitAll()//
+			.antMatchers("/trainers/**").authenticated()//
 			.antMatchers("/organizations", "/organizations/{id}").permitAll()//
 			.antMatchers("/admin/**").hasAnyAuthority("admin")//
 			.antMatchers("/owners/**").hasAnyAuthority("owner", "veterinarian", "trainer")//
+			.antMatchers("/owners/{ownerId}").hasAnyAuthority("owner", "admin", "veterinarian", "trainer")//
+			.antMatchers("/owners/{ownerId}/pets/{petId}/rehab/new").hasAnyAuthority("trainer")//
 			.antMatchers("/homeless-pets/**").hasAnyAuthority("veterinarian", "trainer")//
 			.antMatchers("/vets/**").authenticated()//
-			.antMatchers("/medicine/**").hasAnyAuthority("vet", "admin")//
+			.antMatchers("/medicine/**").hasAnyAuthority("veterinarian", "admin")//
 			.antMatchers("/medical-record/**").authenticated()//
 			.antMatchers("/vets.xml").permitAll()//
 			.anyRequest().denyAll()//
@@ -71,7 +71,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		// se sirve desde esta misma página.
 		http.csrf().ignoringAntMatchers("/h2-console/**");
 		http.headers().frameOptions().sameOrigin();
-
 
 	}
 
