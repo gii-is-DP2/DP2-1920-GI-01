@@ -1,3 +1,4 @@
+
 Feature: New rehabilitation creation
 As a trainer I can add rehabilitations
 
