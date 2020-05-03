@@ -1,3 +1,4 @@
+
 Feature: New rehabilitation creation
 As a trainer I can add rehabilitations
 
@@ -10,3 +11,4 @@ Scenario: Unsuccessful creation of a rehabilitation (Negative)
 Given I am logged in the system as "trainer1" with password "tr41n3r"
 When I create a new rehabilitation for a pet whose owner last name is "Rodriquez"
 Then an error appears in the rehabilitation form
+
