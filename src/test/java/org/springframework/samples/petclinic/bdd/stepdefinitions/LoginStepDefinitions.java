@@ -22,6 +22,7 @@ public class LoginStepDefinitions extends AbstractStep {
 	}
 	
 	public static void loginAs(String username,String password,int port, WebDriver driver) {
+    
 		driver.get("http://localhost:" + port);
 		driver.findElement(By.xpath("//div[@id='main-navbar']/ul[2]/li/a")).click();
 		driver.findElement(By.id("password")).clear();
@@ -32,3 +33,4 @@ public class LoginStepDefinitions extends AbstractStep {
 	}
 	
 }
+
