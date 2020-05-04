@@ -20,16 +20,22 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.ConstraintViolationException;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.samples.petclinic.model.Intervention;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
+import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Service;
@@ -68,6 +74,7 @@ import generatedAssertions.customAssertions.VetAssert;
  */
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
+@AutoConfigureTestDatabase(replace = Replace.NONE)
 class VetServiceTests {
 
 	@Autowired
@@ -144,13 +151,12 @@ class VetServiceTests {
 		vets = this.vetService.findVets();
 		found = vets.size();
 		
-		user.setUsername("testVetUsername");
-		user.setPassword("testVetPassword");
+		user.setUsername("testingUsername");
+		user.setPassword("testingPassword");
 		user.setEnabled(true);
 		
 		vet.setFirstName("testFirstName");
 		vet.setLastName("testLastName");
-		vet.setSpecialties(new ArrayList<Specialty>());
 		vet.setUser(user);
 		
 		this.vetService.saveVet(vet);

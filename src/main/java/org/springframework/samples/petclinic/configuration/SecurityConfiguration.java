@@ -50,9 +50,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.antMatchers("/organizations", "/organizations/{id}").permitAll()//
 			.antMatchers("/admin/**").hasAnyAuthority("admin")//
 			.antMatchers("/owners/**").hasAnyAuthority("owner", "veterinarian", "trainer")//
+			.antMatchers("/homeless-pets", "/homeless-pets/{petId}", "/homeless-pets/{petId}/visits/{visitId}/medical-record").hasAnyAuthority("veterinarian", "trainer")//
+			.antMatchers("/homeless-pets/new", "/homeless-pets/{petId}/edit", "/homeless-pets/{petId}/delete",
+							"/homeless-pets/{petId}/interventions/**", "/homeless-pets/{petId}/visits/**").hasAnyAuthority("veterinarian")//
+			.antMatchers("/homeless-pets/{petId}/rehabs/**").hasAnyAuthority("trainer")//
 			.antMatchers("/owners/{ownerId}").hasAnyAuthority("owner", "admin", "veterinarian", "trainer")//
 			.antMatchers("/owners/{ownerId}/pets/{petId}/rehab/new").hasAnyAuthority("trainer")//
-			.antMatchers("/homeless-pets/**").hasAnyAuthority("veterinarian", "trainer")//
 			.antMatchers("/vets/**").authenticated()//
 			.antMatchers("/medicine/**").hasAnyAuthority("veterinarian", "admin")//
 			.antMatchers("/medical-record/**").authenticated()//
