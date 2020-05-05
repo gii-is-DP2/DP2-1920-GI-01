@@ -35,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @Transactional
-@TestPropertySource(locations = "classpath:application-mysql.properties")
+/*@TestPropertySource(locations = "classpath:application-mysql.properties")*/
 public class MedicalRecordControllerE2ETests {
 
 	private static final int			TEST_OWNER_ID			= 3;
