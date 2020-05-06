@@ -47,7 +47,6 @@ public class PetfinderResource {
 		String[] s = responseChungo.split(",");
 		String[] s2 = s[2].trim().split(":");
 		String token = s2[1].trim().substring(1, s2[1].trim().length()-2);
-		System.out.println(token);
 		
 		return token;
 	}
