@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.web;
+package org.springframework.samples.petclinic.web.e2e;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -11,12 +11,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.samples.petclinic.configuration.SecurityConfiguration;
 import org.springframework.samples.petclinic.model.MedicalRecord;
 import org.springframework.samples.petclinic.model.Medicine;
 import org.springframework.samples.petclinic.model.Owner;
@@ -26,17 +25,18 @@ import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.service.MedicalRecordService;
 import org.springframework.samples.petclinic.service.MedicineService;
 import org.springframework.samples.petclinic.service.PrescriptionService;
-import org.springframework.samples.petclinic.web.formatters.MedicineFormatter;
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
-@WebMvcTest(value = PrescriptionController.class,
-	includeFilters = @ComponentScan.Filter(value = MedicineFormatter.class, type = FilterType.ASSIGNABLE_TYPE),
-	excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class),
-	excludeAutoConfiguration= SecurityConfiguration.class)
-public class PrescriptionControllerTests {
-
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.MOCK)
+@AutoConfigureMockMvc
+@Transactional
+/*@TestPropertySource(locations = "classpath:application-mysql.properties")*/
+public class PrescriptionControllerE2ETests {
+	
 	@MockBean
 	private MedicineService medicineService;
 	
@@ -82,7 +82,7 @@ public class PrescriptionControllerTests {
 		given(medicineService.findByPetType(null)).willReturn(Lists.newArrayList(medicine));
 	}
 	
-	@WithMockUser(value = "spring")
+	@WithMockUser(username = "vet1", authorities = {"veterinarian"})
 	@Test
 	void testInitCreationForm() throws Exception {
 		mockMvc.perform(get("/owners/*/pets/*/visits/*/medical-record/{medical-recordId}/prescription/create", 1))
@@ -92,7 +92,7 @@ public class PrescriptionControllerTests {
 			   .andExpect(model().attributeExists("medicines"));
 	}
 	
-	@WithMockUser(value = "spring")
+	@WithMockUser(username = "vet1", authorities = {"veterinarian"})
 	@Test
 	void testProccessCreationFormSuccess() throws Exception {
 		mockMvc.perform(post("/owners/*/pets/*/visits/*/medical-record/{medical-recordId}/prescription/create", 1)
@@ -103,7 +103,7 @@ public class PrescriptionControllerTests {
 			   .andExpect(view().name("redirect:/owners/1/pets/1/visits/1/medical-record/show?id=1"));
 	}
 	
-	@WithMockUser(value = "spring")
+	@WithMockUser(username = "vet1", authorities = {"veterinarian"})
 	@Test
 	void testProccessCreationFormHasErrors() throws Exception {
 		mockMvc.perform(post("/owners/*/pets/*/visits/*/medical-record/{medical-recordId}/prescription/create", 1)
