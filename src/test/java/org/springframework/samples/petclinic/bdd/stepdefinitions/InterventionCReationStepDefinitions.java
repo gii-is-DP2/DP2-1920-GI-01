@@ -34,7 +34,7 @@ public class InterventionCReationStepDefinitions extends AbstractStep {
 		this.getDriver().findElement(By.xpath("//button[@type='submit']")).click();
 	}
 
-	@Then("Then the new intervention appears in the owners details page")
+	@Then("the new intervention appears in the owners details page")
 	public void the_new_intervention_appears_in_the_owners_details_page() {
 		Assert.assertEquals("Descripcion", this.getDriver().findElement(By.xpath("//b")).getText());
 		Assert.assertEquals("2020/10/01", this.getDriver().findElement(By.xpath("//tr[2]/td")).getText());

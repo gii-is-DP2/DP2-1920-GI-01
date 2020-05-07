@@ -3,7 +3,7 @@ Feature: Visit Creation
 	
 	Scenario: Successful creation of a new visit (Positive)
 		Given I am logged in the system as "vet1" with password "v3t1"
-		When I create a new intervention with description "Descripcion" and date "2020/10/01"
+		When I create a new visit with description "Descripcion" and date "2020/10/01"
 		Then the new visit appears in the owners details page
 	
 	Scenario: Unsuccessful creation of a visit due to incorrect data (Negative)
