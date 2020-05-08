@@ -44,7 +44,7 @@ public class InterventionCReationStepDefinitions extends AbstractStep {
 
 	@Then("an error appears in the intervention form")
 	public void an_error_appears_in_the_intervention_form() {
-		Assert.assertEquals("The  date must be in the future", this.getDriver().findElement(By.xpath("//form[@id='intervention']/div/div[2]/div/span[2]")).getText());
+		Assert.assertEquals("required and after current date", this.getDriver().findElement(By.xpath("//form[@id='intervention']/div/div[2]/div/span[2]")).getText());
 		this.stopDriver();
 	}
 }
