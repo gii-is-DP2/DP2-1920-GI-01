@@ -11,7 +11,7 @@ import lombok.extern.java.Log;
 @Log
 public class VisitCreationStepDefinition extends AbstractStep {
 
-	@When("I create a new visit with description {String} and date {String}")
+	@When("I create a new visit with description {string} and date {string}")
 	public void i_create_a_new_visit_with_description_and_date(final String description, final String date) {
 		this.getDriver().findElement(By.xpath("//div[@id='main-navbar']/ul/li[2]/a/span[2]")).click();
 		this.getDriver().findElement(By.name("lastName")).click();

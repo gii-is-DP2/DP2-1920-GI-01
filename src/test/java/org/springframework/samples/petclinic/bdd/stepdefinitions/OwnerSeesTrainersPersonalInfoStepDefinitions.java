@@ -17,7 +17,7 @@ public class OwnerSeesTrainersPersonalInfoStepDefinitions extends AbstractStep{
 	@LocalServerPort
 	private int port;
 	
-	@When ("I go to the trainers {String} personal information page")
+	@When ("I go to the trainers {string} personal information page")
 	public void i_go_to_the_trainers_personal_information_page(String trainer) {
 	
 		getDriver().findElement(By.linkText("Trainers")).click();
@@ -26,7 +26,7 @@ public class OwnerSeesTrainersPersonalInfoStepDefinitions extends AbstractStep{
 			
 	}
 
-	@Then ("I can see this trainers name {String} and his email {String}")
+	@Then ("I can see this trainers name {string} and his email {string}")
 	public void i_can_see_this_trainers_name_and_his_email (String name, String email){
 		getDriver().findElement(By.linkText("John Doe")).click();
 		getDriver().findElement(By.xpath("//b")).click();
