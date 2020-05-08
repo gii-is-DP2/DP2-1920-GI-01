@@ -29,10 +29,10 @@
 	</c:if>
 
 <br>
-	    <h2>Trainer's rehabilitations</h2>
+	       <h2>Trainer's rehabilitations</h2>
 	         
-	    
-	          <table class="table-condensed">
+	           <table class="table table-striped">
+    
                         <thead>
                         <tr>
                             <th>Rehabilitation Date</th>
@@ -40,15 +40,26 @@
                             <th>Rehabilitation Description</th>
                         </tr>
                         </thead>
-               
-                            <c:forEach var="rehab" items="${trainers.rehabs}">
-                            <tr>
-                                <td><petclinic:localDate date="${rehab.date}" pattern="yyyy-MM-dd"/></td>
-                                         <td><c:out value="${rehab.time}"/></td>
-                                <td><c:out value="${rehab.description}"/></td>
-                            </tr>
-                        </c:forEach>         
-                        </table>
+                        
+                        
+                        <c:forEach var="rehab" items="${trainer.rehabs}">
+	        	<tr>
+                	<td>
+                		<petclinic:localDate date="${rehab.date}" pattern="yyyy-MM-dd"/>
+                	</td>
+                	<td>
+                   		<c:out value="${rehab.time}"/>
+                	</td>
+                	<td>
+                   		<c:out value="${rehab.description}"/>
+                	</td>
+                	<td>
+                	
+                	</td>
+            	</tr>
+			</c:forEach>
+               </table>
+	    
 	    
 
 </petclinic:layout>
