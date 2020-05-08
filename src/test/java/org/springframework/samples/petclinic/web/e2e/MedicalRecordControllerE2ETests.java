@@ -111,7 +111,7 @@ public class MedicalRecordControllerE2ETests {
 			.param("description", "testDescription") //
 			.param("status", "testStatus"))//
 			.andExpect(MockMvcResultMatchers.status().is3xxRedirection()) //
-			.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/3/pets/7/visits/1/medical-record/show?id=null"));
+			.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/6/pets/7/visits/1/medical-record/show?id=3"));
 	}
 
 	@WithMockUser(username = "vet1", authorities = {
@@ -155,7 +155,7 @@ public class MedicalRecordControllerE2ETests {
 			.param("status", "testStatus") //
 			.param("visitId", "1")) //
 			.andExpect(MockMvcResultMatchers.status().is3xxRedirection()) //
-			.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/3/pets/7/visits/1/medical-record/show?id=1"));
+			.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/6/pets/7/visits/1/medical-record/show?id=1"));
 	}
 
 	@WithMockUser(username = "vet1", authorities = {
