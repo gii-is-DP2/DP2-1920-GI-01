@@ -26,15 +26,14 @@ public class OwnerSeesTrainersPersonalInfoStepDefinitions extends AbstractStep{
 			
 	}
 
-	@Then ("I can see this trainers name {String}, his email {string} and his phone {String}")
-	public void i_can_see_this_trainers_name_his_email_and_his_phone (String name, String email, String phone){
+	@Then ("I can see this trainers name {String} and his email {String}")
+	public void i_can_see_this_trainers_name_and_his_email (String name, String email){
 		getDriver().findElement(By.linkText("John Doe")).click();
 		getDriver().findElement(By.xpath("//b")).click();
 		getDriver().findElement(By.xpath("//tr[2]/td")).click();
 		getDriver().findElement(By.xpath("//tr[3]/td")).click();
 	    assertEquals(name, getDriver().findElement(By.xpath("//b")).getText());
 	    assertEquals(email, getDriver().findElement(By.xpath("//tr[2]/td")).getText());
-		assertEquals(phone, getDriver().findElement(By.xpath("//tr[3]/td")).getText());	
-	
+			
 	}
 }
