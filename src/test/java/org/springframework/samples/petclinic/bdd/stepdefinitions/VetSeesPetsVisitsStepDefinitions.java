@@ -17,7 +17,7 @@ public class VetSeesPetsVisitsStepDefinitions extends AbstractStep{
 	@LocalServerPort
 	private int port;
 	
-	@When ("I go to the {String} page")
+	@When ("I go to the {string} page")
 	public void i_go_to_the_page(String findowners) {
 	
 		getDriver().findElement(By.linkText("Find owners")).click();
@@ -26,7 +26,7 @@ public class VetSeesPetsVisitsStepDefinitions extends AbstractStep{
 			
 	}
 	
-	@Then ("After finding owner {String} I can see his pets visits in the section {String}")
+	@Then ("After finding owner {string} I can see his pets visits in the section {string}")
 	public void after_finding_owner_i_can_see_his_pets_visits_in_the_section(String owner, String section) {
 		
 		getDriver().findElement(By.name("lastName")).click();
@@ -39,7 +39,7 @@ public class VetSeesPetsVisitsStepDefinitions extends AbstractStep{
 	}
 	
 	
-	@Then ("an error appears {String}")
+	@Then ("an error appears {string}")
 	public void an_error_appears(String error) {
 		getDriver().findElement(By.name("lastName")).click();
 		getDriver().findElement(By.name("lastName")).clear();

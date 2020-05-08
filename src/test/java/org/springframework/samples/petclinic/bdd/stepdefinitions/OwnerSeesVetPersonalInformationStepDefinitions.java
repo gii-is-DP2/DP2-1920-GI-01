@@ -12,13 +12,13 @@ import lombok.extern.java.Log;
 @Log
 public class OwnerSeesVetPersonalInformationStepDefinitions extends AbstractStep {
 
-	@When("I go to the profile of the Veterinarian {String}")
+	@When("I go to the profile of the Veterinarian {string}")
 	public void i_go_profile_veterinarian(final String name) {
 		this.getDriver().findElement(By.xpath("//div[@id='main-navbar']/ul/li[3]/a/span[2]")).click();
 		this.getDriver().findElement(By.xpath("//a[contains(text(),'" + name + "')]")).click();
 	}
 
-	@Then("his name {String} appears in the page")
+	@Then("his name {string} appears in the page")
 	public void name_veterinarian_check(final String name) {
 		Assert.assertEquals(name, this.getDriver().findElement(By.xpath("//b")).getText());
 		this.stopDriver();

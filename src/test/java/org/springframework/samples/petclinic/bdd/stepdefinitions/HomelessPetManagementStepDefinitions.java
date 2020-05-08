@@ -41,7 +41,7 @@ public class HomelessPetManagementStepDefinitions extends AbstractStep {
 	
 	@Then("the new homeless pet called {string} appears in the listing")
 	public void the_new_homeless_pet_appears_in_the_listing(String name) {
-		assertEquals(name, getDriver().findElement(By.xpath("//tr[3]/td/a")).getText());
+		assertEquals(name, getDriver().findElement(By.xpath("//tr[4]/td/a")).getText());
 		stopDriver();
 	}
 	

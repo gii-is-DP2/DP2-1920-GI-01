@@ -11,8 +11,8 @@ import lombok.extern.java.Log;
 @Log
 public class InterventionCReationStepDefinitions extends AbstractStep {
 
-	@When("I create a new intervention with description {String} and intervention time {String} with intervention date {String}")
-	public void i_create_a_new_intervention_with_description_and_time_with_date(final String description, final String time, final String date) {
+	@When("I create a new intervention with description {string} and intervention time {string} with intervention date {string}")
+	public void i_create_a_new_intervention_with_description_and_time_with_intervention_date(final String description, final String time, final String date) {
 		this.getDriver().findElement(By.xpath("//div[@id='main-navbar']/ul/li[2]/a/span[2]")).click();
 		this.getDriver().findElement(By.name("lastName")).click();
 		this.getDriver().findElement(By.name("lastName")).clear();
