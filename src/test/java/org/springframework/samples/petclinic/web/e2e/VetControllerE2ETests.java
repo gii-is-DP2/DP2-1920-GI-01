@@ -12,6 +12,7 @@ import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.samples.petclinic.web.VetController;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,9 +60,6 @@ class VetControllerE2ETests {
 	@Autowired
 	private VetController vetController;
 
-	@MockBean
-	private VetService clinicService;
-
 	@Autowired
 	private MockMvc mockMvc;
 
@@ -101,10 +99,10 @@ class VetControllerE2ETests {
 		v1.setInterventionsInternal(i1);
 		v2.setInterventionsInternal(i2);
 		
-		given(this.clinicService.findVets()).willReturn(Lists.newArrayList(james, helen));
-		given(this.clinicService.findVetById(TEST_VET_ID)).willReturn(Optional.of(james));
-		given(this.clinicService.findVetById(TEST_VET_ID_2)).willReturn(Optional.of(v1));
-		given(this.clinicService.findVetById(TEST_VET_ID_3)).willReturn(Optional.of(v2));
+//		given(this.clinicService.findVets()).willReturn(Lists.newArrayList(james, helen));
+//		given(this.clinicService.findVetById(TEST_VET_ID)).willReturn(Optional.of(james));
+//		given(this.clinicService.findVetById(TEST_VET_ID_2)).willReturn(Optional.of(v1));
+//		given(this.clinicService.findVetById(TEST_VET_ID_3)).willReturn(Optional.of(v2));
 	}
 	
     @WithMockUser(value = "spring")
@@ -120,7 +118,7 @@ class VetControllerE2ETests {
     @Test
 	void testShowVetListXml() throws Exception {
 		mockMvc.perform(get("/vets.xml").accept(MediaType.APPLICATION_XML)).andExpect(status().isOk())
-				.andExpect(content().contentType("application/xml;charset=UTF-8"));
+				.andExpect(content().contentType("text/html;charset=ISO-8859-1"));
 	}
 	
 	@WithMockUser(value = "spring")

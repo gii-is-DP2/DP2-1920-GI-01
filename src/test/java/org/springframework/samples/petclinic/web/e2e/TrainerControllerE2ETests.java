@@ -18,6 +18,7 @@ import org.springframework.samples.petclinic.service.TrainerService;
 import org.springframework.samples.petclinic.web.TrainerController;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,9 +54,6 @@ public class TrainerControllerE2ETests {
 	@Autowired
 	private TrainerController trainerController;
 	
-	@MockBean
-	private TrainerService	trainerService;
-	
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -89,10 +87,10 @@ public class TrainerControllerE2ETests {
 		Optional<Trainer> trainer3 = Optional.of(t2);
 		Optional<Trainer> trainer4 = Optional.of(t3);
 		
-		given(this.trainerService.findTrainerById(TEST_TRAINER_ID)).willReturn(trainer);
-		given(this.trainerService.findTrainerById(TEST_TRAINER_ID_2)).willReturn(trainer2);
-		given(this.trainerService.findTrainerById(TEST_TRAINER_ID_3)).willReturn(trainer3);
-		given(this.trainerService.findTrainerById(TEST_TRAINER_ID_4)).willReturn(trainer4);
+//		given(this.trainerService.findTrainerById(TEST_TRAINER_ID)).willReturn(trainer);
+//		given(this.trainerService.findTrainerById(TEST_TRAINER_ID_2)).willReturn(trainer2);
+//		given(this.trainerService.findTrainerById(TEST_TRAINER_ID_3)).willReturn(trainer3);
+//		given(this.trainerService.findTrainerById(TEST_TRAINER_ID_4)).willReturn(trainer4);
 	}
 	
 	// US-020 Unregistered user can see trainers -------------------------------------------------------------------

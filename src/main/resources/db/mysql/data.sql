@@ -90,6 +90,7 @@ INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (13, 'Sly', '2012-0
 -- Homeless Pets
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (14, 'Tucker', '2018-06-08', 2, null);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (15, 'Lekay', '2016-04-04', 1, null);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (16, 'Miss', '2015-03-17', 1, null);
 
 -- Visits
 
