@@ -4,14 +4,9 @@ package org.springframework.samples.petclinic.web.e2e;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.service.PetService;
-import org.springframework.samples.petclinic.service.VisitService;
 import org.springframework.samples.petclinic.web.VisitController;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
@@ -36,19 +31,13 @@ public class VisitControllerE2ETests {
 	@Autowired
 	private VisitController		visitController;
 
-	@MockBean
-	private VisitService		visitService;
-
-	@MockBean
-	private PetService			petService;
-
 	@Autowired
 	private MockMvc				mockMvc;
 
 
 	@BeforeEach
 	void setup() {
-		BDDMockito.given(this.petService.findPetById(VisitControllerE2ETests.TEST_PET_ID)).willReturn(new Pet());
+		//BDDMockito.given(this.petService.findPetById(VisitControllerE2ETests.TEST_PET_ID)).willReturn(new Pet());
 	}
 
 	@WithMockUser(username = "vet1", authorities = {

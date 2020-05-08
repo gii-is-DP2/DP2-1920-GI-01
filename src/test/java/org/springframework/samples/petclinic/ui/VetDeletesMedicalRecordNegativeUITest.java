@@ -24,7 +24,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class VetDeletesMedicalRecordPositiveUITest {
+public class VetDeletesMedicalRecordNegativeUITest {
 
 	private WebDriver		driver;
 	private String			baseUrl;
@@ -49,9 +49,9 @@ public class VetDeletesMedicalRecordPositiveUITest {
 
 		this.driver.manage().window().maximize();
 
-		VetDeletesMedicalRecordPositiveUITest.loginAsVet(this.driver, this.port);
+		VetDeletesMedicalRecordNegativeUITest.loginAsVet(this.driver, this.port);
 
-		VetDeletesMedicalRecordPositiveUITest.testMedicalRecordDelete(this.driver, this.port);
+		VetDeletesMedicalRecordNegativeUITest.testMedicalRecordDelete(this.driver, this.port);
 
 	}
 
@@ -86,13 +86,19 @@ public class VetDeletesMedicalRecordPositiveUITest {
 		List<WebElement> rows = table.findElements(By.tagName("tr"));
 		int rowsCountBefore = rows.size();
 
-		driver.findElement(By.linkText("2013-01-01")).click();
-		driver.findElement(By.linkText("Delete")).click();
+		driver.get("http://localhost:" + port + "/owners/6/pets/7/visits/1/medical-record/delete?id=90");
+		Assert.assertEquals("Something happened...", driver.findElement(By.xpath("//h2")).getText());
+
+		driver.get("http://localhost:" + port);
+		driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[2]/a/span[2]")).click();
+		driver.findElement(By.xpath("//button[@type='submit']")).click();
+		driver.findElement(By.linkText("Jean Coleman")).click();
+		driver.findElement(By.xpath("(//a[contains(text(),'Medical History')])[2]")).click();
 
 		table = driver.findElement(By.xpath("//table[@id='medicalRecordsTable']/tbody"));
 		rows = table.findElements(By.tagName("tr"));
 		int rowsCountAfter = rows.size();
-		Assert.assertEquals(rowsCountBefore, rowsCountAfter + 1);
+		Assert.assertEquals(rowsCountBefore, rowsCountAfter);
 	}
 
 	@AfterEach
