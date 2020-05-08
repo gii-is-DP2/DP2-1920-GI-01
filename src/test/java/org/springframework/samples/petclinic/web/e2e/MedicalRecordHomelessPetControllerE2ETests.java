@@ -35,6 +35,7 @@ import org.springframework.samples.petclinic.service.VisitService;
 import org.springframework.samples.petclinic.web.MedicalRecordHomelessPetController;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,15 +56,6 @@ public class MedicalRecordHomelessPetControllerE2ETests {
 	
 	@Autowired
 	private MedicalRecordHomelessPetController medicalRecordHomelessPetController;
-	
-	@MockBean
-	private VisitService	visitService;
-
-	@MockBean
-	private MedicalRecordService medicalRecordService;
-	
-	@MockBean
-	private PrescriptionService prescriptionService;
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -94,10 +86,10 @@ public class MedicalRecordHomelessPetControllerE2ETests {
 		m.setStatus("Good");
 		m.setVisit(v);
 		
-		given(this.medicalRecordService.findMedicalRecordByVisitId(TEST_VISIT_ID)).willReturn(m);
-		given(this.medicalRecordService.findMedicalRecordById(TEST_MEDICAL_RECORD_ID)).willReturn(m);
-		given(this.visitService.findVisitById(TEST_VISIT_ID)).willReturn(Optional.of(v));
-		given(this.visitService.findVisitById(TEST_VISIT_ID_2)).willReturn(Optional.of(v2));
+//		given(this.medicalRecordService.findMedicalRecordByVisitId(TEST_VISIT_ID)).willReturn(m);
+//		given(this.medicalRecordService.findMedicalRecordById(TEST_MEDICAL_RECORD_ID)).willReturn(m);
+//		given(this.visitService.findVisitById(TEST_VISIT_ID)).willReturn(Optional.of(v));
+//		given(this.visitService.findVisitById(TEST_VISIT_ID_2)).willReturn(Optional.of(v2));
 	}
 	
 	//Showing medical records --------------------------------------------------------------------------------------------------
@@ -195,8 +187,8 @@ public class MedicalRecordHomelessPetControllerE2ETests {
 				.andExpect(status().isOk())
 				.andExpect(view().name("homelessPets/editMedicalRecord"))
 				.andExpect(model().attributeExists("medicalRecord"))
-				.andExpect(model().attribute("medicalRecord", hasProperty("description", is("TestDescription"))))
-				.andExpect(model().attribute("medicalRecord", hasProperty("status", is("Good"))));
+				.andExpect(model().attribute("medicalRecord", hasProperty("description", is("Test description"))))
+				.andExpect(model().attribute("medicalRecord", hasProperty("status", is("Test status"))));
 	}
 	
 	@WithMockUser(username = "vet1", authorities = {"veterinarian"})

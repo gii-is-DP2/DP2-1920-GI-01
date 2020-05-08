@@ -31,6 +31,7 @@ import org.springframework.samples.petclinic.service.VisitService;
 import org.springframework.samples.petclinic.web.VisitHomelessPetController;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,18 +49,10 @@ public class VisitHomelessPetControllerE2ETests {
 
 	private static final int TEST_PET_ID = 14;
 	private static final int TEST_VISIT_ID = 5;
+	private static final int TEST_VISIT_ID_2 = 6;
 	
 	@Autowired
 	private VisitHomelessPetController	visitHomelessPetController;
-	
-	@MockBean
-	private VisitService	visitService;
-	
-	@MockBean
-	private PetService		petService;
-	
-	@MockBean
-	private MedicalRecordService medicalRecordService;
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -71,8 +64,8 @@ public class VisitHomelessPetControllerE2ETests {
 		v.setDate(LocalDate.of(2018, 7, 9));
 		v.setDescription("Description 1");
 		Optional<Visit> visit = Optional.of(v);
-		given(this.petService.findPetById(TEST_PET_ID)).willReturn(new Pet());
-		given(this.visitService.findVisitById(TEST_VISIT_ID)).willReturn(visit);
+//		given(this.petService.findPetById(TEST_PET_ID)).willReturn(new Pet());
+//		given(this.visitService.findVisitById(TEST_VISIT_ID)).willReturn(visit);
 	}
 	
 	//Creating new visits -------------------------------------------------------------------------------------------------------
@@ -191,7 +184,7 @@ public class VisitHomelessPetControllerE2ETests {
 	@WithMockUser(username = "vet1", authorities = {"veterinarian"})
 	@Test
 	void deleteVisitHomelessPet() throws Exception {
-		mockMvc.perform(get("/homeless-pets/{petId}/visits/{visitId}/delete", TEST_PET_ID, TEST_VISIT_ID)
+		mockMvc.perform(get("/homeless-pets/{petId}/visits/{visitId}/delete", TEST_PET_ID, TEST_VISIT_ID_2)
 						.with(csrf()))
 				.andExpect(status().is3xxRedirection())
 				.andExpect(view().name("redirect:/homeless-pets/" + TEST_PET_ID));

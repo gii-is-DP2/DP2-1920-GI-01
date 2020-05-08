@@ -38,6 +38,7 @@ import org.springframework.samples.petclinic.service.TrainerService;
 import org.springframework.samples.petclinic.web.RehabHomelessPetController;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,15 +57,6 @@ public class RehabHomelessPetControllerE2ETests {
 	
 	@Autowired
 	private RehabHomelessPetController rehabHomelessPetController;
-	
-	@MockBean
-	private RehabService	rehabService;
-	
-	@MockBean
-	private PetService		petService;
-	
-	@MockBean
-	private TrainerService 	trainerService;
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -103,8 +95,8 @@ public class RehabHomelessPetControllerE2ETests {
 		rehabs.add(r);
 		t.setRehabs(rehabs);
 
-		given(this.petService.findPetById(TEST_PET_ID)).willReturn(new Pet());
-		given(this.rehabService.findRehabById(TEST_REHAB_ID)).willReturn(Optional.of(r));
+//		given(this.petService.findPetById(TEST_PET_ID)).willReturn(new Pet());
+//		given(this.rehabService.findRehabById(TEST_REHAB_ID)).willReturn(Optional.of(r));
 	}
 	
 	//Creating new rehabs -------------------------------------------------------------------------------------------------------
@@ -169,9 +161,9 @@ public class RehabHomelessPetControllerE2ETests {
 				.andExpect(status().isOk())
 				.andExpect(view().name("homelessPets/editRehab"))
 				.andExpect(model().attributeExists("rehab"))
-				.andExpect(model().attribute("rehab", hasProperty("date", is(LocalDate.of(2020, 12, 24)))))
+				.andExpect(model().attribute("rehab", hasProperty("date", is(LocalDate.of(2020, 9, 11)))))
 				.andExpect(model().attribute("rehab", hasProperty("time", is(2))))
-				.andExpect(model().attribute("rehab", hasProperty("description", is("Test"))));
+				.andExpect(model().attribute("rehab", hasProperty("description", is("Rehab session 1"))));
 	}
 	
 	@WithMockUser(username = "trainer1", authorities = {"trainer"})

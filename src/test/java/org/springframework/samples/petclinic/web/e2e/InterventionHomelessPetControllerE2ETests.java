@@ -40,6 +40,7 @@ import org.springframework.samples.petclinic.service.VisitService;
 import org.springframework.samples.petclinic.web.InterventionHomelessPetController;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,15 +59,6 @@ public class InterventionHomelessPetControllerE2ETests {
 	
 	@Autowired
 	private InterventionHomelessPetController interventionHomelessPetController;
-	
-	@MockBean
-	private InterventionService 	interventionService;
-	
-	@MockBean
-	private PetService				petService;
-	
-	@MockBean
-	private VetService				vetService;
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -105,8 +97,8 @@ public class InterventionHomelessPetControllerE2ETests {
 		vet.setInterventionsInternal(interventions);
 		
 		Optional<Intervention> intervention = Optional.of(i);
-		given(this.petService.findPetById(TEST_PET_ID)).willReturn(new Pet());
-		given(this.interventionService.findInterventionById(TEST_INTERVENTION_ID)).willReturn(intervention);
+//		given(this.petService.findPetById(TEST_PET_ID)).willReturn(new Pet());
+//		given(this.interventionService.findInterventionById(TEST_INTERVENTION_ID)).willReturn(intervention);
 	}
 	
 	//Creating new interventions -------------------------------------------------------------------------------------------------------
@@ -172,8 +164,8 @@ public class InterventionHomelessPetControllerE2ETests {
 				.andExpect(view().name("homelessPets/editIntervention"))
 				.andExpect(model().attributeExists("intervention"))
 				.andExpect(model().attribute("intervention", hasProperty("interventionDate", is(LocalDate.of(2020, 9, 9)))))
-				.andExpect(model().attribute("intervention", hasProperty("interventionTime", is(2))))
-				.andExpect(model().attribute("intervention", hasProperty("interventionDescription", is("Test"))));
+				.andExpect(model().attribute("intervention", hasProperty("interventionTime", is(4))))
+				.andExpect(model().attribute("intervention", hasProperty("interventionDescription", is("Surgery"))));
 	}
 	
 	@WithMockUser(username = "vet1", authorities = {"veterinarian"})

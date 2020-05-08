@@ -52,15 +52,6 @@ public class PrescriptionHomelessPetControllerE2ETests {
 	@Autowired
 	private PrescriptionHomelessPetController prescriptionHomelessPetController;
 	
-	@MockBean
-	private MedicineService medicineService;
-	
-	@MockBean
-	private MedicalRecordService medicalRecordService;
-	
-	@MockBean
-	private PrescriptionService prescriptionService;
-	
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -95,9 +86,9 @@ public class PrescriptionHomelessPetControllerE2ETests {
 		Collection<Medicine> medicines = new ArrayList<Medicine>();
 		medicines.add(medicine);
 
-		given(this.medicineService.findManyAll()).willReturn(Lists.newArrayList(medicine));
-		given(this.medicineService.findByPetType(null)).willReturn(Lists.newArrayList(medicine));
-		given(this.medicalRecordService.findMedicalRecordById(TEST_MEDICAL_RECORD_ID)).willReturn(m);
+//		given(this.medicineService.findManyAll()).willReturn(Lists.newArrayList(medicine));
+//		given(this.medicineService.findByPetType(null)).willReturn(Lists.newArrayList(medicine));
+//		given(this.medicalRecordService.findMedicalRecordById(TEST_MEDICAL_RECORD_ID)).willReturn(m);
 	}
 	
 	//Creating new prescription -------------------------------------------------------------------------------------------------------
@@ -124,7 +115,7 @@ public class PrescriptionHomelessPetControllerE2ETests {
 		
 		mockMvc.perform(post("/homeless-pets/{petId}/visits/{visitId}/medical-record/{medicalRecordId}/prescriptions/new", TEST_PET_ID, TEST_VISIT_ID, TEST_MEDICAL_RECORD_ID)
 						.with(csrf())
-						.param("medicine", "testName")
+						.param("medicine", "Dog medicine")
 						.param("dose", "Every 4 hours"))
 				.andExpect(status().is3xxRedirection())
 				.andExpect(view().name("redirect:/homeless-pets/" + TEST_PET_ID));

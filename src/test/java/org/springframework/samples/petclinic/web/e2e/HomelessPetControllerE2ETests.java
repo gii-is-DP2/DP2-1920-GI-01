@@ -42,18 +42,13 @@ public class HomelessPetControllerE2ETests {
 
 	private static final int TEST_PET_ID = 14;
 	private static final int TEST_PET_ID_2 = -1;
+	private static final int TEST_PET_ID_3 = 16;
 	
 	@Autowired
 	private WebApplicationContext context;
 	
 	@Autowired
 	private HomelessPetController homelessPetController;
-	
-	@MockBean
-	private PetService petService;
-	
-	@MockBean
-	private VisitService visitService;
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -67,10 +62,10 @@ public class HomelessPetControllerE2ETests {
 		petForDuplicateNameTest.setName("Tucker");
 		petForDuplicateNameTest.setBirthDate(LocalDate.of(2018, Month.AUGUST, 17));
 		petForDuplicateNameTest.setType(dog);
-		given(this.petService.findHomelessPets()).willReturn(Lists.newArrayList(petForDuplicateNameTest));
-		given(this.petService.findPetTypes()).willReturn(Lists.newArrayList(dog));
-		given(this.petService.findPetById(TEST_PET_ID)).willReturn(new Pet());
-		given(this.petService.findPetById(TEST_PET_ID_2)).willReturn(null);
+//		given(this.petService.findHomelessPets()).willReturn(Lists.newArrayList(petForDuplicateNameTest));
+//		given(this.petService.findPetTypes()).willReturn(Lists.newArrayList(dog));
+//		given(this.petService.findPetById(TEST_PET_ID)).willReturn(new Pet());
+//		given(this.petService.findPetById(TEST_PET_ID_2)).willReturn(null);
 	}
 	
 	//Listing homeless pets ---------------------------------------------------------------------------------------------------------
@@ -238,7 +233,7 @@ public class HomelessPetControllerE2ETests {
 	@WithMockUser(username = "vet1", authorities = {"veterinarian"})
 	@Test
 	void testDelete() throws Exception {
-		mockMvc.perform(get("/homeless-pets/{petId}/delete", TEST_PET_ID))
+		mockMvc.perform(get("/homeless-pets/{petId}/delete", TEST_PET_ID_3))
 				.andExpect(status().isOk())
 				.andExpect(view().name("homelessPets/listPets"));
 	}
