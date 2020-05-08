@@ -35,7 +35,22 @@ public class VetSeesPetsVisitsStepDefinitions extends AbstractStep{
 		getDriver().findElement(By.xpath("//button[@type='submit']")).click();
 		assertEquals(owner, getDriver().findElement(By.xpath("//td")).getText());
 		assertEquals(section, getDriver().findElement(By.xpath("//h2[2]")).getText());
-		   
+		stopDriver();
 	}
+	
+	
+	@Then ("an error appears {String}")
+	public void an_error_appears(String error) {
+		getDriver().findElement(By.name("lastName")).click();
+		getDriver().findElement(By.name("lastName")).clear();
+		getDriver().findElement(By.name("lastName")).sendKeys(" Rodriquez");
+		getDriver().findElement(By.xpath("//button[@type='submit']")).click();
+		getDriver().findElement(By.xpath("//div[@id='lastName']/div")).click();
+		assertEquals(error, getDriver().findElement(By.xpath("//div[@id='lastName']/div")).getText());
+		stopDriver();
 	}
+	
+	}
+	
+	
 
