@@ -2,29 +2,20 @@
 package org.springframework.samples.petclinic.web.e2e;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.samples.petclinic.model.MedicalRecord;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.model.Prescription;
 import org.springframework.samples.petclinic.model.Visit;
-import org.springframework.samples.petclinic.service.MedicalRecordService;
-import org.springframework.samples.petclinic.service.PrescriptionService;
-import org.springframework.samples.petclinic.service.VisitService;
 import org.springframework.samples.petclinic.web.MedicalRecordController;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -35,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @Transactional
-/*@TestPropertySource(locations = "classpath:application-mysql.properties")*/
+/* @TestPropertySource(locations = "classpath:application-mysql.properties") */
 public class MedicalRecordControllerE2ETests {
 
 	private static final int			TEST_OWNER_ID			= 3;
@@ -46,15 +37,6 @@ public class MedicalRecordControllerE2ETests {
 
 	@Autowired
 	private MedicalRecordController		medicalRecordController;
-
-	@MockBean
-	private MedicalRecordService		medicalRecordService;
-
-	@MockBean
-	private VisitService				visitService;
-
-	@MockBean
-	private PrescriptionService			prescriptionService;
 
 	@Autowired
 	private MockMvc						mockMvc;
@@ -75,11 +57,11 @@ public class MedicalRecordControllerE2ETests {
 		testVisit.setDescription("Visit Description");
 		testVisit.setDate(LocalDate.now());
 		testVisit.setPet(testPet);
-		BDDMockito.given(this.visitService.findVisitById(MedicalRecordControllerE2ETests.TEST_VISIT_ID)).willReturn(Optional.of(testVisit));
-		BDDMockito.given(this.medicalRecordService.findMedicalHistory()).willReturn(Lists.newArrayList(new MedicalRecord()));
-		BDDMockito.given(this.medicalRecordService.findMedicalRecordById(MedicalRecordControllerE2ETests.TEST_MEDICAL_RECORD_ID)).willReturn(new MedicalRecord());
-		BDDMockito.given(this.medicalRecordService.findMedicalRecordByPetId(MedicalRecordControllerE2ETests.TEST_PET_ID)).willReturn(Lists.newArrayList(new MedicalRecord()));
-		BDDMockito.given(this.prescriptionService.findManyByMedicalRecord(MedicalRecordControllerE2ETests.TEST_MEDICAL_RECORD)).willReturn(Lists.newArrayList(new Prescription()));
+		//BDDMockito.given(this.visitService.findVisitById(MedicalRecordControllerE2ETests.TEST_VISIT_ID)).willReturn(Optional.of(testVisit));
+		//BDDMockito.given(this.medicalRecordService.findMedicalHistory()).willReturn(Lists.newArrayList(new MedicalRecord()));
+		//BDDMockito.given(this.medicalRecordService.findMedicalRecordById(MedicalRecordControllerE2ETests.TEST_MEDICAL_RECORD_ID)).willReturn(new MedicalRecord());
+		//BDDMockito.given(this.medicalRecordService.findMedicalRecordByPetId(MedicalRecordControllerE2ETests.TEST_PET_ID)).willReturn(Lists.newArrayList(new MedicalRecord()));
+		//BDDMockito.given(this.prescriptionService.findManyByMedicalRecord(MedicalRecordControllerE2ETests.TEST_MEDICAL_RECORD)).willReturn(Lists.newArrayList(new Prescription()));
 	}
 
 	@WithMockUser(username = "vet1", authorities = {
