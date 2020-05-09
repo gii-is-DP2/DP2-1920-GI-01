@@ -1,29 +1,25 @@
-/*
- * Copyright 2002-2013 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 package org.springframework.samples.petclinic.web;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Rehab;
-import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.model.Trainer;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.RehabService;
+import org.springframework.samples.petclinic.service.TrainerService;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -43,50 +39,88 @@ public class RehabController {
 
 	private final RehabService rehabService;
 	private final PetService petService;
+	private final TrainerService trainerService;
+
 
 	@Autowired
-	public RehabController(PetService petService, RehabService rehabService) {
+	public RehabController(PetService petService, RehabService rehabService, TrainerService trainerService) {
 		this.petService = petService;
 		this.rehabService = rehabService;
+		this.trainerService = trainerService;
+		
 	}
 
-	@InitBinder
-	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setDisallowedFields("id");
-	}
 
-	
-	@ModelAttribute("rehab")
-	public Rehab loadPetWithRehab(@PathVariable("petId") int petId) {
-		Pet pet = this.petService.findPetById(petId);
-		Rehab rehab = new Rehab();
-		pet.addRehab(rehab);
-		return rehab;
-	}
-
-	
-	@GetMapping(value = "/owners/*/pets/{petId}/rehab/new")
-	public String initNewRehabForm(@PathVariable("petId") int petId, Map<String, Object> model) {
-		return "pets/createOrUpdateRehabForm";
-	}
-
-	
-	@PostMapping(value = "/owners/{ownerId}/pets/{petId}/rehab/new")
-	public String processNewRehabForm(@Valid Rehab rehab, BindingResult result) {
-		if (result.hasErrors()) {
-			return "pets/createOrUpdateRehabForm";
+	public boolean userHasAuthorities(Collection<SimpleGrantedAuthority> authorities) {
+		Boolean res = false;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if(principal instanceof UserDetails) {
+			Collection<? extends GrantedAuthority> principalAuthorities = ((UserDetails)principal).getAuthorities();
+			if(authorities.containsAll(principalAuthorities)) {
+				res = true;
+			}
 		}
-		else {
-			this.petService.saveRehab(rehab);
-			return "redirect:/owners/{ownerId}";
+		return res;
+	}
+	
+	@GetMapping("/owners/*/pets/{petId}/rehab/new")
+	public String initNewRehabPetForm(@PathVariable("petId") int petId, Map<String, Object> model) {
+		
+		String view;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityTrainer = new SimpleGrantedAuthority("trainer");
+		authorities.add(authorityTrainer);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities == true) {
+			Rehab rehab = new Rehab();
+			Pet pet = this.petService.findPetById(petId);
+			pet.addRehab(rehab);
+			model.put("rehab", rehab);
+			view = "pets/createOrUpdateRehabForm";
+		} else {
+			view = "redirect:/oups";
 		}
+		return view;
 	}
-
-	@GetMapping(value = "/owners/*/pets/{petId}/rehab")
-	public String showRehabs(@PathVariable int petId, Map<String, Object> model) {
-		model.put("rehabs", this.petService.findPetById(petId).getRehabs());
-		return "rehabList";
+	
+	@PostMapping("/owners/{ownerId}/pets/{petId}/rehab/new")
+	public String processNewRehabForm(@PathVariable("petId") int petId, @Valid Rehab rehab, BindingResult result) {
+		String view;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("trainer");
+		authorities.add(authorityVeterinarian);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities == true) {
+			Pet pet = this.petService.findPetById(petId);
+			if (result.hasErrors()) {
+				view = "pets/createOrUpdateRehabForm";
+			}
+			else {
+				Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				String username = ((UserDetails)principal).getUsername();
+				Optional<Trainer> trainer = this.trainerService.findTrainerByUsername(username);
+				if(trainer.isPresent()) {
+					pet.addRehab(rehab);
+					rehab.setTrainer(trainer.get());
+					this.rehabService.saveRehab(rehab);
+				}
+				view = "redirect:/owners/{ownerId}";
+			}
+		} else {
+			view = "redirect:/oups";
+		}
+		return view;
 	}
-
 }
+
+
+
 
