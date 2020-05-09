@@ -29,8 +29,6 @@ public class VetDeletesMedicalRecordStepDefinitions extends AbstractStep {
 		this.getDriver().findElement(By.xpath("//button[@type='submit']")).click();
 		this.getDriver().findElement(By.linkText("Jean Coleman")).click();
 		this.getDriver().findElement(By.xpath("(//a[contains(text(),'Medical History')])[2]")).click();
-		this.getDriver().findElement(By.linkText("2013-01-01")).click();
-		this.getDriver().findElement(By.linkText("Delete")).click();
 	}
 
 	@Then("it is deleted and it is not shown in the list")
