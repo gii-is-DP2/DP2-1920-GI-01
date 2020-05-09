@@ -26,6 +26,7 @@ public class OwnerSeesTrainersPersonalInfoStepDefinitions extends AbstractStep{
 			
 	}
 
+
 	@Then ("I can see this trainers name {string} and his email {string}")
 	public void i_can_see_this_trainers_name_and_his_email (String name, String email){
 		getDriver().findElement(By.linkText("John Doe")).click();
@@ -36,4 +37,14 @@ public class OwnerSeesTrainersPersonalInfoStepDefinitions extends AbstractStep{
 	    assertEquals(email, getDriver().findElement(By.xpath("//tr[2]/td")).getText());
 	    stopDriver();
 	}
+	
+	
+	@Then ("an error {string} appears")
+	public void an_error_appears(String error){
+		getDriver().get("http://localhost:8080/trainers/-1");
+		getDriver().findElement(By.xpath("//h3")).click();
+		assertEquals(error, getDriver().findElement(By.xpath("//h3")).getText());	
+		stopDriver();
+	}	
+	
 }
