@@ -102,12 +102,12 @@ public class VisitServiceTests {
 	@Test
 	@Transactional
 	void shouldDeleteVisit() {
-		Optional<Visit> visit1 = this.visitService.findVisitById(1);
+		Optional<Visit> visit1 = this.visitService.findVisitById(2);
 		
 		assertThat(visit1.isPresent()).isEqualTo(true);
 		this.visitService.delete(visit1.get());
 		
-		visit1 = this.visitService.findVisitById(1);
+		visit1 = this.visitService.findVisitById(2);
 		assertThat(visit1.isPresent()).isEqualTo(false);
 	}
 	
