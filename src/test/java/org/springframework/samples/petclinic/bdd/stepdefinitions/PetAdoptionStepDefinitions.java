@@ -1,6 +1,7 @@
 package org.springframework.samples.petclinic.bdd.stepdefinitions;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
@@ -34,8 +35,8 @@ public class PetAdoptionStepDefinitions extends AbstractStep {
 	
 	@Then("an error appears in the adoption form")
 	public void an_error_appears_in_the_adoption_form() {
-		assertEquals("no puede ser null",
-				getDriver().findElement(By.xpath("//form[@id='adoption']/div/div/div/div/span[2]")).getText());
+		assertTrue(getDriver().findElement(By.xpath("//form[@id='adoption']/div/div/div/div/span[2]")).getText().equals("no puede ser null") || 
+				getDriver().findElement(By.xpath("//form[@id='adoption']/div/div/div/div/span[2]")).getText().equals("must not be null"));
 		stopDriver();
 	}
 	

@@ -1,6 +1,6 @@
 package org.springframework.samples.petclinic.ui;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.concurrent.TimeUnit;
@@ -54,8 +54,8 @@ public class VetAdoptsPetNegativeUITest {
 		driver.findElement(By.linkText("Manage homeless pets")).click();
 		driver.findElement(By.linkText("Adopt")).click();
 		driver.findElement(By.xpath("//button[@type='submit']")).click();
-		assertEquals("no puede ser null",
-				driver.findElement(By.xpath("//form[@id='adoption']/div/div/div/div/span[2]")).getText());
+		assertTrue(driver.findElement(By.xpath("//form[@id='adoption']/div/div/div/div/span[2]")).getText().equals("no puede ser null") ||
+				driver.findElement(By.xpath("//form[@id='adoption']/div/div/div/div/span[2]")).getText().equals("must not be null"));
 	}
 
 	@AfterEach
