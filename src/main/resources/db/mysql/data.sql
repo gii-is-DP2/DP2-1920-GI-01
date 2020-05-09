@@ -124,6 +124,7 @@ INSERT INTO rehab(id, pet_id, rehab_date, rehab_time, description, trainer_id) V
 
 INSERT INTO medical_records(id, description, status, visit_id) VALUES (1, 'Test', 'TestStatus', 1);
 INSERT INTO medical_records(id, description, status, visit_id) VALUES (2, 'Test description', 'Test status', 5);
+INSERT INTO medical_records(id, description, status, visit_id) VALUES (3, 'Was hit by a truck', 'Critical', 1);
 
 -- Medicines
 
