@@ -31,16 +31,13 @@ public class InterventionControllerE2ETest {
 	@Autowired
 	private InterventionController	interventionController;
 
-	@MockBean
-	private PetService				petService;
-
 	@Autowired
 	private MockMvc					mockMvc;
 
 
 	@BeforeEach
 	void setup() {
-		BDDMockito.given(this.petService.findPetById(InterventionControllerE2ETest.TEST_PET_ID)).willReturn(new Pet());
+		//BDDMockito.given(this.petService.findPetById(InterventionControllerE2ETest.TEST_PET_ID)).willReturn(new Pet());
 	}
 
 	@WithMockUser(username = "vet1", authorities = {

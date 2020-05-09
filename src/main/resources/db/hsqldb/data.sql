@@ -109,7 +109,6 @@ INSERT INTO rehab(id, pet_id, rehab_date, rehab_time, description, trainer_id) V
 
 INSERT INTO medical_records VALUES (1, 'Test', 'TestStatus', 1);
 INSERT INTO medical_records VALUES (2, 'Test description', 'Test status', 5);
-INSERT INTO medical_records VALUES (3, 'Was hit by a truck', 'Critical', 1);
 
 INSERT INTO medicine VALUES (1, 'Cat medicine', '2023-05-22', 'Maker', 1);
 INSERT INTO medicine VALUES (2, 'Dog medicine', '2023-05-22', 'Maker', 2);

@@ -55,16 +55,6 @@ class RehabControllerE2ETests {
 	@Autowired
 	private RehabController rehabController;
 	
-
-	@MockBean
-	private RehabService	rehabService;
-	
-	@MockBean
-	private PetService		petService;
-
-	@MockBean
-	private TrainerService 	trainerService;
-	
 		
 	@Autowired
 	private MockMvc mockMvc;
@@ -72,9 +62,6 @@ class RehabControllerE2ETests {
 	
 	@BeforeEach
 	void setup() {
-		
-
-		
 		Rehab rehab = new Rehab();
 		rehab.setDate(LocalDate.now());
 		rehab.setTime(1);
@@ -84,7 +71,7 @@ class RehabControllerE2ETests {
 		pet.setBirthDate(LocalDate.of(2019, 02, 14));
 		pet.setName("Reksis");
 
-		given(this.petService.findPetById(RehabControllerE2ETests.TEST_PET_ID)).willReturn(pet);
+		//given(this.petService.findPetById(RehabControllerE2ETests.TEST_PET_ID)).willReturn(pet);
 	}
 	
 

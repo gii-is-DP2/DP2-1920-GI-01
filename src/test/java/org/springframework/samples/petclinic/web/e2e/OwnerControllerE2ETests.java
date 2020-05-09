@@ -31,9 +31,6 @@ public class OwnerControllerE2ETests {
 	@Autowired
 	private OwnerController		ownerController;
 
-	@MockBean
-	private OwnerService		ownerService;
-
 	@Autowired
 	private MockMvc				mockMvc;
 
@@ -49,7 +46,7 @@ public class OwnerControllerE2ETests {
 		this.george.setAddress("110 W. Liberty St.");
 		this.george.setCity("Madison");
 		this.george.setTelephone("6085551023");
-		BDDMockito.given(this.ownerService.findOwnerById(OwnerControllerE2ETests.TEST_OWNER_ID)).willReturn(this.george);
+		//BDDMockito.given(this.ownerService.findOwnerById(OwnerControllerE2ETests.TEST_OWNER_ID)).willReturn(this.george);
 	}
 
 	@WithMockUser(username = "vet1", authorities = {
