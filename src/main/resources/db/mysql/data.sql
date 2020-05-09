@@ -25,7 +25,6 @@ INSERT INTO users(username,password,enabled) VALUES ('trainer2','train333',TRUE)
 
 INSERT INTO authorities(username, authority) VALUES ('admin1','admin');
 INSERT INTO authorities(username, authority) VALUES ('owner1','owner');
-INSERT INTO authorities(username, authority) VALUES ('owner1','owner');
 INSERT INTO authorities(username, authority) VALUES ('owner2','owner');
 INSERT INTO authorities(username, authority) VALUES ('owner3','owner');
 INSERT INTO authorities(username, authority) VALUES ('owner4','owner');
