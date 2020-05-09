@@ -2,6 +2,15 @@
 
 INSERT INTO users(username,password,enabled) VALUES ('admin1','4dm1n',TRUE);
 INSERT INTO users(username,password,enabled) VALUES ('owner1','0wn3r',TRUE);
+INSERT INTO users(username,password,enabled) VALUES ('owner2','0wn3r',TRUE);
+INSERT INTO users(username,password,enabled) VALUES ('owner3','0wn3r',TRUE);
+INSERT INTO users(username,password,enabled) VALUES ('owner4','0wn3r',TRUE);
+INSERT INTO users(username,password,enabled) VALUES ('owner5','0wn3r',TRUE);
+INSERT INTO users(username,password,enabled) VALUES ('owner6','0wn3r',TRUE);
+INSERT INTO users(username,password,enabled) VALUES ('owner7','0wn3r',TRUE);
+INSERT INTO users(username,password,enabled) VALUES ('owner8','0wn3r',TRUE);
+INSERT INTO users(username,password,enabled) VALUES ('owner9','0wn3r',TRUE);
+INSERT INTO users(username,password,enabled) VALUES ('owner10','0wn3r',TRUE);
 INSERT INTO users(username,password,enabled) VALUES ('vet1','v3t1',TRUE);
 INSERT INTO users(username,password,enabled) VALUES ('vet2','v3t2',TRUE);
 INSERT INTO users(username,password,enabled) VALUES ('vet3','v3t3',TRUE);
@@ -16,6 +25,16 @@ INSERT INTO users(username,password,enabled) VALUES ('trainer2','train333',TRUE)
 
 INSERT INTO authorities(username, authority) VALUES ('admin1','admin');
 INSERT INTO authorities(username, authority) VALUES ('owner1','owner');
+INSERT INTO authorities(username, authority) VALUES ('owner1','owner');
+INSERT INTO authorities(username, authority) VALUES ('owner2','owner');
+INSERT INTO authorities(username, authority) VALUES ('owner3','owner');
+INSERT INTO authorities(username, authority) VALUES ('owner4','owner');
+INSERT INTO authorities(username, authority) VALUES ('owner5','owner');
+INSERT INTO authorities(username, authority) VALUES ('owner6','owner');
+INSERT INTO authorities(username, authority) VALUES ('owner7','owner');
+INSERT INTO authorities(username, authority) VALUES ('owner8','owner');
+INSERT INTO authorities(username, authority) VALUES ('owner9','owner');
+INSERT INTO authorities(username, authority) VALUES ('owner10','owner');
 INSERT INTO authorities(username, authority) VALUES ('vet1','veterinarian');
 INSERT INTO authorities(username, authority) VALUES ('vet2','veterinarian');
 INSERT INTO authorities(username, authority) VALUES ('vet3','veterinarian');
