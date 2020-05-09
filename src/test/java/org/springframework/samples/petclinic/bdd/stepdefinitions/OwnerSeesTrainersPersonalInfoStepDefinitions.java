@@ -34,6 +34,6 @@ public class OwnerSeesTrainersPersonalInfoStepDefinitions extends AbstractStep{
 		getDriver().findElement(By.xpath("//tr[3]/td")).click();
 	    assertEquals(name, getDriver().findElement(By.xpath("//b")).getText());
 	    assertEquals(email, getDriver().findElement(By.xpath("//tr[2]/td")).getText());
-			
+	    stopDriver();
 	}
 }
