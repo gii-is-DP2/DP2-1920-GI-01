@@ -32,6 +32,7 @@ public class MedicalRecordControllerE2ETests {
 	private static final int			TEST_OWNER_ID			= 3;
 	private static final int			TEST_PET_ID				= 7;
 	private static final int			TEST_VISIT_ID			= 1;
+	private static final int			TEST_VISIT_ID_2			= 2;
 	private static final int			TEST_MEDICAL_RECORD_ID	= 1;
 	private static final MedicalRecord	TEST_MEDICAL_RECORD		= new MedicalRecord();
 
@@ -106,12 +107,12 @@ public class MedicalRecordControllerE2ETests {
 	})
 	@Test
 	void testProcessCreationFormSuccess() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.post("/owners/*/pets/*/visits/{visitId}/medical-record/new", MedicalRecordControllerE2ETests.TEST_VISIT_ID) //
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/owners/*/pets/*/visits/{visitId}/medical-record/new", MedicalRecordControllerE2ETests.TEST_VISIT_ID_2) //
 			.with(SecurityMockMvcRequestPostProcessors.csrf()) //
 			.param("description", "testDescription") //
 			.param("status", "testStatus"))//
 			.andExpect(MockMvcResultMatchers.status().is3xxRedirection()) //
-			.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/6/pets/7/visits/1/medical-record/show?id=4"));
+			.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/6/pets/8/visits/" + TEST_VISIT_ID_2 + "/medical-record/show?id=3"));
 	}
 
 	@WithMockUser(username = "vet1", authorities = {
