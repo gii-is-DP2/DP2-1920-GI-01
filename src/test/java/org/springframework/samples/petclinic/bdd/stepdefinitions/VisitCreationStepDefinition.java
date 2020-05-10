@@ -33,8 +33,8 @@ public class VisitCreationStepDefinition extends AbstractStep {
 
 	@Then("the new visit appears in the owners details page")
 	public void the_new_visit_appears_in_the_owners_details_page() {
-		Assert.assertEquals("Description", this.getDriver().findElement(By.xpath("//b")).getText());
-		Assert.assertEquals("2020/10/01", this.getDriver().findElement(By.xpath("//tr[2]/td")).getText());
+		Assert.assertEquals("Description", this.getDriver().findElement(By.xpath("//td[2]/table/tbody/tr/td[2]")).getText());
+		Assert.assertEquals("2020-10-01", this.getDriver().findElement(By.xpath("//td[2]/table/tbody/tr/td")).getText());
 		this.stopDriver();
 	}
 
