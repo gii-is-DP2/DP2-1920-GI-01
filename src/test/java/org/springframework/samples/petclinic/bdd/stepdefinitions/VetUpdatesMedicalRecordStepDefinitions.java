@@ -46,8 +46,12 @@ public class VetUpdatesMedicalRecordStepDefinitions extends AbstractStep {
 
 	@Then("an error appears in the medical record update form")
 	public void an_error_appears_in_the_update_form() {
-		Assert.assertEquals("no puede estar vacío", this.getDriver().findElement(By.xpath("//form[@id='medicalRecord']/div/div[2]/div/span[2]")).getText());
-		Assert.assertEquals("no puede estar vacío", this.getDriver().findElement(By.xpath("//form[@id='medicalRecord']/div/div[3]/div/span[2]")).getText());
+//		Assert.assertEquals("no puede estar vacío", this.getDriver().findElement(By.xpath("//form[@id='medicalRecord']/div/div[2]/div/span[2]")).getText());
+//		Assert.assertEquals("no puede estar vacío", this.getDriver().findElement(By.xpath("//form[@id='medicalRecord']/div/div[3]/div/span[2]")).getText());
+		Assert.assertTrue("no puede estar vacío".equals(this.getDriver().findElement(By.xpath("//form[@id='medicalRecord']/div/div[2]/div/span[2]")).getText()) ||
+				"must not be blank".equals(this.getDriver().findElement(By.xpath("//form[@id='medicalRecord']/div/div[2]/div/span[2]")).getText()));
+		Assert.assertTrue("no puede estar vacío".equals(this.getDriver().findElement(By.xpath("//form[@id='medicalRecord']/div/div[3]/div/span[2]")).getText()) ||
+				"must not be blank".equals(this.getDriver().findElement(By.xpath("//form[@id='medicalRecord']/div/div[2]/div/span[2]")).getText()));
 		this.stopDriver();
 	}
 

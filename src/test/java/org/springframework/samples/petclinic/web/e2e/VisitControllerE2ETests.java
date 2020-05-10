@@ -63,7 +63,7 @@ public class VisitControllerE2ETests {
 	})
 	@Test
 	void testProcessNewVisitFormHasErrors() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.post("/owners/*/pets/{petId}/visits/new", VisitControllerE2ETests.TEST_PET_ID).with(SecurityMockMvcRequestPostProcessors.csrf()).param("name", "George"))
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/owners/*/pets/{petId}/visits/new", VisitControllerE2ETests.TEST_PET_ID).with(SecurityMockMvcRequestPostProcessors.csrf()).param("date", ""))
 			.andExpect(MockMvcResultMatchers.model().attributeHasErrors("visit")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.view().name("pets/createOrUpdateVisitForm"));
 	}
 

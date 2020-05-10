@@ -3,6 +3,8 @@ package org.springframework.samples.petclinic.bdd.stepdefinitions;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -28,6 +30,9 @@ public class VisitCreationStepDefinition extends AbstractStep {
 		// The visit date bellow may provoke a failure if the test is runned after the date provided, if so, change the date to a future date
 
 		this.getDriver().findElement(By.id("date")).sendKeys(date);
+		this.getDriver().findElement(By.id("description")).click();
+		WebDriverWait wait = new WebDriverWait(this.getDriver(), 100);
+		  wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@type='submit']")));
 		this.getDriver().findElement(By.xpath("//button[@type='submit']")).click();
 	}
 
@@ -40,7 +45,7 @@ public class VisitCreationStepDefinition extends AbstractStep {
 
 	@Then("an error appears in the visit form")
 	public void an_error_appears_in_the_visit_form() {
-		Assert.assertEquals("The  date must be in the future", this.getDriver().findElement(By.xpath("//form[@id='intervention']/div/div[2]/div/span[2]")).getText());
+		Assert.assertEquals("required and after current date", this.getDriver().findElement(By.xpath("//form[@id='visit']/div/div/div/span[2]")).getText());
 		this.stopDriver();
 	}
 }
