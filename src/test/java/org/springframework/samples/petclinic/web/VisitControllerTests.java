@@ -73,7 +73,7 @@ class VisitControllerTests {
 	void testProcessNewVisitFormHasErrors() throws Exception {
 		mockMvc.perform(post("/owners/*/pets/{petId}/visits/new", TEST_PET_ID)
 							.with(csrf())
-							.param("name", "George"))
+							.param("date", ""))
 				.andExpect(model().attributeHasErrors("visit")).andExpect(status().isOk())
 				.andExpect(view().name("pets/createOrUpdateVisitForm"));
 	}
