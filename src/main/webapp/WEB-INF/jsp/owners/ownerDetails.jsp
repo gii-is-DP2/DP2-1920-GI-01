@@ -206,6 +206,22 @@
                                 	
                                 	
                 	
+	<sec:authorize access="hasAuthority('trainer')">
+	                		
+	                    	<spring:url value="/owners/{ownerId}/pets/{petId}/rehab/{rehabId}/delete" var="existingrehabDeleteUrl">
+	                        	<spring:param name="petId" value="${pet.id}"/>
+	                        	<spring:param name="ownerId" value="${owner.id}"/>
+	                        	<spring:param name="rehabId" value="${rehab.id}"/>
+	                        </spring:url>
+	                    	<a href="${fn:escapeXml(existingrehabDeleteUrl)}">Delete Rehab</a>
+	                    </sec:authorize>
+                	</td>
+                	
+                	
+                	
+                	
+                	
+                	
                 	
                             </tr>
                         </c:forEach>         

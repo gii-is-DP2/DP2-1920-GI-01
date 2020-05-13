@@ -8,7 +8,9 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.model.Intervention;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Rehab;
 import org.springframework.samples.petclinic.model.Trainer;
@@ -21,6 +23,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -119,8 +122,44 @@ public class RehabController {
 		}
 		return view;
 	}
+	
+	
+	/* New */
+
+
+	@GetMapping("/owners/{ownerId}/pets/{petId}/rehab/{rehabId}/delete")
+	public String deleteRehab(@PathVariable("ownerId") int ownerId, @PathVariable("petId") int petId, @PathVariable("rehabId") int rehabId, ModelMap model) {
+		String view;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("trainer");
+		authorities.add(authorityVeterinarian);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities == true) {
+			Optional<Rehab> rehab;
+			view = "owners/ownerDetails";
+			rehab = this.rehabService.findRehabById(rehabId);
+			Pet pet = this.petService.findPetById(petId);
+			if(rehab.isPresent()) {
+				Trainer trainer = rehab.get().getTrainer();
+				trainer.removeRehab(rehab.get());
+				pet.removeRehab(rehab.get());
+				this.rehabService.delete(rehab.get());
+				view = "redirect:/owners/{ownerId}";
+			} else {
+				view = "redirect:/owners/{ownerId}";
+			}
+		} else {
+			view = "redirect:/oups";
+		}
+		return view;
+	
 }
 
 
+}
 
 

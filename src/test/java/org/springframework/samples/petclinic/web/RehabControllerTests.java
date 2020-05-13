@@ -121,9 +121,28 @@ class RehabControllerTests {
 			.andExpect(MockMvcResultMatchers.view().name("pets/createOrUpdateRehabForm"));//
 	}
 
-
-		
-		
+	/* Deleting an existing rehab, successful */
+		 
+	@WithMockUser(username = "spring", authorities = {"trainer"})
+	@Test
+	void deleteExistingRehab() throws Exception {
+		mockMvc.perform(get("/owners/1/pets/1/rehab/1/delete")
+						.with(SecurityMockMvcRequestPostProcessors.csrf()))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/owners/{ownerId}"));
+		}
+	
+	
+	 
+	@WithMockUser(username = "spring", authorities = {"trainer"})
+	@Test
+	void deleteRehabInvalidId() throws Exception {
+		mockMvc.perform(get("/owners/5/pets/6/rehab/-3/delete")
+						.with(SecurityMockMvcRequestPostProcessors.csrf()))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/owners/{ownerId}"));
+		}
+	
 }
 
 
