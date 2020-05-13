@@ -38,6 +38,7 @@ import org.springframework.samples.petclinic.service.TrainerService;
 import org.springframework.samples.petclinic.web.RehabController;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -116,7 +117,26 @@ class RehabControllerE2ETests {
 	}
 
 
-		
+	@WithMockUser(username = "trainer1", authorities = {"trainer"})
+	@Test
+	void deleteExistingRehab() throws Exception {
+		mockMvc.perform(get("/owners/1/pets/1/rehab/1/delete")
+						.with(csrf()))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/owners/{ownerId}"));
+		}
+	
+	
+	 
+	@WithMockUser(username = "trainer1", authorities = {"trainer"})
+	@Test
+	void deleteRehabInvalidId() throws Exception {
+		mockMvc.perform(get("/owners/5/pets/6/rehab/-3/delete")
+						.with(csrf()))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/owners/{ownerId}"));
+		}
+	
 		
 }
 
