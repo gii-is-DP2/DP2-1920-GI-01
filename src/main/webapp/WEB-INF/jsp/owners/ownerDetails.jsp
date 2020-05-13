@@ -201,16 +201,27 @@
                                          <td><c:out value="${rehab.time}"/></td>
                                 <td><c:out value="${rehab.description}"/></td>
                                 <td><c:out value="${rehab.trainer.firstName} ${rehab.trainer.lastName}"/></td>
+                                	<td>
+                                	
+                                	
+                                	
+                	
+                	
                             </tr>
                         </c:forEach>         
            
                         <tr>
                              <td>
+                             <sec:authorize access="hasAuthority('trainer')">
                                 <spring:url value="/owners/{ownerId}/pets/{petId}/rehab/new" var="rehabUrl">
                                     <spring:param name="ownerId" value="${owner.id}"/>
                                     <spring:param name="petId" value="${pet.id}"/>
                                     </spring:url>
-                                <a href="${fn:escapeXml(rehabUrl)}">Add Rehab</a>                         
+                                <a href="${fn:escapeXml(rehabUrl)}">Add Rehab</a>     
+                                </sec:authorize>
+                                
+                                
+                                                    
                                                                                         
                             </td>
                         </tr>
