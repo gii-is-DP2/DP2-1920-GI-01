@@ -191,6 +191,7 @@
                             <th>Rehabilitation Date</th>
                   			<th>Rehabilitation Time</th>
                             <th>Rehabilitation Description</th>
+                            <th>Rehabilitation Trainer </th>
                         </tr>
                         </thead>
                
@@ -199,6 +200,7 @@
                                 <td><petclinic:localDate date="${rehab.date}" pattern="yyyy-MM-dd"/></td>
                                          <td><c:out value="${rehab.time}"/></td>
                                 <td><c:out value="${rehab.description}"/></td>
+                                <td><c:out value="${rehab.trainer.firstName} ${rehab.trainer.lastName}"/></td>
                             </tr>
                         </c:forEach>         
            
