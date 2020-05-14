@@ -159,6 +159,65 @@ public class RehabController {
 	
 }
 
+	
+	
+	@GetMapping("/owners/{ownerId}/pets/{petId}/rehab/{rehabId}/edit")
+	public String initEditRehabPetForm(@PathVariable("petId") int petId, @PathVariable("rehabId") int rehabId, @PathVariable("ownerId") int ownerId, ModelMap model) {
+		String view;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityTrainer = new SimpleGrantedAuthority("trainer");
+		authorities.add(authorityTrainer);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities == true) {
+			view = "pets/createOrUpdateRehabForm";
+			Optional<Rehab> rehab = this.rehabService.findRehabById(rehabId);
+			if(rehab.isPresent()) {
+				model.addAttribute("rehab", rehab.get());
+			} else {
+				model.addAttribute("message", "Rehab not found!");
+			}
+		} else {
+			view = "redirect:/oups";
+		}
+		return view;
+	}
+	
+	@PostMapping("/owners/{ownerId}/pets/{petId}/rehab/{rehabId}/edit")
+	public String processEditRehabPetForm(@PathVariable("petId") int petId, @Valid Rehab rehab,  @PathVariable("ownerId") int ownerId, BindingResult result, @PathVariable("rehabId") int rehabId, ModelMap model) {
+		String view;
+		Boolean hasAuthorities;
+		
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("trainer");
+		authorities.add(authorityVeterinarian);
+		
+		hasAuthorities = userHasAuthorities(authorities);
+		
+		if(hasAuthorities == true) {
+			if(result.hasErrors()) {
+				model.put("rehab", rehab);
+				view = "owners/ownerDetails";
+			} else {
+				Optional<Rehab> rehabToUpdate = this.rehabService.findRehabById(rehabId);
+				if(rehabToUpdate.isPresent()) {
+					BeanUtils.copyProperties(rehab, rehabToUpdate.get(), "id", "pet", "trainer");
+					try {
+						this.rehabService.saveRehab(rehabToUpdate.get());
+					} catch (Exception e) {
+						view = "pets/createOrUpdateRehabForm";
+					}
+				}
+				view = "redirect:/owners/{ownerId}";
+			}
+		} else {
+			view = "redirect:/oups";
+		}
+		return view;
+	}
 
 }
 

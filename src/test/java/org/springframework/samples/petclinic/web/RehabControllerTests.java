@@ -143,6 +143,21 @@ class RehabControllerTests {
 				.andExpect(view().name("redirect:/owners/{ownerId}"));
 		}
 	
+	/* Editing a rehab, successful*/
+	
+	@WithMockUser(username = "spring", authorities = {"trainer"})
+	@Test
+	void UpdatingRehabFormSuccessfully() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/owners/1/pets/1/rehab/1/edit")
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
+			.param("date", "2020/07/07")//
+			.param("time", "1")//
+			.param("description", "Test description"))//
+			.andExpect(MockMvcResultMatchers.status()
+			.is3xxRedirection())
+			.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/{ownerId}"));
+	}
+
 }
 
 
