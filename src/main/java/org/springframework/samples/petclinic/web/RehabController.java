@@ -160,7 +160,7 @@ public class RehabController {
 }
 
 	
-	
+
 	@GetMapping("/owners/{ownerId}/pets/{petId}/rehab/{rehabId}/edit")
 	public String initEditRehabPetForm(@PathVariable("petId") int petId, @PathVariable("rehabId") int rehabId, @PathVariable("ownerId") int ownerId, ModelMap model) {
 		String view;

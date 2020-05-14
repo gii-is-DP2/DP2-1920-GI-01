@@ -50,9 +50,11 @@
 	                        <c:when test="${rehab['new']}">
 	                            <button class="btn btn-default" type="submit">Add Rehabilitation</button>
 	                        </c:when>
+	                      
 	                        <c:otherwise>
 	                            <button class="btn btn-default" type="submit">Update Rehabilitation</button>
 	                        </c:otherwise>
+	                      
 	                    </c:choose>                              
                  </div>
             </div>

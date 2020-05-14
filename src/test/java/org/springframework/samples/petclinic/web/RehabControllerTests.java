@@ -143,7 +143,7 @@ class RehabControllerTests {
 				.andExpect(view().name("redirect:/owners/{ownerId}"));
 		}
 	
-	/* Editing a rehab, successful*/
+/* Editing a rehab, successful*/
 	
 	@WithMockUser(username = "spring", authorities = {"trainer"})
 	@Test
