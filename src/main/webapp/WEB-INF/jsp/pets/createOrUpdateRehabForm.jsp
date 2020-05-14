@@ -13,8 +13,7 @@
         </script>
     </jsp:attribute>
     <jsp:body>
-        <h2><c:if test="${rehab['new']}">New </c:if>Rehab</h2>
-
+        <h2><c:if test="${rehab['new']}">New </c:if>Rehabilitation</h2>
         <b>Pet</b>
         <table class="table table-striped">
             <thead>
@@ -35,6 +34,8 @@
 
         <form:form modelAttribute="rehab" class="form-horizontal">
             <div class="form-group has-feedback">
+          
+                    
                 <petclinic:inputField label="Date" name="date"/>
 		<petclinic:inputField label="Time" name="time"/>
                 <petclinic:inputField label="Description" name="description"/>
@@ -42,9 +43,20 @@
 
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                    <input type="hidden" name="petId" value="${rehab.pet.id}"/>                
-                    <button class="btn btn-default" type="submit">Add Rehabilitation</button>
-                </div>
+                    <input type="hidden" name="petId" value="${rehab.pet.id}"/>    
+                    
+                    
+                    <c:choose>
+	                        <c:when test="${rehab['new']}">
+	                            <button class="btn btn-default" type="submit">Add Rehabilitation</button>
+	                        </c:when>
+	                      
+	                        <c:otherwise>
+	                            <button class="btn btn-default" type="submit">Update Rehabilitation</button>
+	                        </c:otherwise>
+	                      
+	                    </c:choose>                              
+                 </div>
             </div>
         </form:form>
 
@@ -55,6 +67,7 @@
                 <th>Date</th>
                 <th>Time</th>
                 <th>Description</th>
+                 <th>Trainer </th>
             </tr>
             <c:forEach var="rehab" items="${rehab.pet.rehabs}"> 
                 <c:if test="${!rehab['new']}">
@@ -62,6 +75,7 @@
                         <td><petclinic:localDate date="${rehab.date}" pattern="yyyy/MM/dd"/></td>
                   		<td><c:out value="${rehab.time}"/></td>
                         <td><c:out value="${rehab.description}"/></td>
+                        <td><c:out value="${rehab.trainer.firstName} ${rehab.trainer.lastName}"/></td>
                     </tr>
                 </c:if>
             </c:forEach>
