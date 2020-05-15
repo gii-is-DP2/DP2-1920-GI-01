@@ -200,7 +200,7 @@ public class RehabController {
 		if(hasAuthorities == true) {
 			if(result.hasErrors()) {
 				model.put("rehab", rehab);
-				view = "owners/ownerDetails";
+				view = "pets/createOrUpdateRehabForm";
 			} else {
 				Optional<Rehab> rehabToUpdate = this.rehabService.findRehabById(rehabId);
 				if(rehabToUpdate.isPresent()) {
