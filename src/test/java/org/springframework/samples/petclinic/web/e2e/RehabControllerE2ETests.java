@@ -42,6 +42,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 @ExtendWith(SpringExtension.class)
@@ -137,9 +139,34 @@ class RehabControllerE2ETests {
 				.andExpect(view().name("redirect:/owners/{ownerId}"));
 		}
 	
-		
-}
 
+	
+	@WithMockUser(username = "trainer1", authorities = {"trainer"})
+	@Test
+	void UpdatingRehabFormSuccessfully() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/owners/1/pets/1/rehab/1/edit")
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
+			.param("date", "2020/07/07")//
+			.param("time", "1")//
+			.param("description", "Test description"))//
+			.andExpect(MockMvcResultMatchers.status()
+			.is3xxRedirection())
+			.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/{ownerId}"));
+	}
+
+
+	@WithMockUser(username = "trainer1", authorities = {"trainer"})
+	@Test
+	void testProcessEditingRehabWithError() throws Exception {
+		mockMvc.perform(post("/owners/1/pets/1/rehab/1/edit")
+						.with(csrf())
+						.param("date", "null")
+						.param("time", "2")
+						.param("description", "edit test"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("pets/createOrUpdateRehabForm"));
+	}
+}
 
 				 
 				 
