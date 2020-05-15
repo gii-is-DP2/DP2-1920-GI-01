@@ -187,7 +187,7 @@ public class RehabController {
 	}
 	
 	@PostMapping("/owners/{ownerId}/pets/{petId}/rehab/{rehabId}/edit")
-	public String processEditRehabPetForm(@PathVariable("petId") int petId, @Valid Rehab rehab,  @PathVariable("ownerId") int ownerId, BindingResult result, @PathVariable("rehabId") int rehabId, ModelMap model) {
+	public String processEditRehabPetForm(@PathVariable("petId") int petId, @PathVariable("rehabId") int rehabId,@Valid Rehab rehab, BindingResult result, @PathVariable("ownerId") int ownerId, ModelMap model) {
 		String view;
 		Boolean hasAuthorities;
 		
@@ -218,6 +218,7 @@ public class RehabController {
 		}
 		return view;
 	}
+	
 
 }
 
