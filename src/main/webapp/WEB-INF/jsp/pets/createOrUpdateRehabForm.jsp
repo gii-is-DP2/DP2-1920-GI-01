@@ -34,7 +34,8 @@
 
         <form:form modelAttribute="rehab" class="form-horizontal">
             <div class="form-group has-feedback">
-          
+          <input type="hidden" name="petId" value="${rehab.pet.id}"/>
+	        	<input type="hidden" name="id" value="${rehab.id}"/>
                     
                 <petclinic:inputField label="Date" name="date"/>
 		<petclinic:inputField label="Time" name="time"/>
@@ -43,7 +44,7 @@
 
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                    <input type="hidden" name="petId" value="${rehab.pet.id}"/>    
+             
                     
                     
                     <c:choose>
