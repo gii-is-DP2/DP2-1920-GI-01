@@ -6,7 +6,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
-class VetManagement extends Simulation {
+class VetManagementDiagnosis extends Simulation {
 
 	val httpProtocol = http
 		.baseUrl("http://www.dp2.com")
@@ -123,7 +123,12 @@ class VetManagement extends Simulation {
                                                                        ShowVetJamesCarterForm.showVetJamesCarterForm)
 		
 
-	setUp(vetManagementPositiveScn.inject(atOnceUsers(1)),
-        vetManagementNegativeScn.inject(atOnceUsers(1))
+	setUp(vetManagementPositiveScn.inject(rampUsers(1500) during (100 seconds)),
+          vetManagementNegativeScn.inject(rampUsers(1500) during (100 seconds))
        ).protocols(httpProtocol)
+	.assertions(
+    global.responseTime.max.lt(5000),
+    global.responseTime.mean.lt(1000),
+    global.successfulRequests.percent.gt(95)
+  )
 }
