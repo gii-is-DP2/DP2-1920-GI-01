@@ -9,7 +9,9 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -40,15 +42,39 @@ public class OwnerSeesTrainersPersonalInformationNegativeUITest {
 	  
 	  driver.manage().window().maximize();
 	  testOwnerSeesTrainersPersonalInforError(driver, port);
+	  BrokenTrainerLink(driver,port);
 	 
   }
   
   public void testOwnerSeesTrainersPersonalInforError(WebDriver driver, int port) throws Exception {
 	    driver.get("http://localhost:" + port);
-    driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[4]/a/span[2]")).click();
-    assertEquals("Please sign in", driver.findElement(By.xpath("//h2")).getText());
+	 new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(),'Login')]")));
+		driver.findElement(By.xpath("//a[contains(text(),'Login')]")).click();
+		WebDriverWait wait = new WebDriverWait(driver, 200);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@type='submit']")));
+		WebElement usernameInput = driver.findElement(By.xpath("//input[@id='username']"));
+		usernameInput.clear();
+		usernameInput.click();
+		wait.until(ExpectedConditions.visibilityOf(usernameInput));
+		usernameInput.sendKeys("trainer1");
+		WebElement passwordInput = driver.findElement(By.xpath("//input[@id='password']"));
+		passwordInput.clear();
+		passwordInput.click();
+		wait.until(ExpectedConditions.visibilityOf(passwordInput));
+		passwordInput.sendKeys("tr41n3r");
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@type='submit']")));
+		driver.findElement(By.xpath("//button[@type='submit']")).click();
+	 
   }
 
+ public void BrokenTrainerLink(WebDriver driver, int port){
+	   driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[4]/a/span[2]")).click();
+	   driver.get("http://localhost:" + port + "/trainers/-1");
+	   driver.findElement(By.xpath("//h3")).click();
+	    assertEquals("Trainer not found!", driver.findElement(By.xpath("//h3")).getText());
+	  
+  }
+  
   @AfterEach
   public void tearDown() throws Exception {
     driver.quit();
