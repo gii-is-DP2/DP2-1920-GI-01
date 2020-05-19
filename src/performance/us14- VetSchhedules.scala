@@ -6,7 +6,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
-class us20 extends Simulation {
+class us14 extends Simulation {
 
 	val httpProtocol = http
 		.baseUrl("http://www.dp2.com")
@@ -31,11 +31,11 @@ class us20 extends Simulation {
 
 
 
-	val scn = scenario("us20")
-		.exec(http("request_0")
+	val scn = scenario("us14")
+		.exec(http("home")
 			.get("/")
 			.headers(headers_0))
-		.pause(12)
+		.pause(8)
 		// home
 		.exec(http("login")
 			.get("/login")
@@ -43,33 +43,26 @@ class us20 extends Simulation {
 			.resources(http("request_2")
 			.get("/login")
 			.headers(headers_2)))
-		.pause(11)
+		.pause(10)
 		// login
 		.exec(http("logged")
 			.post("/login")
 			.headers(headers_3)
 			.formParam("username", "vet1")
 			.formParam("password", "v3t1")
-			.formParam("_csrf", "5f41e2e9-505b-4b35-90eb-08579571d938"))
-		.pause(15)
+			.formParam("_csrf", "4e9e043b-9ebd-422e-bfb1-c8e10a9607fe"))
+		.pause(6)
 		// logged
-		.exec(http("adoptions")
-			.get("/homeless-pets")
+		.exec(http("veterinarians")
+			.get("/vets")
 			.headers(headers_0))
-		.pause(7)
-		// adoptions
-		.exec(http("adoptionForm")
-			.get("/homeless-pets/14/adopt")
+		.pause(13)
+		// veterinarians
+		.exec(http("showVet")
+			.get("/vets/1")
 			.headers(headers_0))
-		.pause(37)
-		// adoptionForm
-		.exec(http("adopt")
-			.post("/homeless-pets/14/adopt")
-			.headers(headers_3)
-			.formParam("owner", "George Franklin")
-			.formParam("_csrf", "46c34adb-641c-489a-b36b-92884e86ffb1"))
-		.pause(4)
-		// adopt
+		.pause(9)
+		// showVet
 
 	setUp(scn.inject(atOnceUsers(1500))).protocols(httpProtocol)
 }

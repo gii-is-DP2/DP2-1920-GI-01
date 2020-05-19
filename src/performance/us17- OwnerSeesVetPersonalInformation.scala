@@ -1,3 +1,4 @@
+  
 package dp2
 
 import scala.concurrent.duration._
@@ -6,7 +7,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
-class us14 extends Simulation {
+class us17 extends Simulation {
 
 	val httpProtocol = http
 		.baseUrl("http://www.dp2.com")
@@ -31,11 +32,11 @@ class us14 extends Simulation {
 
 
 
-	val scn = scenario("us14")
+	val scn = scenario("us17")
 		.exec(http("home")
 			.get("/")
 			.headers(headers_0))
-		.pause(8)
+		.pause(40)
 		// home
 		.exec(http("login")
 			.get("/login")
@@ -43,26 +44,26 @@ class us14 extends Simulation {
 			.resources(http("request_2")
 			.get("/login")
 			.headers(headers_2)))
-		.pause(10)
+		.pause(6)
 		// login
 		.exec(http("logged")
 			.post("/login")
 			.headers(headers_3)
-			.formParam("username", "vet1")
-			.formParam("password", "v3t1")
-			.formParam("_csrf", "4e9e043b-9ebd-422e-bfb1-c8e10a9607fe"))
-		.pause(6)
+			.formParam("username", "owner1")
+			.formParam("password", "0wn3r")
+			.formParam("_csrf", "5cc54564-e50a-41a6-96de-7538e64ade6b"))
+		.pause(12)
 		// logged
-		.exec(http("veterinarians")
+		.exec(http("veterinarianListing")
 			.get("/vets")
 			.headers(headers_0))
-		.pause(13)
-		// veterinarians
-		.exec(http("showVet")
+		.pause(59)
+		// veterinarianListing
+		.exec(http("vetShow")
 			.get("/vets/1")
 			.headers(headers_0))
-		.pause(9)
-		// showVet
+		.pause(5)
+		// vetShow
 
-	setUp(scn.inject(atOnceUsers(1500))).protocols(httpProtocol)
+	setUp(scn.inject(atOnceUsers(2000))).protocols(httpProtocol)
 }

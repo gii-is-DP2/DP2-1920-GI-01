@@ -6,7 +6,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
-class us17 extends Simulation {
+class us16 extends Simulation {
 
 	val httpProtocol = http
 		.baseUrl("http://www.dp2.com")
@@ -31,11 +31,11 @@ class us17 extends Simulation {
 
 
 
-	val scn = scenario("us17")
+	val scn = scenario("us16")
 		.exec(http("home")
 			.get("/")
 			.headers(headers_0))
-		.pause(40)
+		.pause(36)
 		// home
 		.exec(http("login")
 			.get("/login")
@@ -43,26 +43,31 @@ class us17 extends Simulation {
 			.resources(http("request_2")
 			.get("/login")
 			.headers(headers_2)))
-		.pause(6)
+		.pause(7)
 		// login
 		.exec(http("logged")
 			.post("/login")
 			.headers(headers_3)
 			.formParam("username", "owner1")
 			.formParam("password", "0wn3r")
-			.formParam("_csrf", "5cc54564-e50a-41a6-96de-7538e64ade6b"))
-		.pause(12)
+			.formParam("_csrf", "220bf300-3cce-475a-aae2-90915b8d2411"))
+		.pause(8)
 		// logged
-		.exec(http("veterinarianListing")
-			.get("/vets")
+		.exec(http("findOwners")
+			.get("/owners/find")
 			.headers(headers_0))
-		.pause(59)
-		// veterinarianListing
-		.exec(http("vetShow")
-			.get("/vets/1")
+		.pause(66)
+		// findOwners
+		.exec(http("ownerList")
+			.get("/owners?lastName=")
 			.headers(headers_0))
-		.pause(5)
-		// vetShow
+		.pause(6)
+		// ownerList
+		.exec(http("ownerShow")
+			.get("/owners/1")
+			.headers(headers_0))
+		.pause(6)
+		// ownerShow
 
 	setUp(scn.inject(atOnceUsers(2000))).protocols(httpProtocol)
 }

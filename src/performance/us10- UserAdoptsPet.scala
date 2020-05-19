@@ -6,11 +6,11 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
-class us15 extends Simulation {
+class us20 extends Simulation {
 
 	val httpProtocol = http
 		.baseUrl("http://www.dp2.com")
-		.inferHtmlResources(BlackList(""".*.jar""", """.*.css""", """.*.png""", """.*.ico""", """.*.js"""), WhiteList())
+		.inferHtmlResources(BlackList(""".*.jar""", """.*.css""", """.*.js""", """.*.png""", """.*.ico"""), WhiteList())
 		.acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
 		.acceptEncodingHeader("gzip, deflate")
 		.acceptLanguageHeader("es-ES,es;q=0.9,en;q=0.8")
@@ -31,11 +31,11 @@ class us15 extends Simulation {
 
 
 
-	val scn = scenario("home")
+	val scn = scenario("us20")
 		.exec(http("request_0")
 			.get("/")
 			.headers(headers_0))
-		.pause(8)
+		.pause(12)
 		// home
 		.exec(http("login")
 			.get("/login")
@@ -43,46 +43,33 @@ class us15 extends Simulation {
 			.resources(http("request_2")
 			.get("/login")
 			.headers(headers_2)))
-		.pause(10)
+		.pause(11)
 		// login
 		.exec(http("logged")
 			.post("/login")
 			.headers(headers_3)
 			.formParam("username", "vet1")
 			.formParam("password", "v3t1")
-			.formParam("_csrf", "b4d087f5-5169-4092-b0e4-522a60faa6d4"))
-		.pause(13)
+			.formParam("_csrf", "5f41e2e9-505b-4b35-90eb-08579571d938"))
+		.pause(15)
 		// logged
-		.exec(http("findOwners")
-			.get("/owners/find")
+		.exec(http("adoptions")
+			.get("/homeless-pets")
 			.headers(headers_0))
-		.pause(8)
-		// findOwners
-		.exec(http("ownerList")
-			.get("/owners?lastName=")
+		.pause(7)
+		// adoptions
+		.exec(http("adoptionForm")
+			.get("/homeless-pets/14/adopt")
 			.headers(headers_0))
-		.pause(6)
-		// ownerList
-		.exec(http("ownerShow")
-			.get("/owners/1")
-			.headers(headers_0))
-		.pause(10)
-		// ownerShow
-		.exec(http("addIntervention")
-			.get("/owners/1/pets/1/interventions/new")
-			.headers(headers_0))
-		.pause(14)
-		// addIntervention
-		.exec(http("add")
-			.post("/owners/1/pets/1/interventions/new")
+		.pause(37)
+		// adoptionForm
+		.exec(http("adopt")
+			.post("/homeless-pets/14/adopt")
 			.headers(headers_3)
-			.formParam("interventionDescription", "Wing intervention")
-			.formParam("interventionDate", "2020/09/20")
-			.formParam("interventionTime", "1")
-			.formParam("petId", "1")
-			.formParam("_csrf", "25b60d4c-9b48-42cf-b275-6f83b0ce7c2f"))
-		.pause(3)
-		// add
+			.formParam("owner", "George Franklin")
+			.formParam("_csrf", "46c34adb-641c-489a-b36b-92884e86ffb1"))
+		.pause(4)
+		// adopt
 
 	setUp(scn.inject(atOnceUsers(1500))).protocols(httpProtocol)
 }
