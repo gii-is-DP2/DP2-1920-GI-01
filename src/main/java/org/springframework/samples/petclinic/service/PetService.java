@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Intervention;
 import org.springframework.samples.petclinic.model.Pet;
@@ -81,6 +83,7 @@ public class PetService {
 	}
 
 	@Transactional(rollbackFor = DuplicatedPetNameException.class)
+	@CacheEvict(cacheNames = "homelessPets", allEntries = true)
 	public void savePet(final Pet pet) throws DataAccessException, DuplicatedPetNameException {
 		Pet otherPet = new Pet();
 		
@@ -102,6 +105,7 @@ public class PetService {
 	}
 
 	//This method allows us to find all homeless pets
+	@Cacheable("homelessPets")
 	public List<Pet> findHomelessPets() throws DataAccessException {
 		return this.petRepository.findHomelessPets();
 	}
