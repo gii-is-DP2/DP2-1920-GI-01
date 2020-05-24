@@ -129,8 +129,8 @@ UnsuccessfulAddingOfRehab.unsuccessfuladdingofrehab
 )
 
 
-	setUp(NewSuccessfulRehab.inject(rampUsers(1500) during (100 seconds)),
-	      UnsuccessfulNewRehab.inject(rampUsers(1500) during (100 seconds))
+	setUp(NewSuccessfulRehab.inject(rampUsers(1200) during (100 seconds)),
+	      UnsuccessfulNewRehab.inject(rampUsers(1200) during (100 seconds))
 
 	).protocols(httpProtocol)
   .assertions(

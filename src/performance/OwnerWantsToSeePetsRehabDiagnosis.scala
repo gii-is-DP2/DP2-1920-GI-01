@@ -94,8 +94,8 @@ FindOwner.findowner,
 UnsuccessfulRehabSeeing.unsuccessfulrehabseeing
 )
 
-setUp(OwnerSeesPetsRehabsSuccessful.inject(rampUsers(2300) during (100 seconds)),
-	     OwnerOpensBrokenLink.inject(rampUsers(2300) during (100 seconds))
+setUp(OwnerSeesPetsRehabsSuccessful.inject(rampUsers(1900) during (100 seconds)),
+	     OwnerOpensBrokenLink.inject(rampUsers(1900) during (100 seconds))
      ).protocols(httpProtocol)
  .assertions(
     global.responseTime.max.lt(5000),

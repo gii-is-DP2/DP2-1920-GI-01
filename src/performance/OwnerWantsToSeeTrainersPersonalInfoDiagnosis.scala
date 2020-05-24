@@ -100,8 +100,8 @@ TrainersList.trainerlist,
 TrainerUnsuccessful.trainerunsuccessful
 )
 
-	setUp(OwnerSeesTrainersPersonalInfo.inject(rampUsers(1000) during (100 seconds)),
-	      OwnerCantSeeTrainersPersonalInfo.inject(rampUsers(1000) during (100 seconds))
+	setUp(OwnerSeesTrainersPersonalInfo.inject(rampUsers(800) during (100 seconds)),
+	      OwnerCantSeeTrainersPersonalInfo.inject(rampUsers(800) during (100 seconds))
 
 	).protocols(httpProtocol)
   .assertions(
