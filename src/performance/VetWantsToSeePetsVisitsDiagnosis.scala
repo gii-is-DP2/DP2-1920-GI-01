@@ -95,8 +95,8 @@ FindOwners.findowners,
 BrokenOwnersLink.brokenownerslink
 )
 
-	setUp(VetSeesPetsVisits.inject(rampUsers(3000) during (100 seconds)),
-	      VetCannotSeeBecauseOfBrokenLink.inject(rampUsers(3000) during (100 seconds))
+	setUp(VetSeesPetsVisits.inject(rampUsers(2000) during (100 seconds)),
+	      VetCannotSeeBecauseOfBrokenLink.inject(rampUsers(2000) during (100 seconds))
 
 	).protocols(httpProtocol)
   .assertions(

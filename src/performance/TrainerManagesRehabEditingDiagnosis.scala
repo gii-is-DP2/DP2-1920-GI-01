@@ -177,8 +177,8 @@ val error = exec(http("request_13")
 	request_13.error
 	)
 		
-	setUp(SuccessfulRehabEditing.inject(rampUsers(2000) during (100 seconds)),
-	      UnsuccessfulRehabEditing.inject(rampUsers(2000) during (100 seconds))
+	setUp(SuccessfulRehabEditing.inject(rampUsers(1300) during (100 seconds)),
+	      UnsuccessfulRehabEditing.inject(rampUsers(1300) during (100 seconds))
 
 	).protocols(httpProtocol)	
   .assertions(
