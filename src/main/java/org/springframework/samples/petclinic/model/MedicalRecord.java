@@ -3,6 +3,7 @@ package org.springframework.samples.petclinic.model;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -23,7 +24,7 @@ public class MedicalRecord extends BaseEntity {
 	@NotBlank
 	private String	status;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "visit_id")
 	private Visit	visit;
 
