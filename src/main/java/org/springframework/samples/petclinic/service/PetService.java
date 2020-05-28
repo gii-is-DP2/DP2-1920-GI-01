@@ -68,6 +68,7 @@ public class PetService {
 	}
 
 	@Transactional(readOnly = true)
+	@Cacheable("petTypes")
 	public Collection<PetType> findPetTypes() throws DataAccessException {
 		return this.petRepository.findPetTypes();
 	}

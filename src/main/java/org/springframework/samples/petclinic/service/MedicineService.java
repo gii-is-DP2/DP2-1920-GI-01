@@ -4,6 +4,8 @@ package org.springframework.samples.petclinic.service;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.samples.petclinic.model.Medicine;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.repository.MedicineRepository;
@@ -17,6 +19,7 @@ public class MedicineService {
 	private MedicineRepository repository;
 	
 	@Transactional
+	@CacheEvict(cacheNames = {"petTypes", "medicines"}, allEntries = true)
 	public void saveMedicine(Medicine medicine) {
 		repository.save(medicine);
 	}
@@ -27,21 +30,25 @@ public class MedicineService {
 	}
 	
 	@Transactional
+	@CacheEvict(cacheNames = {"petTypes", "medicines"}, allEntries = true)
 	public void deleteMedicine(Medicine medicine) {
 		repository.delete(medicine);
 	}
 	
 	@Transactional(readOnly = true)
+	@Cacheable("medicines")
 	public Collection<Medicine> findManyMedicineByName(String name) {
 		return repository.findByNameContaining(name);
 	}
 	
 	@Transactional(readOnly = true)
+	@Cacheable("medicines")
 	public Collection<Medicine> findManyAll() {
 		return repository.findAll();
 	}
 	
 	@Transactional(readOnly = true)
+	@Cacheable("medicines")
 	public Collection<Medicine> findByPetType(PetType petType) {
 		return repository.findByPetType(petType);
 	}
