@@ -31,21 +31,25 @@
 	    <cache alias="homelessPets" uses-template="default">
 	        <key-type></key-type>
 	        <value-type>java.util.Collection</value-type>
+	    </cache>       
+   	  <cache alias="petTypes" uses-template="default">
+	        <key-type></key-type>
+	        <value-type>java.util.Collection</value-type>
+	    </cache>
+   	  <cache alias="medicines" uses-template="default">
+	        <key-type></key-type>
+	        <value-type>java.util.Collection</value-type>   
 	    </cache>        
-	    
 	    <cache alias="medicalHistory" uses-template="default">
 	        <key-type></key-type>
 	        <value-type>java.util.Collection</value-type>
 	    </cache>    
-	    
 	    <cache alias="vets" uses-template="default">
 	        <key-type></key-type>
 	        <value-type>java.util.Collection</value-type>
 	    </cache>  
-	    
 	    <cache alias="specialties" uses-template="default">
 	        <key-type></key-type>
 	        <value-type>java.util.Collection</value-type>
 	    </cache> 
-	         
     </config>
