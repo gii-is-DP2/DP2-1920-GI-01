@@ -27,11 +27,11 @@ public class Trainer extends Person{
 	@NotEmpty
 	private String phone;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "username", referencedColumnName = "username")
 	private User user;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "trainer", fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "trainer", fetch = FetchType.LAZY)
 	private Set<Rehab>	rehabs;
 	
 	//Getters and Setters
