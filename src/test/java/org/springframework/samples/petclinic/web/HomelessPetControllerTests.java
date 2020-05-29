@@ -48,7 +48,7 @@ import org.springframework.web.context.WebApplicationContext;
 		includeFilters = @ComponentScan.Filter(value = PetTypeFormatter.class, type = FilterType.ASSIGNABLE_TYPE),
 		excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class),
 		excludeAutoConfiguration= SecurityConfiguration.class)
-public class HomelessPetControllerTests {
+class HomelessPetControllerTests {
 
 	private static final int TEST_PET_ID = 14;
 	private static final int TEST_PET_ID_2 = -1;
@@ -61,9 +61,6 @@ public class HomelessPetControllerTests {
 	
 	@MockBean
 	private PetService petService;
-	
-	@MockBean
-	private VisitService visitService;
 	
 	@Autowired
 	private MockMvc mockMvc;
