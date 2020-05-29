@@ -82,14 +82,14 @@ public class InterventionHomelessPetController {
 	public String initNewInterventionHomelessPetForm(@PathVariable("petId") int petId, Map<String, Object> model) {
 		
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			Intervention intervention = new Intervention();
 			Pet pet = this.petService.findPetById(petId);
 			pet.addIntervention(intervention);
@@ -104,14 +104,14 @@ public class InterventionHomelessPetController {
 	@PostMapping("/homeless-pets/{petId}/interventions/new")
 	public String processNewInterventionHomelessPetForm(@PathVariable("petId") int petId, @Valid Intervention intervention, BindingResult result, ModelMap model) {
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			Pet pet = this.petService.findPetById(petId);
 			pet.addIntervention(intervention);
 			if (result.hasErrors()) {
@@ -137,14 +137,14 @@ public class InterventionHomelessPetController {
 	@GetMapping("/homeless-pets/{petId}/interventions/{interventionId}/edit")
 	public String initEditInterventionHomelessPetForm(@PathVariable("petId") int petId, @PathVariable("interventionId") int interventionId, ModelMap model) {
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			view = EDIT_VIEW;
 			Optional<Intervention> intervention = this.interventionService.findInterventionById(interventionId);
 			if(intervention.isPresent()) {
@@ -161,14 +161,14 @@ public class InterventionHomelessPetController {
 	@PostMapping("/homeless-pets/{petId}/interventions/{interventionId}/edit")
 	public String processEditInterventionHomelessPetForm(@PathVariable("petId") int petId, @PathVariable("interventionId") int interventionId, @Valid Intervention intervention, BindingResult result, ModelMap model) {
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			if(result.hasErrors()) {
 				model.put(INTERVENTION, intervention);
 				view = EDIT_VIEW;
@@ -178,8 +178,7 @@ public class InterventionHomelessPetController {
 					BeanUtils.copyProperties(intervention, interventionToUpdate.get(), "id", "pet", "vet");
 					try {
 						this.interventionService.saveIntervention(interventionToUpdate.get());
-					} catch (Exception e) {
-					}
+					} catch (Exception e) {}
 				}
 				view = REDIRECT_LIST_VIEW + petId;
 			}
@@ -192,14 +191,14 @@ public class InterventionHomelessPetController {
 	@GetMapping("/homeless-pets/{petId}/interventions/{interventionId}/delete")
 	public String deleteInterventionHomelessPet(@PathVariable("petId") int petId, @PathVariable("interventionId") int interventionId, ModelMap model) {
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			Optional<Intervention> intervention;
 			intervention = this.interventionService.findInterventionById(interventionId);
 			Pet pet = this.petService.findPetById(petId);

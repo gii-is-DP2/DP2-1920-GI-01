@@ -73,7 +73,7 @@ public class MedicalRecordHomelessPetController {
 		MedicalRecord medicalRecord;
 		Collection<Prescription> prescriptions;
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
@@ -81,7 +81,7 @@ public class MedicalRecordHomelessPetController {
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			medicalRecord = this.medicalRecordService.findMedicalRecordByVisitId(visitId);
 			prescriptions = this.prescriptionService.findManyByMedicalRecord(medicalRecord);
 			if(medicalRecord == null) {
@@ -104,14 +104,14 @@ public class MedicalRecordHomelessPetController {
 		MedicalRecord medicalRecord;
 		Optional<Visit> visit;
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 		
 			medicalRecord = new MedicalRecord();
 			visit = this.visitService.findVisitById(visitId);
@@ -129,7 +129,7 @@ public class MedicalRecordHomelessPetController {
 	@PostMapping("/homeless-pets/{petId}/visits/{visitId}/medical-record/new")
 	public String processCreationForm(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, @Valid MedicalRecord medicalRecord, BindingResult result, ModelMap model) {
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
@@ -137,7 +137,7 @@ public class MedicalRecordHomelessPetController {
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		Optional<Visit> visit;
 		
-		if(hasAuthorities) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			visit = this.visitService.findVisitById(visitId);
 			
 			if(result.hasErrors()) {
@@ -159,14 +159,14 @@ public class MedicalRecordHomelessPetController {
 	public String initUpdateForm(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, @PathVariable("medicalRecordId") int medicalRecordId, ModelMap model) {
 		MedicalRecord medicalRecord;
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			medicalRecord = this.medicalRecordService.findMedicalRecordById(medicalRecordId);
 			if(medicalRecord == null) {
 				model.addAttribute("message", "Medical Record not found!");
@@ -184,7 +184,7 @@ public class MedicalRecordHomelessPetController {
 	@PostMapping("/homeless-pets/{petId}/visits/{visitId}/medical-record/{medicalRecordId}/edit")
 	public String processUpdateForm(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, @PathVariable("medicalRecordId") int medicalRecordId, @Valid MedicalRecord medicalRecord, BindingResult result, ModelMap model) {
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
@@ -192,7 +192,7 @@ public class MedicalRecordHomelessPetController {
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		MedicalRecord medicalRecordToUpdate;
 		
-		if(hasAuthorities) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			if(result.hasErrors()) {
 				model.addAttribute(MEDICAL_RECORD, medicalRecord);
 				view = EDIT_VIEW;
@@ -211,7 +211,7 @@ public class MedicalRecordHomelessPetController {
 	@GetMapping("/homeless-pets/{petId}/visits/{visitId}/medical-record/{medicalRecordId}/delete")
 	public String deleteMedicalRecord(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, @PathVariable("medicalRecordId") int medicalRecordId, ModelMap model) {
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
@@ -219,7 +219,7 @@ public class MedicalRecordHomelessPetController {
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		MedicalRecord medicalRecord;
 		
-		if(hasAuthorities) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			view = REDIRECT_LIST_VIEW + petId;
 			medicalRecord = this.medicalRecordService.findMedicalRecordById(medicalRecordId);
 			this.prescriptionService.deleteAllAssociated(medicalRecord);

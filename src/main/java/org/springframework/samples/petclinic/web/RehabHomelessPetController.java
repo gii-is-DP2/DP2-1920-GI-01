@@ -73,14 +73,14 @@ public class RehabHomelessPetController {
 	public String initNewRehabHomelessPetForm(@PathVariable("petId") int petId, Map<String, Object> model) {
 		
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 
 		authorities.add(TRAINER);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			Rehab rehab = new Rehab();
 			Pet pet = this.petService.findPetById(petId);
 			pet.addRehab(rehab);
@@ -95,14 +95,14 @@ public class RehabHomelessPetController {
 	@PostMapping("/homeless-pets/{petId}/rehabs/new")
 	public String processNewRehabHomelessPetForm(@PathVariable("petId") int petId, @Valid Rehab rehab, BindingResult result) {
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 
 		authorities.add(TRAINER);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			Pet pet = this.petService.findPetById(petId);
 			if (result.hasErrors()) {
 				view = EDIT_VIEW;
@@ -127,14 +127,14 @@ public class RehabHomelessPetController {
 	@GetMapping("/homeless-pets/{petId}/rehabs/{rehabId}/edit")
 	public String initEditRehabHomelessPetForm(@PathVariable("petId") int petId, @PathVariable("rehabId") int rehabId, ModelMap model) {
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 
 		authorities.add(TRAINER);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			view = EDIT_VIEW;
 			Optional<Rehab> rehab = this.rehabService.findRehabById(rehabId);
 			if(rehab.isPresent()) {
@@ -151,25 +151,24 @@ public class RehabHomelessPetController {
 	@PostMapping("/homeless-pets/{petId}/rehabs/{rehabId}/edit")
 	public String processEditRehabHomelessPetForm(@PathVariable("petId") int petId, @Valid Rehab rehab, BindingResult result, @PathVariable("rehabId") int rehabId, ModelMap model) {
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 
 		authorities.add(TRAINER);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			if(result.hasErrors()) {
 				model.put(REHAB, rehab);
 				view = EDIT_VIEW;
 			} else {
 				Optional<Rehab> rehabToUpdate = this.rehabService.findRehabById(rehabId);
 				if(rehabToUpdate.isPresent()) {
-					BeanUtils.copyProperties(rehab, rehabToUpdate.get(), "id", "pet", "trainer");
+					BeanUtils.copyProperties(rehab, rehabToUpdate.get(), "id", "pet", TRAINER);
 					try {
 						this.rehabService.saveRehab(rehabToUpdate.get());
-					} catch (Exception e) {
-					}
+					} catch (Exception e) {}
 				}
 				view = REDIRECT_LIST_VIEW + petId;
 			}
@@ -182,14 +181,14 @@ public class RehabHomelessPetController {
 	@GetMapping("/homeless-pets/{petId}/rehabs/{rehabId}/delete")
 	public String deleteRehabHomelessPet(@PathVariable("petId") int petId, @PathVariable("rehabId") int rehabId, ModelMap model) {
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 
 		authorities.add(TRAINER);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			Optional<Rehab> rehab;
 			rehab = this.rehabService.findRehabById(rehabId);
 			Pet pet = this.petService.findPetById(petId);
