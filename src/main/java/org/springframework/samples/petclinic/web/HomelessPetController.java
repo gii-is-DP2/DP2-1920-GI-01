@@ -87,7 +87,7 @@ public class HomelessPetController {
 	public String listHomelessPets (ModelMap model) {
 		
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
@@ -95,7 +95,7 @@ public class HomelessPetController {
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			view = "homelessPets/listPets";
 			List<Pet> homelessPets = this.petService.findHomelessPets();
 			model.put("homelessPets", homelessPets);
@@ -110,7 +110,7 @@ public class HomelessPetController {
 	@GetMapping("/{petId}")
 	public String showHomelessPet(@PathVariable("petId") int petId, ModelMap model) {
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
@@ -118,7 +118,7 @@ public class HomelessPetController {
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			Pet homelessPet = this.petService.findPetById(petId);
 			model.addAttribute("homelessPet", homelessPet);
 			view = "homelessPets/showPet";
@@ -133,14 +133,14 @@ public class HomelessPetController {
 	public String initCreationForm(ModelMap model) {
 		
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			Pet pet = new Pet();
 			model.put("pet", pet);
 			view = EDIT_FORM;
@@ -155,14 +155,14 @@ public class HomelessPetController {
 	public String processCreationForm(@Valid Pet pet, BindingResult result, ModelMap model) {
 		
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			if (result.hasErrors()) {
 				model.put("pet", pet);
 				view = EDIT_FORM;
@@ -187,14 +187,14 @@ public class HomelessPetController {
 	public String initUpdateForm(@PathVariable("petId") int petId, ModelMap model) {
 		
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			Pet pet = this.petService.findPetById(petId);
 			model.put("pet", pet);
 			view = EDIT_FORM;
@@ -210,14 +210,14 @@ public class HomelessPetController {
     		@PathVariable("petId") int petId, ModelMap model) {
 		
     	String view;
-    	List<String> authorities = new ArrayList<String>();
+    	List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
     		if (result.hasErrors()) {
 				model.put("pet", pet);
 				view = EDIT_FORM;
@@ -242,14 +242,14 @@ public class HomelessPetController {
     public String deleteHomelessPet(@PathVariable("petId") int petId, ModelMap model) {
     	
     	String view;
-    	List<String> authorities = new ArrayList<String>();
+    	List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 	    	Pet pet = this.petService.findPetById(petId);
 	    	if(pet != null) {
 	    		petService.deletePet(pet);

@@ -81,14 +81,14 @@ public class VisitHomelessPetController {
 	public String initNewVisitHomelessPetForm(@PathVariable("petId") int petId, Map<String, Object> model) {
 		
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			Visit visit = new Visit();
 			Pet pet = this.petService.findPetById(petId);
 			pet.addVisit(visit);
@@ -103,14 +103,14 @@ public class VisitHomelessPetController {
 	@PostMapping("/homeless-pets/{petId}/visits/new")
 	public String processNewVisitHomelessPetForm(@PathVariable("petId") int petId, @Valid Visit visit, BindingResult result) {
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			Pet pet = this.petService.findPetById(petId);
 			if (result.hasErrors()) {
 				view = EDIT_VIEW;
@@ -130,14 +130,14 @@ public class VisitHomelessPetController {
 	@GetMapping("/homeless-pets/{petId}/visits/{visitId}/edit")
 	public String initEditVisitHomelessPetForm(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, ModelMap model) {
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			view = EDIT_VIEW;
 			Optional<Visit> visit = this.visitService.findVisitById(visitId);
 			if(visit.isPresent()) {
@@ -154,14 +154,14 @@ public class VisitHomelessPetController {
 	@PostMapping("/homeless-pets/{petId}/visits/{visitId}/edit")
 	public String processEditVisitHomelessPetForm(@PathVariable("petId") int petId, @Valid Visit visit, BindingResult result, @PathVariable("visitId") int visitId, ModelMap model) {
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			if(result.hasErrors()) {
 				model.put(VISIT, visit);
 				view = EDIT_VIEW;
@@ -171,8 +171,7 @@ public class VisitHomelessPetController {
 					BeanUtils.copyProperties(visit, visitToUpdate.get(), "id", "pet");
 					try {
 						this.petService.saveVisit(visitToUpdate.get());
-					} catch (Exception e) {
-					}
+					} catch (Exception e) {}
 				}
 				view = REDIRECT_LIST_VIEW + petId;
 			}
@@ -185,14 +184,14 @@ public class VisitHomelessPetController {
 	@GetMapping("/homeless-pets/{petId}/visits/{visitId}/delete")
 	public String deleteVisitHomelessPet(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, ModelMap model) {
 		String view;
-		List<String> authorities = new ArrayList<String>();
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
 		authorities.add(VETERINARIAN);
 		
 		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			Optional<Visit> visit;
 			visit = this.visitService.findVisitById(visitId);
 			Pet pet = this.petService.findPetById(petId);
