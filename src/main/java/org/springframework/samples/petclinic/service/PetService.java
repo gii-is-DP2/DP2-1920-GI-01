@@ -1,30 +1,13 @@
 
-/*
- * Copyright 2002-2013 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package org.springframework.samples.petclinic.service;
 
-import java.util.Collection;
+import java.util.Collection; 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Intervention;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
@@ -69,24 +52,24 @@ public class PetService {
 
 	@Transactional(readOnly = true)
 	@Cacheable("petTypes")
-	public Collection<PetType> findPetTypes() throws DataAccessException {
+	public Collection<PetType> findPetTypes() {
 		return this.petRepository.findPetTypes();
 	}
 
 	@Transactional
-	public void saveVisit(final Visit visit) throws DataAccessException {
+	public void saveVisit(final Visit visit) {
 		this.visitRepository.save(visit);
 	}
 
 	@Transactional(readOnly = true)
-	public Pet findPetById(final int id) throws DataAccessException {
+	public Pet findPetById(final int id) {
 		return this.petRepository.findById(id);
 	}
 
 	@Transactional(rollbackFor = DuplicatedPetNameException.class)
 	@CacheEvict(cacheNames = "homelessPets", allEntries = true)
-	public void savePet(final Pet pet) throws DataAccessException, DuplicatedPetNameException {
-		Pet otherPet = new Pet();
+	public void savePet(final Pet pet) throws DuplicatedPetNameException {
+		Pet otherPet;
 		
 		if(pet.getOwner() != null) {
 			otherPet = pet.getOwner().getPetwithIdDifferent(pet.getName(), pet.getId());
@@ -107,19 +90,19 @@ public class PetService {
 
 	//This method allows us to find all homeless pets
 	@Cacheable("homelessPets")
-	public List<Pet> findHomelessPets() throws DataAccessException {
+	public List<Pet> findHomelessPets() {
 		return this.petRepository.findHomelessPets();
 	}
 
 	//This method allows us to delete a given pet
-	public void deletePet(final Pet pet) throws DataAccessException {
+	public void deletePet(final Pet pet) {
 		this.interventionRepository.findInterventionByPetId(pet.getId()).stream().forEach(i -> this.interventionRepository.delete(i));
 		this.rehabRepository.findByPetId(pet.getId()).stream().forEach(r -> this.rehabRepository.delete(r));
 		this.petRepository.delete(pet);
 	}
 
 	@Transactional
-	public void saveIntervention(final Intervention intervention) throws DataAccessException {
+	public void saveIntervention(final Intervention intervention) {
 		this.interventionRepository.save(intervention);
 	}
 
@@ -129,18 +112,16 @@ public class PetService {
 	}
 
 	@Transactional
-	public void saveRehab(final Rehab rehab) throws DataAccessException {
+	public void saveRehab(final Rehab rehab) {
 		this.rehabRepository.save(rehab);
 	}
 
 	@Transactional
-	public Optional<Intervention> findInterventionById(final int interventionId) throws DataAccessException {
-		// TODO Auto-generated method stub
+	public Optional<Intervention> findInterventionById(final int interventionId) {
 		return this.interventionRepository.findById(interventionId);
 	}
 
-	public void deleteIntervention(final Intervention intervention) throws DataAccessException {
-		// TODO Auto-generated method stub
+	public void deleteIntervention(final Intervention intervention) {
 		this.interventionRepository.delete(intervention);
 
 	}
