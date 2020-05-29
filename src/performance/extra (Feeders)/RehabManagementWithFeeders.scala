@@ -6,7 +6,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
-class RehabManagementFeeders extends Simulation {
+class RehabManagementWithFeeders extends Simulation {
 
 	val httpProtocol = http
 		.baseUrl("http://www.dp2.com")
@@ -81,17 +81,20 @@ val newrehabform = exec(http("NewRehabForm")
 	
 object AddedSuccessfulNewRehab {
 
-val feederPositive = csv("RehabManagementFeedersPositive.csv");
+val feederPositive = csv("RehabManagementPositive4.csv")
 
-feed(feederPositive)
-
-
-val addedsuccessfulnewrehab = exec(http("AddedSuccessfulNewRehab")
+  val addedSuccessfulNewRehab2 = exec(http("AddedSuccessfulNewRehab")
+			.get("/owners/3/pets/3/rehab/new")
+			.headers(headers_0)
+      .check(css("input[name=_csrf]","value").saveAs("stoken"))
+    ).pause(34) 
+.feed(feederPositive)
+.exec(http("AddedSuccessfulrehab")
 			.post("/owners/3/pets/3/rehab/new")
 			.headers(headers_3)
 			.formParam("petId", "")
 			.formParam("id", "")
-			.formParam("date", "2020/05/18")
+			.formParam("date", "${date}")
 			.formParam("time", "${time}")
 			.formParam("description", "${description}")
 			.formParam("_csrf", "${stoken}"))
@@ -104,17 +107,20 @@ val addedsuccessfulnewrehab = exec(http("AddedSuccessfulNewRehab")
 
 object UnsuccessfulAddingOfRehab {
 
-val feederNegative = csv("RehabManagementFeederNegative.csv");
+val feederNegative = csv("RehabManagementNegative4.csv")
 
-
-feed(feederNegative)
-
-val unsuccessfuladdingofrehab = exec(http("UnsuccessfulAddingOfRehab")
+ val addedUnsuccessfulRehab = exec(http("UnsuccessfulAddingOfRehab")
+			.get("/owners/3/pets/3/rehab/new")
+			.headers(headers_0)
+      .check(css("input[name=_csrf]","value").saveAs("stoken"))
+    ).pause(34) 
+.feed(feederNegative)
+.exec(http("UnsuccessfulAddingOfRehab2")
 			.post("/owners/3/pets/3/rehab/new")
 			.headers(headers_3)
 			.formParam("petId", "")
 			.formParam("id", "")
-			.formParam("date", "2020/05/18")
+			.formParam("date", "${date}")
 			.formParam("time", "${time}")
 			.formParam("description", "${description}")
 			.formParam("_csrf", "${stoken}"))
@@ -131,7 +137,7 @@ Logged.logged,
 FindOwnersPage.findownerspage,
 OwnerDetails.ownerdetails,
 NewRehabForm.newrehabform,
-AddedSuccessfulNewRehab.addedsuccessfulnewrehab
+AddedSuccessfulNewRehab.addedSuccessfulNewRehab2
 )
 
 
@@ -142,13 +148,18 @@ Logged.logged,
 FindOwnersPage.findownerspage,
 OwnerDetails.ownerdetails,
 NewRehabForm.newrehabform,
-UnsuccessfulAddingOfRehab.unsuccessfuladdingofrehab
+UnsuccessfulAddingOfRehab.addedUnsuccessfulRehab 
 )
 
 
-	setUp(NewSuccessfulRehab.inject(atOnceUsers(1)),
-	      UnsuccessfulNewRehab.inject(atOnceUsers(1))
+setUp(NewSuccessfulRehab.inject(rampUsers(100) during (100 seconds)),
+	      UnsuccessfulNewRehab.inject(rampUsers(100) during (100 seconds))
 
 	).protocols(httpProtocol)
+  .assertions(
+    global.responseTime.max.lt(5000),
+    global.responseTime.mean.lt(1000),
+    global.successfulRequests.percent.gt(95)
+  )
 
 }
