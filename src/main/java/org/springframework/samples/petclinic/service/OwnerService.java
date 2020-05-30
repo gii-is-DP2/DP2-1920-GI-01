@@ -58,18 +58,11 @@ public class OwnerService {
 		return this.ownerRepository.findByLastName(lastName);
 	}
 
-	//	@Transactional(readOnly = true)
-	//	public Collection<Adoption> findByOwnerId(final Integer ownerId) {
-	//		return this.ownerRepository.findByOwnerId(ownerId);
-	//	}
-
 	@Transactional
 	public void saveOwner(final Owner owner) throws DataAccessException {
-		//creating owner
+
 		this.ownerRepository.save(owner);
-		//creating user
 		this.userService.saveUser(owner.getUser());
-		//creating authorities
 		this.authoritiesService.saveAuthorities(owner.getUser().getUsername(), "owner");
 	}
 

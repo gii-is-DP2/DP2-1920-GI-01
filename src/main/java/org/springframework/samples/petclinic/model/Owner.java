@@ -136,8 +136,7 @@ public class Owner extends Person {
 	}
 
 	public List<Adoption> getAdoptions() {
-		List<Adoption> sortedAdoptions = new ArrayList<>(this.getAdoptionsInternal());
-		return sortedAdoptions;
+		return new ArrayList<>(this.getAdoptionsInternal());
 	}
 
 	public void addPet(final Pet pet) {

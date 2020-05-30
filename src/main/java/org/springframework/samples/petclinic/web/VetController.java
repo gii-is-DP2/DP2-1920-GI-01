@@ -55,7 +55,12 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class VetController {
 
-	private final VetService vetService;
+	private final VetService	vetService;
+	private static final String	MESSAGE			= "message";
+	private static final String	VET_NOT_FOUND	= "Vet not found!";
+	private static final String	ADMIN			= "admin";
+	private static final String	REDIRECT		= "redirect:/oups";
+	private static final String	URL_VET_EDIT	= "admin/vets/vetEdit";
 
 
 	@Autowired
@@ -101,7 +106,7 @@ public class VetController {
 		if (vet.isPresent()) {
 			mav.addObject("vet", vet.get());
 		} else {
-			mav.addObject("message", "Vet not found!");
+			mav.addObject(VetController.MESSAGE, VetController.VET_NOT_FOUND);
 		}
 		return mav;
 	}
@@ -127,7 +132,7 @@ public class VetController {
 		Boolean hasAuthorities;
 
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("admin");
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority(VetController.ADMIN);
 		authorities.add(authorityVeterinarian);
 
 		hasAuthorities = this.userHasAuthorities(authorities);
@@ -138,7 +143,7 @@ public class VetController {
 			model.put("vets", vets);
 			view = "admin/vets/vetList";
 		} else {
-			view = "redirect:/oups";
+			view = VetController.REDIRECT;
 		}
 		return view;
 	}
@@ -154,7 +159,7 @@ public class VetController {
 		Boolean hasAuthorities;
 
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("admin");
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority(VetController.ADMIN);
 		authorities.add(authorityVeterinarian);
 
 		hasAuthorities = this.userHasAuthorities(authorities);
@@ -170,10 +175,10 @@ public class VetController {
 					mav.addObject("message2", "This vet has no interventions");
 				}
 			} else {
-				mav.addObject("message", "Vet not found!");
+				mav.addObject(VetController.MESSAGE, VetController.VET_NOT_FOUND);
 			}
 		} else {
-			view = "redirect:/oups";
+			view = VetController.REDIRECT;
 			mav = new ModelAndView(view);
 		}
 		return mav;
@@ -186,7 +191,7 @@ public class VetController {
 		Boolean hasAuthorities;
 
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("admin");
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority(VetController.ADMIN);
 		authorities.add(authorityVeterinarian);
 
 		hasAuthorities = this.userHasAuthorities(authorities);
@@ -194,9 +199,9 @@ public class VetController {
 		if (hasAuthorities == true) {
 			Vet vet = new Vet();
 			model.addAttribute("vet", vet);
-			view = "admin/vets/vetEdit";
+			view = VetController.URL_VET_EDIT;
 		} else {
-			view = "redirect:/oups";
+			view = VetController.REDIRECT;
 		}
 		return view;
 	}
@@ -208,7 +213,7 @@ public class VetController {
 		Boolean hasAuthorities;
 
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("admin");
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority(VetController.ADMIN);
 		authorities.add(authorityVeterinarian);
 
 		hasAuthorities = this.userHasAuthorities(authorities);
@@ -216,17 +221,17 @@ public class VetController {
 		if (hasAuthorities == true) {
 			if (result.hasErrors()) {
 				model.addAttribute("vet", vet);
-				view = "admin/vets/vetEdit";
+				view = VetController.URL_VET_EDIT;
 			} else {
 				try {
 					this.vetService.saveVet(vet);
 					view = this.showVetListAsAdmin(model);
 				} catch (Exception e) {
-					view = "admin/vets/vetEdit";
+					view = VetController.URL_VET_EDIT;
 				}
 			}
 		} else {
-			view = "redirect:/oups";
+			view = VetController.REDIRECT;
 		}
 		return view;
 	}
@@ -238,7 +243,7 @@ public class VetController {
 		Boolean hasAuthorities;
 
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("admin");
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority(VetController.ADMIN);
 		authorities.add(authorityVeterinarian);
 
 		hasAuthorities = this.userHasAuthorities(authorities);
@@ -248,11 +253,11 @@ public class VetController {
 			if (vet.isPresent()) {
 				modelMap.put("vet", vet.get());
 			} else {
-				modelMap.addAttribute("message", "Vet not found!");
+				modelMap.addAttribute(VetController.MESSAGE, VetController.VET_NOT_FOUND);
 			}
-			view = "admin/vets/vetEdit";
+			view = VetController.URL_VET_EDIT;
 		} else {
-			view = "redirect:/oups";
+			view = VetController.REDIRECT;
 		}
 		return view;
 	}
@@ -264,7 +269,7 @@ public class VetController {
 		Boolean hasAuthorities;
 
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("admin");
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority(VetController.ADMIN);
 		authorities.add(authorityVeterinarian);
 
 		hasAuthorities = this.userHasAuthorities(authorities);
@@ -272,18 +277,18 @@ public class VetController {
 		if (hasAuthorities == true) {
 			if (result.hasErrors()) {
 				model.put("vet", vet);
-				view = "admin/vets/vetEdit";
+				view = VetController.URL_VET_EDIT;
 			} else {
 				try {
 					vet.setId(vetId);
 					this.vetService.saveVet(vet);
 				} catch (DataAccessException e) {
-					view = "admin/vets/vetEdit";
+					view = VetController.URL_VET_EDIT;
 				}
 				view = "redirect:/admin/vets";
 			}
 		} else {
-			view = "redirect:/oups";
+			view = VetController.REDIRECT;
 		}
 		return view;
 	}
@@ -295,7 +300,7 @@ public class VetController {
 		Boolean hasAuthorities;
 
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("admin");
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority(VetController.ADMIN);
 		authorities.add(authorityVeterinarian);
 
 		hasAuthorities = this.userHasAuthorities(authorities);
@@ -306,24 +311,24 @@ public class VetController {
 			vet = this.vetService.findVetById(vetId);
 			if (vet.isPresent()) {
 				List<Intervention> interventions = vet.get().getInterventions();
-				if(interventions == null || interventions.isEmpty()) {
+				if (interventions == null || interventions.isEmpty()) {
 					this.vetService.deleteVet(vet.get());
-					modelMap.addAttribute("message", "Vet deleted successfully!");
+					modelMap.addAttribute(VetController.MESSAGE, "Vet deleted successfully!");
 				} else {
 					boolean res = interventions.stream().anyMatch(i -> i.getInterventionDate().isAfter(LocalDate.now()));
-					if(res == true) {
-						modelMap.addAttribute("message", "You can't delete a vet that has future interventions.");
+					if (res == true) {
+						modelMap.addAttribute(VetController.MESSAGE, "You can't delete a vet that has future interventions.");
 					} else {
-						modelMap.addAttribute("message", "Vet deleted successfully!");
+						modelMap.addAttribute(VetController.MESSAGE, "Vet deleted successfully!");
 						this.vetService.deleteVet(vet.get());
 					}
 				}
 			} else {
-				modelMap.addAttribute("message", "Vet not found!");
+				modelMap.addAttribute(VetController.MESSAGE, VetController.VET_NOT_FOUND);
 			}
 			view = this.showVetListAsAdmin(modelMap);
 		} else {
-			view = "redirect:/oups";
+			view = VetController.REDIRECT;
 		}
 		return view;
 	}

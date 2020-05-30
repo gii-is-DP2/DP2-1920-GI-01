@@ -47,7 +47,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class OwnerController {
 
 	private static final String	VIEWS_OWNER_CREATE_OR_UPDATE_FORM	= "owners/createOrUpdateOwnerForm";
-
+	private static final String	OWNER								= "owner";
 	private final OwnerService	ownerService;
 
 
@@ -64,7 +64,7 @@ public class OwnerController {
 	@GetMapping(value = "/owners/new")
 	public String initCreationForm(final Map<String, Object> model) {
 		Owner owner = new Owner();
-		model.put("owner", owner);
+		model.put(OwnerController.OWNER, owner);
 		return OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
 	}
 
@@ -82,7 +82,7 @@ public class OwnerController {
 
 	@GetMapping(value = "/owners/find")
 	public String initFindForm(final Map<String, Object> model) {
-		model.put("owner", new Owner());
+		model.put(OwnerController.OWNER, new Owner());
 		return "owners/findOwners";
 	}
 
@@ -141,7 +141,7 @@ public class OwnerController {
 		Owner owner = this.ownerService.findOwnerById(ownerId);
 		Collection<Adoption> adoptions = owner.getAdoptions();
 		ModelAndView mav = new ModelAndView("owners/ownerDetails");
-		mav.addObject("owner", owner);
+		mav.addObject(OwnerController.OWNER, owner);
 		mav.addObject("adoptions", adoptions);
 		return mav;
 	}
