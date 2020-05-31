@@ -42,6 +42,12 @@ public class RehabController {
 	private final PetService petService;
 	private final TrainerService trainerService;
 
+	private static final String REHAB_FORM = "pets/createOrUpdateRehabForm";
+	private static final String ERROR = "redirect:/oups";
+	private static final String REHAB = "rehab";
+	private static final String OWNERS = "redirect:/owners/{ownerId}";
+	private static final String TRAINER = "trainer";
+	
 
 	@Autowired
 	public RehabController(PetService petService, RehabService rehabService, TrainerService trainerService) {
@@ -70,8 +76,8 @@ public class RehabController {
 		String view;
 		Boolean hasAuthorities;
 		
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityTrainer = new SimpleGrantedAuthority("trainer");
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+		SimpleGrantedAuthority authorityTrainer = new SimpleGrantedAuthority(TRAINER);
 		authorities.add(authorityTrainer);
 		
 		hasAuthorities = userHasAuthorities(authorities);
@@ -80,10 +86,10 @@ public class RehabController {
 			Rehab rehab = new Rehab();
 			Pet pet = this.petService.findPetById(petId);
 			pet.addRehab(rehab);
-			model.put("rehab", rehab);
-			view = "pets/createOrUpdateRehabForm";
+			model.put(REHAB, rehab);
+			view = REHAB_FORM;
 		} else {
-			view = "redirect:/oups";
+			view = ERROR;
 		}
 		return view;
 	}
@@ -93,8 +99,8 @@ public class RehabController {
 		String view;
 		Boolean hasAuthorities;
 		
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("trainer");
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority(TRAINER);
 		authorities.add(authorityVeterinarian);
 		
 		hasAuthorities = userHasAuthorities(authorities);
@@ -102,7 +108,7 @@ public class RehabController {
 		if(hasAuthorities == true) {
 			Pet pet = this.petService.findPetById(petId);
 			if (result.hasErrors()) {
-				view = "pets/createOrUpdateRehabForm";
+				view = REHAB_FORM;
 			}
 			else {
 				Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -113,10 +119,10 @@ public class RehabController {
 					rehab.setTrainer(trainer.get());
 					this.rehabService.saveRehab(rehab);
 				}
-				view = "redirect:/owners/{ownerId}";
+				view = OWNERS;
 			}
 		} else {
-			view = "redirect:/oups";
+			view = ERROR;
 		}
 		return view;
 	}
@@ -130,8 +136,8 @@ public class RehabController {
 		String view;
 		Boolean hasAuthorities;
 		
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("trainer");
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority(TRAINER);
 		authorities.add(authorityVeterinarian);
 		
 		hasAuthorities = userHasAuthorities(authorities);
@@ -146,12 +152,12 @@ public class RehabController {
 				trainer.removeRehab(rehab.get());
 				pet.removeRehab(rehab.get());
 				this.rehabService.delete(rehab.get());
-				view = "redirect:/owners/{ownerId}";
+				view =OWNERS;
 			} else {
-				view = "redirect:/owners/{ownerId}";
+				view = OWNERS;
 			}
 		} else {
-			view = "redirect:/oups";
+			view =ERROR;
 		}
 		return view;
 	
@@ -164,22 +170,22 @@ public class RehabController {
 		String view;
 		Boolean hasAuthorities;
 		
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityTrainer = new SimpleGrantedAuthority("trainer");
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+		SimpleGrantedAuthority authorityTrainer = new SimpleGrantedAuthority(TRAINER);
 		authorities.add(authorityTrainer);
 		
 		hasAuthorities = userHasAuthorities(authorities);
 		
 		if(hasAuthorities == true) {
-			view = "pets/createOrUpdateRehabForm";
+			view = REHAB_FORM;
 			Optional<Rehab> rehab = this.rehabService.findRehabById(rehabId);
 			if(rehab.isPresent()) {
-				model.addAttribute("rehab", rehab.get());
+				model.addAttribute(REHAB, rehab.get());
 			} else {
 				model.addAttribute("message", "Rehab not found!");
 			}
 		} else {
-			view = "redirect:/oups";
+			view = ERROR;
 		}
 		return view;
 	}
@@ -189,30 +195,30 @@ public class RehabController {
 		String view;
 		Boolean hasAuthorities;
 		
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("trainer");
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+			SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority(TRAINER);
 		authorities.add(authorityVeterinarian);
 		
 		hasAuthorities = userHasAuthorities(authorities);
 		
 		if(hasAuthorities == true) {
 			if(result.hasErrors()) {
-				model.put("rehab", rehab);
-				view = "pets/createOrUpdateRehabForm";
+				model.put(REHAB, rehab);
+				view = REHAB_FORM;
 			} else {
 				Optional<Rehab> rehabToUpdate = this.rehabService.findRehabById(rehabId);
 				if(rehabToUpdate.isPresent()) {
-					BeanUtils.copyProperties(rehab, rehabToUpdate.get(), "id", "pet", "trainer");
+					BeanUtils.copyProperties(rehab, rehabToUpdate.get(), "id", "pet", TRAINER);
 					try {
 						this.rehabService.saveRehab(rehabToUpdate.get());
 					} catch (Exception e) {
-						view = "pets/createOrUpdateRehabForm";
+						view = REHAB_FORM;
 					}
 				}
-				view = "redirect:/owners/{ownerId}";
+				view = OWNERS;
 			}
 		} else {
-			view = "redirect:/oups";
+			view = ERROR;
 		}
 		return view;
 	}
