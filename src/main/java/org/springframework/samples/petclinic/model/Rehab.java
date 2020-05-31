@@ -28,8 +28,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import java.time.LocalDate;
-import java.util.List;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
