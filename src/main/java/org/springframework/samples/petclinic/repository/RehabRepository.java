@@ -31,9 +31,9 @@ import org.springframework.samples.petclinic.model.Rehab;
 public interface RehabRepository {
 
 	
-	void save(Rehab rehab) ;
+	void save(Rehab rehab);
 	
-	void delete(Rehab rehab) ;
+	void delete(Rehab rehab);
 
 	List<Rehab> findByPetId(Integer petId);
 	
