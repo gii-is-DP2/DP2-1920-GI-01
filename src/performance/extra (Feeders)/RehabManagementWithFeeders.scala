@@ -25,10 +25,15 @@ class RehabManagementWithFeeders extends Simulation {
 		"Proxy-Connection" -> "keep-alive")
 
 	val headers_3 = Map(
+		"Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+		"Accept-Language" -> "en-US,en;q=0.9",
 		"Origin" -> "http://www.dp2.com",
 		"Proxy-Connection" -> "keep-alive",
 		"Upgrade-Insecure-Requests" -> "1")
 
+
+  val uri1 = "http://clientservices.googleapis.com/chrome-variations/seed"
+  
 
 object Home {
 val home = exec(http("Home")
@@ -38,24 +43,25 @@ val home = exec(http("Home")
 }
 
 object Login {
-val login = exec(http("Login")
-			.get("/login")
-			.headers(headers_0))
-		.pause(1)
-		.exec(http("request_2")
-			.get("/login")
-			.headers(headers_2))
-		.pause(31)
- }
 
-object Logged {
-val logged = exec(http("Logged")
-			.post("/login")
-			.headers(headers_3)
-			.formParam("username", "trainer1")
-			.formParam("password", "tr41n3r")
-			.formParam("_csrf", "cb8ea9e4-5130-46ae-89d1-08ae57b2eba5"))
-		.pause(23)
+ val login = exec(
+      http("Login")
+			  .get("/login")
+			  .headers(headers_0)
+        .check(css("input[name=_csrf]", "value").saveAs("stoken"))
+    ).pause(30)
+    .exec(
+      http("Logged")
+			  .post("/login")
+			  .headers(headers_3)
+			  .formParam("username", "trainer1")
+			  .formParam("password", "tr41n3r")
+			  .formParam("_csrf", "${stoken}")
+    ).pause(23)
+
+
+
+
 }
 
 object FindOwnersPage {
@@ -92,7 +98,7 @@ val feederPositive = csv("RehabManagementPositive4.csv")
 .exec(http("AddedSuccessfulrehab")
 			.post("/owners/3/pets/3/rehab/new")
 			.headers(headers_3)
-			.formParam("petId", "")
+			.formParam("petId", "3")
 			.formParam("id", "")
 			.formParam("date", "${date}")
 			.formParam("time", "${time}")
@@ -118,7 +124,7 @@ val feederNegative = csv("RehabManagementNegative4.csv")
 .exec(http("UnsuccessfulAddingOfRehab2")
 			.post("/owners/3/pets/3/rehab/new")
 			.headers(headers_3)
-			.formParam("petId", "")
+			.formParam("petId", "3")
 			.formParam("id", "")
 			.formParam("date", "${date}")
 			.formParam("time", "${time}")
@@ -133,7 +139,6 @@ val feederNegative = csv("RehabManagementNegative4.csv")
 val NewSuccessfulRehab = scenario("Successful").exec(
 Home.home,
 Login.login,
-Logged.logged,
 FindOwnersPage.findownerspage,
 OwnerDetails.ownerdetails,
 NewRehabForm.newrehabform,
@@ -144,7 +149,6 @@ AddedSuccessfulNewRehab.addedSuccessfulNewRehab2
 val UnsuccessfulNewRehab = scenario("Unsuccessful").exec(
 Home.home,
 Login.login,
-Logged.logged,
 FindOwnersPage.findownerspage,
 OwnerDetails.ownerdetails,
 NewRehabForm.newrehabform,
