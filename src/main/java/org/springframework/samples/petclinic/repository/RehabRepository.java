@@ -15,12 +15,10 @@
  */
 package org.springframework.samples.petclinic.repository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.model.Rehab;
 
 
@@ -33,11 +31,11 @@ import org.springframework.samples.petclinic.model.Rehab;
 public interface RehabRepository {
 
 	
-	void save(Rehab rehab) throws DataAccessException;
+	void save(Rehab rehab) ;
 	
-	void delete(Rehab rehab) throws DataAccessException;
+	void delete(Rehab rehab) ;
 
 	List<Rehab> findByPetId(Integer petId);
 	
-	Optional<Rehab> findById(int id) throws DataAccessException;
+	Optional<Rehab> findById(int id) ;
 }
