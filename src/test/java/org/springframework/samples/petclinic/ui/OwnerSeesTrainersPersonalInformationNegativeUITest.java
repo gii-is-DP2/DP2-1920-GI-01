@@ -1,16 +1,13 @@
 package org.springframework.samples.petclinic.ui;
 
-import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -18,7 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class OwnerSeesTrainersPersonalInformationNegativeUITest {
+ class OwnerSeesTrainersPersonalInformationNegativeUITest {
   private WebDriver driver;
   private String baseUrl;
   private boolean acceptNextAlert = true;
@@ -38,7 +35,7 @@ public class OwnerSeesTrainersPersonalInformationNegativeUITest {
 
   @Test
   
- public void testOwnerSeesPetsRehab () throws Exception {
+ void testOwnerSeesPetsRehab () throws Exception {
 	  
 	  driver.manage().window().maximize();
 	  testOwnerSeesTrainersPersonalInforError(driver, port);
