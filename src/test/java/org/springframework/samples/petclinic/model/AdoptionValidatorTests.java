@@ -10,7 +10,7 @@ import javax.validation.Validator;
 
 import org.junit.jupiter.api.Test;
 
-public class AdoptionValidatorTests extends ValidatorTests {
+class AdoptionValidatorTests extends ValidatorTests {
 
 	@Test
 	void shouldValidateWhenCorrect() {

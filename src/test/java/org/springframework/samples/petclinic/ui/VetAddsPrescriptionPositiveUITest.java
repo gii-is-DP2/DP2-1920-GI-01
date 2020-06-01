@@ -22,7 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class VetAddsPrescriptionPositiveUITest {
+class VetAddsPrescriptionPositiveUITest {
 	
 	@LocalServerPort
 	private int port;
@@ -42,7 +42,7 @@ public class VetAddsPrescriptionPositiveUITest {
 	}
 
 	@Test
-	public void testUS007Positive() throws Exception {
+	void testUS007Positive() throws Exception {
 		driver.get("http://localhost:" + port);
 		driver.findElement(By.xpath("//a[contains(text(),'Login')]")).click();
 		driver.findElement(By.id("username")).click();

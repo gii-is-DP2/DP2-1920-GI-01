@@ -29,6 +29,9 @@ public class MedicineController {
 	private static final String SHOW_VIEW = "medicine/show";
 	private static final String CREATE_OR_UPDATE_VIEW = "medicine/form";
 	
+	private static final String MEDICINE_LITERAL = "medicine";
+	private static final String MEDICINE_NOT_FOUND_MESSAGE = "Medicine not found";
+	
 	@Autowired
 	private MedicineService medicineService;
 	
@@ -56,7 +59,7 @@ public class MedicineController {
 		
 		medicine = new Medicine();
 		
-		model.put("medicine", medicine);
+		model.put(MEDICINE_LITERAL, medicine);
 		
 		return CREATE_OR_UPDATE_VIEW;
 	}
@@ -67,7 +70,7 @@ public class MedicineController {
 		String redirection;
 		
 		if(result.hasErrors()) {
-			model.put("medicine", medicine);
+			model.put(MEDICINE_LITERAL, medicine);
 			return CREATE_OR_UPDATE_VIEW;
 		}
 		
@@ -86,10 +89,10 @@ public class MedicineController {
 		medicine = medicineService.findMedicineById(medicineId);
 		
 		if(medicine == null) {
-			throw new NullPointerException("Medicine not found");
+			throw new NullPointerException(MEDICINE_NOT_FOUND_MESSAGE);
 		}
 		
-		model.put("medicine", medicine);
+		model.put(MEDICINE_LITERAL, medicine);
 		
 		return SHOW_VIEW;
 	}
@@ -101,10 +104,10 @@ public class MedicineController {
 		medicine = medicineService.findMedicineById(medicineId);
 		
 		if(medicine == null) {
-			throw new NullPointerException("Medicine not found");
+			throw new NullPointerException(MEDICINE_NOT_FOUND_MESSAGE);
 		}
 		
-		model.put("medicine", medicine);
+		model.put(MEDICINE_LITERAL, medicine);
 		
 		return CREATE_OR_UPDATE_VIEW;
 	}
@@ -115,7 +118,7 @@ public class MedicineController {
 		Medicine medicineToUpdate;
 		
 		if(result.hasErrors()) {
-			model.put("medicine", medicine);
+			model.put(MEDICINE_LITERAL, medicine);
 			return CREATE_OR_UPDATE_VIEW;
 		}
 		
@@ -123,7 +126,7 @@ public class MedicineController {
 		redirection = "redirect:/medicine/show?id=" + medicineId;
 		
 		if(medicineToUpdate == null) {
-			throw new NullPointerException("Medicine not found");
+			throw new NullPointerException(MEDICINE_NOT_FOUND_MESSAGE);
 		}
 		
 		BeanUtils.copyProperties(medicine, medicineToUpdate, "id", "name");
@@ -139,7 +142,7 @@ public class MedicineController {
 		medicine = medicineService.findMedicineById(medicineId);
 		
 		if(medicine == null) {
-			throw new NullPointerException("Medicine not found");
+			throw new NullPointerException(MEDICINE_NOT_FOUND_MESSAGE);
 		}
 		
 		medicineService.deleteMedicine(medicine);
