@@ -31,6 +31,11 @@ public class MedicalRecordController {
 
 	private static final String		SHOW_VIEW				= "medicalRecord/show";
 	private static final String		CREATE_OR_UPDATE_VIEW	= "medicalRecord/form";
+	private static final String		VIEW					= "/owners/*/pets/*/visits/{visitId}/medical-record";
+	private static final String		MEDICAL_RECORD			= "medicalRecord";
+	private static final String		PET_QUERY				= "/pets/";
+	private static final String		REDIRECT_QUERY			= "redirect:/owners/";
+	private static final String		NOT_FOUND_ERROR			= "MedicalRecord not found";
 
 	@Autowired
 	private VisitService			visitService;
@@ -53,7 +58,7 @@ public class MedicalRecordController {
 		dataBinder.setDisallowedFields("id");
 	}
 
-	@GetMapping("/owners/*/pets/*/visits/{visitId}/medical-record/new")
+	@GetMapping(MedicalRecordController.VIEW + "/new")
 	public String initCreationForm(@PathVariable("visitId") final int visitId, final ModelMap model) {
 		MedicalRecord medicalRecord;
 		Visit visit;
@@ -70,7 +75,7 @@ public class MedicalRecordController {
 		return result;
 	}
 
-	@PostMapping("/owners/*/pets/*/visits/{visitId}/medical-record/new")
+	@PostMapping(MedicalRecordController.VIEW + "/new")
 	public String proccessCreationForm(@PathVariable("visitId") final int visitId, @Valid final MedicalRecord medicalRecord, final BindingResult result, final ModelMap model) {
 		Integer medicalRecordId;
 		String redirection;
@@ -81,7 +86,7 @@ public class MedicalRecordController {
 
 		if (result.hasErrors()) {
 
-			model.put("medicalRecord", medicalRecord);
+			model.put(MedicalRecordController.MEDICAL_RECORD, medicalRecord);
 			return MedicalRecordController.CREATE_OR_UPDATE_VIEW;
 		}
 
@@ -90,12 +95,12 @@ public class MedicalRecordController {
 		medicalRecordId = medicalRecord.getId();
 		String petId = medicalRecord.getVisit().getPet().getId().toString();
 		String ownerId = medicalRecord.getVisit().getPet().getOwner().getId().toString();
-		redirection = "redirect:/owners/" + ownerId + "/pets/" + petId + "/visits/" + visitId + "/medical-record/show?id=" + medicalRecordId;
+		redirection = MedicalRecordController.REDIRECT_QUERY + ownerId + MedicalRecordController.PET_QUERY + petId + "/visits/" + visitId + "/medical-record/show?id=" + medicalRecordId;
 
 		return redirection;
 	}
 
-	@GetMapping("/owners/*/pets/*/visits/{visitId}/medical-record/show")
+	@GetMapping(MedicalRecordController.VIEW + "/show")
 	public String showMedicalRecord(@RequestParam(value = "id", required = true) final Integer medicalRecordId, final ModelMap model) {
 		MedicalRecord medicalRecord;
 		Collection<Prescription> prescriptions;
@@ -104,10 +109,10 @@ public class MedicalRecordController {
 		prescriptions = this.prescriptionService.findManyByMedicalRecord(medicalRecord);
 
 		if (medicalRecord == null) {
-			throw new NullPointerException("MedicalRecord not found");
+			throw new NullPointerException(MedicalRecordController.NOT_FOUND_ERROR);
 		}
 
-		model.put("medicalRecord", medicalRecord);
+		model.put(MedicalRecordController.MEDICAL_RECORD, medicalRecord);
 		model.put("prescriptions", prescriptions);
 
 		return MedicalRecordController.SHOW_VIEW;
@@ -117,41 +122,41 @@ public class MedicalRecordController {
 	public String showVetList(@PathVariable("petId") final int petId, final MedicalRecord medicalRecord, final BindingResult result, final ModelMap model) {
 		Collection<MedicalRecord> res = this.medicalRecordService.findMedicalRecordByPetId(petId);
 
-		model.put("medicalRecords", res);
+		model.put(MedicalRecordController.MEDICAL_RECORD, res);
 
 		return "medicalRecord/list";
 	}
 
-	@GetMapping("/owners/*/pets/*/visits/{visitId}/medical-record/update")
+	@GetMapping(MedicalRecordController.VIEW + "/update")
 	public String initUpdateForm(@RequestParam(value = "id", required = true) final Integer medicalRecordId, final ModelMap model) {
 		MedicalRecord medicalRecord;
 
 		medicalRecord = this.medicalRecordService.findMedicalRecordById(medicalRecordId);
 
 		if (medicalRecord == null) {
-			throw new NullPointerException("MedicalRecord not found");
+			throw new NullPointerException(MedicalRecordController.NOT_FOUND_ERROR);
 		}
 
-		model.put("medicalRecord", medicalRecord);
+		model.put(MedicalRecordController.MEDICAL_RECORD, medicalRecord);
 
 		return MedicalRecordController.CREATE_OR_UPDATE_VIEW;
 	}
 
-	@PostMapping("/owners/*/pets/*/visits/{visitId}/medical-record/update")
+	@PostMapping(MedicalRecordController.VIEW + "/update")
 	public String proccessUpdateForm(@PathVariable("visitId") final int visitId, @RequestParam(value = "id", required = true) final Integer medicalRecordId, @Valid final MedicalRecord medicalRecord, final BindingResult result, final ModelMap model) {
 		String redirection;
 		MedicalRecord medicalRecordToUpdate;
 		Visit visit;
 
 		if (medicalRecord == null) {
-			throw new NullPointerException("MedicalRecord not found");
+			throw new NullPointerException(MedicalRecordController.NOT_FOUND_ERROR);
 		}
 
 		visit = this.visitService.findVisitById(visitId).get();
 		medicalRecord.setVisit(visit);
 
 		if (result.hasErrors()) {
-			model.put("medicalRecord", medicalRecord);
+			model.put(MedicalRecordController.MEDICAL_RECORD, medicalRecord);
 			return MedicalRecordController.CREATE_OR_UPDATE_VIEW;
 		}
 
@@ -162,7 +167,7 @@ public class MedicalRecordController {
 
 		String petId = visit.getPet().getId().toString();
 		String ownerId = visit.getPet().getOwner().getId().toString();
-		redirection = "redirect:/owners/" + ownerId + "/pets/" + petId + "/visits/" + visitId + "/medical-record/show?id=" + medicalRecordId;
+		redirection = MedicalRecordController.REDIRECT_QUERY + ownerId + MedicalRecordController.PET_QUERY + petId + "/visits/" + visitId + "/medical-record/show?id=" + medicalRecordId;
 
 		return redirection;
 	}
@@ -180,7 +185,7 @@ public class MedicalRecordController {
 		this.prescriptionService.deleteAllAssociated(medicalRecord);
 		this.medicalRecordService.deleteMedicalRecord(medicalRecord);
 
-		return "redirect:/owners/" + ownerId + "/pets/" + petId + "/medical-history";
+		return MedicalRecordController.REDIRECT_QUERY + ownerId + MedicalRecordController.PET_QUERY + petId + "/medical-history";
 	}
 
 }

@@ -6,7 +6,6 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.MedicalRecord;
 import org.springframework.samples.petclinic.repository.MedicalRecordRepository;
 import org.springframework.samples.petclinic.repository.PrescriptionRepository;
@@ -53,7 +52,7 @@ public class MedicalRecordService {
 
 	@Cacheable("medicalHistory")
 	@Transactional(readOnly = true)
-	public Collection<MedicalRecord> findMedicalHistory() throws DataAccessException {
+	public Collection<MedicalRecord> findMedicalHistory() {
 		return this.repository.findAll();
 	}
 }
