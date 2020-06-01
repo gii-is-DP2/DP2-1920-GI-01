@@ -15,12 +15,12 @@ import io.restassured.http.ContentType;
 import lombok.extern.java.Log;
 
 @Log
-public class PetFinderAPITest {
+class PetFinderAPITest {
 	
 	private String token = PetfinderResource.getToken();
 	
 	@Test
-	public void getTokenTest() {
+	void getTokenTest() {
 		given()
 			.contentType(ContentType.JSON)
 				.body("{\r\n" + 
@@ -42,7 +42,7 @@ public class PetFinderAPITest {
 	}
 	
 	@Test
-	public void getOrganizationsListTest() {
+	void getOrganizationsListTest() {
 		given()
 			.auth()
 				.oauth2(token)
@@ -60,7 +60,7 @@ public class PetFinderAPITest {
 	}	
 	
 	@Test
-	public void getOrganizationTest() {
+	void getOrganizationTest() {
 		given()
 			.auth()
 				.oauth2(token)

@@ -18,7 +18,7 @@ import org.springframework.samples.petclinic.web.validators.MedicineValidator;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 
-public class MedicineValidatorTests extends ValidatorTests {
+class MedicineValidatorTests extends ValidatorTests {
 	
 	@Test
 	void shouldValidateWhenCorrect() {

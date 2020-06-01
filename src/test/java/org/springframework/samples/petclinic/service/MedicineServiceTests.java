@@ -25,7 +25,7 @@ import generatedAssertions.customAssertions.MedicineAssert;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-public class MedicineServiceTests {
+class MedicineServiceTests {
 	
 	@Autowired
 	protected MedicineService medicineService;

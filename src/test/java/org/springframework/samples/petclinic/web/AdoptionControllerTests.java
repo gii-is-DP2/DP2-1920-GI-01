@@ -32,7 +32,7 @@ import org.springframework.test.web.servlet.MockMvc;
 includeFilters = @ComponentScan.Filter(value = OwnerFormatter.class, type = FilterType.ASSIGNABLE_TYPE),
 excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class),
 excludeAutoConfiguration= SecurityConfiguration.class)
-public class AdoptionControllerTests {
+class AdoptionControllerTests {
 
 	@MockBean
 	private AdoptionService adoptionService;
