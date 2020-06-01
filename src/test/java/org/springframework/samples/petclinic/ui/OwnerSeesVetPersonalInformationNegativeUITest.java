@@ -20,7 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class OwnerSeesVetPersonalInformationNegativeUITest {
+ class OwnerSeesVetPersonalInformationNegativeUITest {
 
 	private WebDriver		driver;
 	private String			baseUrl;
@@ -83,7 +83,7 @@ public class OwnerSeesVetPersonalInformationNegativeUITest {
 	}
 
 	@Test
-	public void testOwnerSeesVetPersonalInformationWithoutRegistration() throws Exception {
+	 void testOwnerSeesVetPersonalInformationWithoutRegistration() throws Exception {
 
 		this.driver.manage().window().maximize();
 		this.driver.get("http://localhost:" + this.port);

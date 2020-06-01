@@ -23,7 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class VetManagesVisitNegativeUITest {
+ class VetManagesVisitNegativeUITest {
 
 	private WebDriver		driver;
 	private String			baseUrl;
@@ -104,7 +104,7 @@ public class VetManagesVisitNegativeUITest {
 		}
 	}
 
-	public void testVetAddVisitWithoutAllInputs() throws Exception {
+	void testVetAddVisitWithoutAllInputs() throws Exception {
 
 		this.driver.findElement(By.xpath("//div[@id='main-navbar']/ul/li[2]/a/span[2]")).click();
 		this.driver.findElement(By.name("lastName")).click();
@@ -116,7 +116,7 @@ public class VetManagesVisitNegativeUITest {
 	}
 
 	@Test
-	public void testTrainerAddsRehab() throws Exception {
+	 void testTrainerAddsRehab() throws Exception {
 
 		this.driver.manage().window().maximize();
 		VetManagesInterventionNegativeUITest.loginAsVet(this.driver, this.port);

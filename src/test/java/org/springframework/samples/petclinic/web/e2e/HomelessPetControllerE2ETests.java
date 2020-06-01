@@ -1,6 +1,6 @@
 package org.springframework.samples.petclinic.web.e2e;
 
-import static org.mockito.BDDMockito.given;   
+  
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -11,21 +11,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.time.Month;
 
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
-import org.springframework.samples.petclinic.service.PetService;
-import org.springframework.samples.petclinic.service.VisitService;
 import org.springframework.samples.petclinic.web.HomelessPetController;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +33,7 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 /*@TestPropertySource(
 		locations = "classpath:application-mysql.properties")*/
-public class HomelessPetControllerE2ETests {
+ class HomelessPetControllerE2ETests {
 
 	private static final int TEST_PET_ID = 14;
 	private static final int TEST_PET_ID_2 = -1;

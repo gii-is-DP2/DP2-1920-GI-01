@@ -52,7 +52,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 /*@TestPropertySource(
 		locations = "classpath:application-mysql.properties")*/
-public class InterventionHomelessPetControllerE2ETests {
+ class InterventionHomelessPetControllerE2ETests {
 
 	private static final int TEST_PET_ID = 14;
 	private static final int TEST_INTERVENTION_ID = 1;

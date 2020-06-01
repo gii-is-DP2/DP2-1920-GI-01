@@ -30,7 +30,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(value = MedicalRecordController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class), excludeAutoConfiguration = SecurityConfiguration.class)
-public class MedicalRecordControllerTests {
+ class MedicalRecordControllerTests {
 
 	private static final int			TEST_OWNER_ID			= 3;
 	private static final int			TEST_PET_ID				= 7;
