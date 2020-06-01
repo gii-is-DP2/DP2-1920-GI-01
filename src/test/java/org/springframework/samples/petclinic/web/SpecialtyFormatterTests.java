@@ -19,7 +19,7 @@ import org.springframework.samples.petclinic.web.formatters.SpecialtyFormatter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
-public class SpecialtyFormatterTests {
+class SpecialtyFormatterTests {
 
 	@Mock
 	private VetService vetService;

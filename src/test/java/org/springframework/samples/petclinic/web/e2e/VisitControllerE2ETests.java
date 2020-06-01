@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @TestPropertySource(
  * locations = "classpath:application-mysql.properties")
  */
-public class VisitControllerE2ETests {
+ class VisitControllerE2ETests {
 
 	private static final int	TEST_PET_ID	= 1;
 

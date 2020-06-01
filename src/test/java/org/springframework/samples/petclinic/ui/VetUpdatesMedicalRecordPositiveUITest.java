@@ -23,7 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class VetUpdatesMedicalRecordPositiveUITest {
+ class VetUpdatesMedicalRecordPositiveUITest {
 
 	private WebDriver		driver;
 	private String			baseUrl;
@@ -44,7 +44,7 @@ public class VetUpdatesMedicalRecordPositiveUITest {
 	}
 
 	@Test
-	public void testVetShouldUpdateMedicalRecord() throws Exception {
+ void testVetShouldUpdateMedicalRecord() throws Exception {
 
 		this.driver.manage().window().maximize();
 

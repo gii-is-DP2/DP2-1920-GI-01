@@ -24,7 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 @Transactional
 /*@TestPropertySource(locations = "classpath:application-mysql.properties")*/
+
 class MedicineControllerE2ETests {
+
 	
 	@Autowired
 	private MockMvc mockMvc;

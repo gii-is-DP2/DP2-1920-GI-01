@@ -16,7 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AdminManagesVetPositiveUITest {
+ class AdminManagesVetPositiveUITest {
 
 	  private WebDriver driver;
 	  private String baseUrl;
@@ -36,7 +36,7 @@ public class AdminManagesVetPositiveUITest {
 	  }
 
 	  @Test
-	  public void testAdminShouldUpdateAnExistingVet() throws Exception {
+	 void testAdminShouldUpdateAnExistingVet() throws Exception {
 		  
 		  driver.manage().window().maximize();
 		  

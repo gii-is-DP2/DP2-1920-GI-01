@@ -3,13 +3,9 @@ package org.springframework.samples.petclinic.web.e2e;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.samples.petclinic.model.Owner;
-import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.web.OwnerController;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
@@ -25,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 /*@TestPropertySource(
 locations = "classpath:application-mysql.properties")*/
-public class OwnerControllerE2ETests {
+ class OwnerControllerE2ETests {
 
 	private static final int	TEST_OWNER_ID	= 1;
 

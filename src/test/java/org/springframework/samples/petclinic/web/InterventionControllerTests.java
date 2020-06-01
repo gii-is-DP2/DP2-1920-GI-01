@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(controllers = InterventionController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class), excludeAutoConfiguration = SecurityConfiguration.class)
-public class InterventionControllerTests {
+ class InterventionControllerTests {
 
 	private static final int		TEST_INTERVENTION_ID	= 1;
 	private static final int		TEST_PET_ID				= 1;

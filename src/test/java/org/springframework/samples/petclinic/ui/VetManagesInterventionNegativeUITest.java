@@ -23,7 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class VetManagesInterventionNegativeUITest {
+ class VetManagesInterventionNegativeUITest {
 
 	private WebDriver		driver;
 	private String			baseUrl;
@@ -117,7 +117,7 @@ public class VetManagesInterventionNegativeUITest {
 	}
 
 	@Test
-	public void testTrainerAddsRehab() throws Exception {
+	void testTrainerAddsRehab() throws Exception {
 
 		this.driver.manage().window().maximize();
 		VetManagesInterventionNegativeUITest.loginAsVet(this.driver, this.port);
