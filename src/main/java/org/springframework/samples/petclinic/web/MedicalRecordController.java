@@ -69,7 +69,7 @@ public class MedicalRecordController {
 		result = MedicalRecordController.CREATE_OR_UPDATE_VIEW;
 
 		medicalRecord.setVisit(visit);
-		model.put("medicalRecord", medicalRecord);
+		model.put(MedicalRecordController.MEDICAL_RECORD, medicalRecord);
 		model.put("visit", visit);
 
 		return result;
