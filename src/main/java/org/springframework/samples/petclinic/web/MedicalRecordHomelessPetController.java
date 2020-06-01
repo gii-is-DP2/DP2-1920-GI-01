@@ -2,6 +2,7 @@ package org.springframework.samples.petclinic.web;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -31,6 +32,13 @@ public class MedicalRecordHomelessPetController {
 	private final VisitService visitService;
 	private final MedicalRecordService medicalRecordService;
 	private final PrescriptionService prescriptionService;
+
+	private static final String VETERINARIAN = "veterinarian";
+	private static final String TRAINER = "trainer";
+	private static final String MEDICAL_RECORD = "medicalRecord";
+	private static final String REDIRECT_OUPS_URL = "redirect:/oups";
+	private static final String EDIT_VIEW = "homelessPets/editMedicalRecord";
+	private static final String REDIRECT_LIST_VIEW = "redirect:/homeless-pets/";
 	
 	@Autowired
 	private MedicalRecordHomelessPetController(VisitService visitService, MedicalRecordService medicalRecordService, PrescriptionService prescriptionService) {
@@ -39,7 +47,6 @@ public class MedicalRecordHomelessPetController {
 		this.prescriptionService = prescriptionService;
 	}
 	
-	//This method will let us check security
 	public boolean userHasAuthorities(Collection<SimpleGrantedAuthority> authorities) {
 		Boolean res = false;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -52,22 +59,29 @@ public class MedicalRecordHomelessPetController {
 		return res;
 	}
 	
+	public Collection<SimpleGrantedAuthority> makeAuthorities(List<String> authoritiesString) {
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+		for (String s: authoritiesString) {
+			SimpleGrantedAuthority authority = new SimpleGrantedAuthority(s);
+			authorities.add(authority);
+		}
+		return authorities;
+	}
+	
 	@GetMapping("/homeless-pets/{petId}/visits/{visitId}/medical-record")
 	public String showMedicalRecord(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, ModelMap model) {
 		MedicalRecord medicalRecord;
 		Collection<Prescription> prescriptions;
 		String view;
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
-		SimpleGrantedAuthority authorityTrainer = new SimpleGrantedAuthority("trainer");
-		authorities.add(authorityVeterinarian);
-		authorities.add(authorityTrainer);
+		authorities.add(VETERINARIAN);
+		authorities.add(TRAINER);
 		
-		hasAuthorities = userHasAuthorities(authorities);
+		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			medicalRecord = this.medicalRecordService.findMedicalRecordByVisitId(visitId);
 			prescriptions = this.prescriptionService.findManyByMedicalRecord(medicalRecord);
 			if(medicalRecord == null) {
@@ -75,12 +89,12 @@ public class MedicalRecordHomelessPetController {
 			} else {
 				model.addAttribute("petId", petId);
 				model.addAttribute("visitId", visitId);
-				model.addAttribute("medicalRecord", medicalRecord);
+				model.addAttribute(MEDICAL_RECORD, medicalRecord);
 				model.addAttribute("prescriptions", prescriptions);
 			}
 			view = "homelessPets/showMedicalRecord";
 		} else {
-			view = "redirect:/oups";
+			view = REDIRECT_OUPS_URL;
 		}
 		return view;
 	}
@@ -90,25 +104,23 @@ public class MedicalRecordHomelessPetController {
 		MedicalRecord medicalRecord;
 		Optional<Visit> visit;
 		String view;
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
-		authorities.add(authorityVeterinarian);
+		authorities.add(VETERINARIAN);
 		
-		hasAuthorities = userHasAuthorities(authorities);
+		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 		
 			medicalRecord = new MedicalRecord();
 			visit = this.visitService.findVisitById(visitId);
-			view = "homelessPets/editMedicalRecord";
+			view = EDIT_VIEW;
 			
 			medicalRecord.setVisit(visit.get());
-			model.addAttribute("medicalRecord", medicalRecord);
-			//model.addAttribute("visit", visit.get());
+			model.addAttribute(MEDICAL_RECORD, medicalRecord);
 		} else {
-			view = "redirect:/oups";
+			view = REDIRECT_OUPS_URL;
 		}
 		
 		return view;
@@ -117,28 +129,27 @@ public class MedicalRecordHomelessPetController {
 	@PostMapping("/homeless-pets/{petId}/visits/{visitId}/medical-record/new")
 	public String processCreationForm(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, @Valid MedicalRecord medicalRecord, BindingResult result, ModelMap model) {
 		String view;
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
-		authorities.add(authorityVeterinarian);
+		authorities.add(VETERINARIAN);
 		
-		hasAuthorities = userHasAuthorities(authorities);
+		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		Optional<Visit> visit;
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			visit = this.visitService.findVisitById(visitId);
 			
 			if(result.hasErrors()) {
-				model.addAttribute("medicalRecord", medicalRecord);
-				view = "homelessPets/editMedicalRecord";
+				model.addAttribute(MEDICAL_RECORD, medicalRecord);
+				view = EDIT_VIEW;
 			} else {
 				medicalRecord.setVisit(visit.get());
 				this.medicalRecordService.saveMedicalRecord(medicalRecord);
-				view = "redirect:/homeless-pets/" + petId;
+				view = REDIRECT_LIST_VIEW + petId;
 			}
 		} else {
-			view = "redirect:/oups";
+			view = REDIRECT_OUPS_URL;
 		}
 		
 		return view;
@@ -148,24 +159,23 @@ public class MedicalRecordHomelessPetController {
 	public String initUpdateForm(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, @PathVariable("medicalRecordId") int medicalRecordId, ModelMap model) {
 		MedicalRecord medicalRecord;
 		String view;
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
-		authorities.add(authorityVeterinarian);
+		authorities.add(VETERINARIAN);
 		
-		hasAuthorities = userHasAuthorities(authorities);
+		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			medicalRecord = this.medicalRecordService.findMedicalRecordById(medicalRecordId);
 			if(medicalRecord == null) {
 				model.addAttribute("message", "Medical Record not found!");
 			} else {
-				model.addAttribute("medicalRecord", medicalRecord);
+				model.addAttribute(MEDICAL_RECORD, medicalRecord);
 			}
-			view = "homelessPets/editMedicalRecord";	
+			view = EDIT_VIEW;	
 		} else {
-			view = "redirect:/oups";
+			view = REDIRECT_OUPS_URL;
 		}
 			
 		return view;
@@ -174,27 +184,26 @@ public class MedicalRecordHomelessPetController {
 	@PostMapping("/homeless-pets/{petId}/visits/{visitId}/medical-record/{medicalRecordId}/edit")
 	public String processUpdateForm(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, @PathVariable("medicalRecordId") int medicalRecordId, @Valid MedicalRecord medicalRecord, BindingResult result, ModelMap model) {
 		String view;
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
-		authorities.add(authorityVeterinarian);
+		authorities.add(VETERINARIAN);
 		
-		hasAuthorities = userHasAuthorities(authorities);
+		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		MedicalRecord medicalRecordToUpdate;
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			if(result.hasErrors()) {
-				model.addAttribute("medicalRecord", medicalRecord);
-				view = "homelessPets/editMedicalRecord";
+				model.addAttribute(MEDICAL_RECORD, medicalRecord);
+				view = EDIT_VIEW;
 			} else {
 				medicalRecordToUpdate = this.medicalRecordService.findMedicalRecordById(medicalRecordId);
 				BeanUtils.copyProperties(medicalRecord, medicalRecordToUpdate, "id", "name", "visit");
 				this.medicalRecordService.saveMedicalRecord(medicalRecordToUpdate);
-				view = "redirect:/homeless-pets/" + petId;
+				view = REDIRECT_LIST_VIEW + petId;
 			}
 		} else {
-			view = "redirect:/oups";
+			view = REDIRECT_OUPS_URL;
 		}
 		return view;
 	}
@@ -202,22 +211,21 @@ public class MedicalRecordHomelessPetController {
 	@GetMapping("/homeless-pets/{petId}/visits/{visitId}/medical-record/{medicalRecordId}/delete")
 	public String deleteMedicalRecord(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, @PathVariable("medicalRecordId") int medicalRecordId, ModelMap model) {
 		String view;
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
-		authorities.add(authorityVeterinarian);
+		authorities.add(VETERINARIAN);
 		
-		hasAuthorities = userHasAuthorities(authorities);
+		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		MedicalRecord medicalRecord;
 		
-		if(hasAuthorities == true) {
-			view = "redirect:/homeless-pets/" + petId;
+		if(Boolean.TRUE.equals(hasAuthorities)) {
+			view = REDIRECT_LIST_VIEW + petId;
 			medicalRecord = this.medicalRecordService.findMedicalRecordById(medicalRecordId);
 			this.prescriptionService.deleteAllAssociated(medicalRecord);
 			this.medicalRecordService.deleteMedicalRecord(medicalRecord);
 		} else {
-			view = "redirect:/oups";
+			view = REDIRECT_OUPS_URL;
 		}
 			
 		return view;

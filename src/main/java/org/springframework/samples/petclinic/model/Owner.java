@@ -136,8 +136,7 @@ public class Owner extends Person {
 	}
 
 	public List<Adoption> getAdoptions() {
-		List<Adoption> sortedAdoptions = new ArrayList<>(this.getAdoptionsInternal());
-		return sortedAdoptions;
+		return new ArrayList<>(this.getAdoptionsInternal());
 	}
 
 	public void addPet(final Pet pet) {
@@ -174,7 +173,7 @@ public class Owner extends Person {
 		for (Pet pet : this.getPetsInternal()) {
 			String compName = pet.getName();
 			compName = compName.toLowerCase();
-			if (compName.equals(name) && pet.getId() != id) {
+			if (compName.equals(name) && pet.getId() != id ) {
 				return pet;
 			}
 		}

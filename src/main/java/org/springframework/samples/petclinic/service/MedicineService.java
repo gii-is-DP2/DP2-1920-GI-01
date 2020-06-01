@@ -42,7 +42,6 @@ public class MedicineService {
 	}
 	
 	@Transactional(readOnly = true)
-	@Cacheable("medicines")
 	public Collection<Medicine> findManyAll() {
 		return repository.findAll();
 	}

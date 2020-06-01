@@ -65,8 +65,6 @@ public interface OwnerRepository {
 	 * @see BaseEntity#isNew
 	 */
 
-	//	Collection<Adoption> findByOwnerId(Integer ownerId);
-
 	void save(Owner owner) throws DataAccessException;
 
 	Collection<Owner> findAll();

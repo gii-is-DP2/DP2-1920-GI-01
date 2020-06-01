@@ -47,6 +47,10 @@
 
         <jacoco.version>0.8.5</jacoco.version>
         <spring-format.version>0.0.19</spring-format.version>
+        
+        <sonar.projectKey>gii-is-DP2_DP2-1920-GI-01</sonar.projectKey>
+        <sonar.organization>gii-is-dp2</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
     </properties>
 

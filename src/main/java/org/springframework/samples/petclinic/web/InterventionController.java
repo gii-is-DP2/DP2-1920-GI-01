@@ -28,7 +28,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class InterventionController {
 
-	private final PetService petService;
+	private final PetService	petService;
+
+	private static final String	CREATE_FORM		= "pets/createOrUpdateInterventionForm";
+	private static final String	INTERVENTION	= "intervention";
 
 
 	@InitBinder
@@ -63,18 +66,16 @@ public class InterventionController {
 		return intervention;
 	}
 
-	// Spring MVC calls method loadPetWithVisit(...) before initNewVisitForm is called
 	@GetMapping(value = "/owners/*/pets/{petId}/interventions/new")
 	public String initNewVisitForm(@PathVariable("petId") final int petId, final Map<String, Object> model) {
-		return "pets/createOrUpdateInterventionForm";
+		return InterventionController.CREATE_FORM;
 	}
 
-	// Spring MVC calls method loadPetWithVisit(...) before processNewVisitForm is called
 	@PostMapping(value = "/owners/{ownerId}/pets/{petId}/interventions/new")
 	public String processNewInterventionForm(@Valid final Intervention intervention, final BindingResult result, final ModelMap modelMap) {
 		if (result.hasErrors()) {
-			modelMap.put("intervention", intervention);
-			return "pets/createOrUpdateInterventionForm";
+			modelMap.put(InterventionController.INTERVENTION, intervention);
+			return InterventionController.CREATE_FORM;
 		} else {
 			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			String username = ((UserDetails) principal).getUsername();
@@ -103,9 +104,6 @@ public class InterventionController {
 
 		if (intervention.isPresent()) {
 			this.petService.deleteIntervention(intervention.get());
-			//	modelMap.addAttribute("message", "Interventiondeleted succesfully");
-		} else {
-			//	modelMap.addAttribute("message", "Intervention not found");
 		}
 		return view;
 	}
@@ -115,18 +113,16 @@ public class InterventionController {
 		Optional<Intervention> intervention;
 		intervention = this.petService.findInterventionById(interventionId);
 		if (intervention.isPresent()) {
-			modelMap.put("intervention", intervention.get());
-		} else {
-			//	modelMap.addAttribute("message", "Trainer not found");
+			modelMap.put(InterventionController.INTERVENTION, intervention.get());
 		}
-		return "pets/createOrUpdateInterventionForm";
+		return InterventionController.CREATE_FORM;
 	}
 
 	@PostMapping("/owners/*/pets/{petId}/interventions/{interventionId}/edit")
 	public String processUpdateForm(@Valid final Intervention intervention, final BindingResult result, @PathVariable("interventionId") final int interventionId, @PathVariable("petId") final int petId, final ModelMap modelMap) {
 		if (result.hasErrors()) {
-			modelMap.put("intervention", intervention);
-			return "pets/createOrUpdateInterventionForm";
+			modelMap.put(InterventionController.INTERVENTION, intervention);
+			return InterventionController.CREATE_FORM;
 		} else {
 			Optional<Intervention> interventionToUpdate = this.petService.findInterventionById(interventionId);
 			if (interventionToUpdate.isPresent()) {

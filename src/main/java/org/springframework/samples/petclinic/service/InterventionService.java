@@ -1,6 +1,6 @@
+
 package org.springframework.samples.petclinic.service;
 
-import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,20 +15,21 @@ public class InterventionService {
 
 	@Autowired
 	private InterventionRepository interventionRepository;
-	
+
+
 	@Transactional(readOnly = true)
-	public Optional<Intervention> findInterventionById(int interventionId) throws DataAccessException {
-		return interventionRepository.findById(interventionId);
+	public Optional<Intervention> findInterventionById(final int interventionId) throws DataAccessException {
+		return this.interventionRepository.findById(interventionId);
 	}
-	
+
 	@Transactional
-	public void saveIntervention(Intervention intervention) throws DataAccessException {
+	public void saveIntervention(final Intervention intervention) throws DataAccessException {
 		this.interventionRepository.save(intervention);
 	}
-	
+
 	@Transactional
-	public void delete(Intervention intervention) throws DataAccessException {
+	public void delete(final Intervention intervention) throws DataAccessException {
 		this.interventionRepository.delete(intervention);
 	}
-	
+
 }

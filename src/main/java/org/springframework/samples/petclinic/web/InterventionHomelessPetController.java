@@ -1,8 +1,8 @@
 package org.springframework.samples.petclinic.web;
 
-import java.security.Principal; 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -37,6 +37,13 @@ public class InterventionHomelessPetController {
 	private final InterventionService interventionService;
 	private final VetService vetService;
 	
+	private static final String VETERINARIAN = "veterinarian";
+	private static final String INTERVENTION = "intervention";
+	private static final String EDIT_VIEW = "homelessPets/editIntervention";
+	private static final String REDIRECT_OUPS_URL = "redirect:/oups";
+	private static final String REDIRECT_LIST_VIEW = "redirect:/homeless-pets/";
+	private static final String MESSAGE = "message";
+	
 	@Autowired
 	public InterventionHomelessPetController(PetService petService, InterventionService interventionService, VetService vetService) {
 		this.petService = petService;
@@ -62,26 +69,34 @@ public class InterventionHomelessPetController {
 		return res;
 	}
 	
+	public Collection<SimpleGrantedAuthority> makeAuthorities(List<String> authoritiesString) {
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+		for (String s: authoritiesString) {
+			SimpleGrantedAuthority authority = new SimpleGrantedAuthority(s);
+			authorities.add(authority);
+		}
+		return authorities;
+	}
+	
 	@GetMapping("/homeless-pets/{petId}/interventions/new")
 	public String initNewInterventionHomelessPetForm(@PathVariable("petId") int petId, Map<String, Object> model) {
 		
 		String view;
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
-		authorities.add(authorityVeterinarian);
+		authorities.add(VETERINARIAN);
 		
-		hasAuthorities = userHasAuthorities(authorities);
+		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			Intervention intervention = new Intervention();
 			Pet pet = this.petService.findPetById(petId);
 			pet.addIntervention(intervention);
-			model.put("intervention", intervention);
-			view = "homelessPets/editIntervention";
+			model.put(INTERVENTION, intervention);
+			view = EDIT_VIEW;
 		} else {
-			view = "redirect:/oups";
+			view = REDIRECT_OUPS_URL;
 		}
 		return view;
 	}
@@ -89,20 +104,19 @@ public class InterventionHomelessPetController {
 	@PostMapping("/homeless-pets/{petId}/interventions/new")
 	public String processNewInterventionHomelessPetForm(@PathVariable("petId") int petId, @Valid Intervention intervention, BindingResult result, ModelMap model) {
 		String view;
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
-		authorities.add(authorityVeterinarian);
+		authorities.add(VETERINARIAN);
 		
-		hasAuthorities = userHasAuthorities(authorities);
+		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			Pet pet = this.petService.findPetById(petId);
 			pet.addIntervention(intervention);
 			if (result.hasErrors()) {
-				model.addAttribute("intervention", intervention);
-				view = "homelessPets/editIntervention";
+				model.addAttribute(INTERVENTION, intervention);
+				view = EDIT_VIEW;
 			}
 			else {
 				Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -112,10 +126,10 @@ public class InterventionHomelessPetController {
 					intervention.setVet(vet.get());
 					this.interventionService.saveIntervention(intervention);
 				}
-				view = "redirect:/homeless-pets/" + petId;
+				view = REDIRECT_LIST_VIEW + petId;
 			}
 		} else {
-			view = "redirect:/oups";
+			view = REDIRECT_OUPS_URL;
 		}
 		return view;
 	}
@@ -123,24 +137,23 @@ public class InterventionHomelessPetController {
 	@GetMapping("/homeless-pets/{petId}/interventions/{interventionId}/edit")
 	public String initEditInterventionHomelessPetForm(@PathVariable("petId") int petId, @PathVariable("interventionId") int interventionId, ModelMap model) {
 		String view;
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
-		authorities.add(authorityVeterinarian);
+		authorities.add(VETERINARIAN);
 		
-		hasAuthorities = userHasAuthorities(authorities);
+		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities == true) {
-			view = "homelessPets/editIntervention";
+		if(Boolean.TRUE.equals(hasAuthorities)) {
+			view = EDIT_VIEW;
 			Optional<Intervention> intervention = this.interventionService.findInterventionById(interventionId);
 			if(intervention.isPresent()) {
-				model.addAttribute("intervention", intervention.get());
+				model.addAttribute(INTERVENTION, intervention.get());
 			} else {
-				model.addAttribute("message", "Intervention not found!");
+				model.addAttribute(MESSAGE, "Intervention not found!");
 			}
 		} else {
-			view = "redirect:/oups";
+			view = REDIRECT_OUPS_URL;
 		}
 		return view;
 	}
@@ -148,32 +161,29 @@ public class InterventionHomelessPetController {
 	@PostMapping("/homeless-pets/{petId}/interventions/{interventionId}/edit")
 	public String processEditInterventionHomelessPetForm(@PathVariable("petId") int petId, @PathVariable("interventionId") int interventionId, @Valid Intervention intervention, BindingResult result, ModelMap model) {
 		String view;
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
-		authorities.add(authorityVeterinarian);
+		authorities.add(VETERINARIAN);
 		
-		hasAuthorities = userHasAuthorities(authorities);
+		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			if(result.hasErrors()) {
-				model.put("intervention", intervention);
-				view = "homelessPets/editIntervention";
+				model.put(INTERVENTION, intervention);
+				view = EDIT_VIEW;
 			} else {
 				Optional<Intervention> interventionToUpdate = this.interventionService.findInterventionById(interventionId);
 				if(interventionToUpdate.isPresent()) {
 					BeanUtils.copyProperties(intervention, interventionToUpdate.get(), "id", "pet", "vet");
 					try {
 						this.interventionService.saveIntervention(interventionToUpdate.get());
-					} catch (Exception e) {
-						view = "homelessPets/editIntervention";
-					}
+					} catch (Exception e) {}
 				}
-				view = "redirect:/homeless-pets/" + petId;
+				view = REDIRECT_LIST_VIEW + petId;
 			}
 		} else {
-			view = "redirect:/oups";
+			view = REDIRECT_OUPS_URL;
 		}
 		return view;
 	}
@@ -181,17 +191,15 @@ public class InterventionHomelessPetController {
 	@GetMapping("/homeless-pets/{petId}/interventions/{interventionId}/delete")
 	public String deleteInterventionHomelessPet(@PathVariable("petId") int petId, @PathVariable("interventionId") int interventionId, ModelMap model) {
 		String view;
+		List<String> authorities = new ArrayList<>();
 		Boolean hasAuthorities;
 		
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		SimpleGrantedAuthority authorityVeterinarian = new SimpleGrantedAuthority("veterinarian");
-		authorities.add(authorityVeterinarian);
+		authorities.add(VETERINARIAN);
 		
-		hasAuthorities = userHasAuthorities(authorities);
+		hasAuthorities = userHasAuthorities(makeAuthorities(authorities));
 		
-		if(hasAuthorities == true) {
+		if(Boolean.TRUE.equals(hasAuthorities)) {
 			Optional<Intervention> intervention;
-			view = "homelessPets/listPets";
 			intervention = this.interventionService.findInterventionById(interventionId);
 			Pet pet = this.petService.findPetById(petId);
 			if(intervention.isPresent()) {
@@ -199,14 +207,14 @@ public class InterventionHomelessPetController {
 				Vet vet = intervention.get().getVet();
 				vet.removeIntervention(intervention.get());
 				this.interventionService.delete(intervention.get());
-				model.addAttribute("message", "Intervention deleted successfully!");
-				view = "redirect:/homeless-pets/" + petId;
+				model.addAttribute(MESSAGE, "Intervention deleted successfully!");
+				view = REDIRECT_LIST_VIEW + petId;
 			} else {
-				model.addAttribute("message", "Intervention not found!");
-				view = "redirect:/homeless-pets/" + petId;
+				model.addAttribute(MESSAGE, "Intervention not found!");
+				view = REDIRECT_LIST_VIEW + petId;
 			}
 		} else {
-			view = "redirect:/oups";
+			view = REDIRECT_OUPS_URL;
 		}
 		return view;
 	}

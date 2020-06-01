@@ -34,7 +34,7 @@ import static org.mockito.BDDMockito.given;
 @WebMvcTest(controllers = VisitHomelessPetController.class,
 		excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class),
 		excludeAutoConfiguration= SecurityConfiguration.class)
-public class VisitHomelessPetControllerTests {
+class VisitHomelessPetControllerTests {
 
 	private static final int TEST_PET_ID = 14;
 	private static final int TEST_VISIT_ID = 5;

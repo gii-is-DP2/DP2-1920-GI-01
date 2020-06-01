@@ -32,7 +32,7 @@ import org.springframework.test.web.servlet.MockMvc;
 	includeFilters = @ComponentScan.Filter(value = PetTypeFormatter.class, type = FilterType.ASSIGNABLE_TYPE),
 	excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class),
 	excludeAutoConfiguration= SecurityConfiguration.class)
-public class MedicineControllerTests {
+class MedicineControllerTests {
 	
 	@MockBean
 	private MedicineService medicineService;
