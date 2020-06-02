@@ -40,7 +40,7 @@ class PetAdoption extends Simulation {
 		var login = exec(http("Login")
 			.get("/login")
 			.headers(headers_0)
-			.check(css("input[name=_csrf]","value").saveAs("stoken"))))
+			.check(css("input[name=_csrf]","value").saveAs("stoken")))
 		.pause(16)
 		.exec(http("logged")
 			.post("/login")
@@ -61,8 +61,8 @@ class PetAdoption extends Simulation {
 	object PetAdoptionFormPositive {
 		var petAdoptionFormPositive = exec(http("PetAdoptionForm")
 			.get("/homeless-pets/14/adopt")
-			.headers(headers_0))
-			.check(css("input[name=_csrf]","value").saveAs("stoken"))))
+			.headers(headers_0)
+			.check(css("input[name=_csrf]","value").saveAs("stoken")))
 		.pause(13)
 		.exec(http("PetAdopted")
 			.post("/homeless-pets/14/adopt")
@@ -82,8 +82,8 @@ class PetAdoption extends Simulation {
 	object PetAdoptionFormNegative {
 		var petAdoptionFormNegative = exec(http("PetAdoptionForm")
 			.get("/homeless-pets/15/adopt")
-			.headers(headers_0))
-			.check(css("input[name=_csrf]","value").saveAs("stoken"))))
+			.headers(headers_0)
+			.check(css("input[name=_csrf]","value").saveAs("stoken")))
 		.pause(2)
 		.exec(http("PetAdoptionFormWithErrorMessage")
 			.post("/homeless-pets/15/adopt")
@@ -103,7 +103,7 @@ class PetAdoption extends Simulation {
 																	  ListHomelessPets.listHomelessPets,
 																	  PetAdoptionFormNegative.petAdoptionFormNegative)
 
-	setUp(petAdoptionPositiveScn.inject(atOnceUsers(1)),
-		  petAdoptionNegativeScn.inject(atOnceUsers(1)))
+	setUp(petAdoptionPositiveScn.inject(atOnceUsers(42500)),
+		  petAdoptionNegativeScn.inject(atOnceUsers(42500)))
 		.protocols(httpProtocol)
 }

@@ -40,7 +40,7 @@ class MedicineListing extends Simulation {
 		var login = exec(http("Login")
 			.get("/login")
 			.headers(headers_0)
-			.check(css("input[name=_csrf]","value").saveAs("stoken"))))
+			.check(css("input[name=_csrf]","value").saveAs("stoken")))
 		.pause(16)
 		.exec(http("logged")
 			.post("/login")
@@ -62,6 +62,6 @@ class MedicineListing extends Simulation {
 																	   Login.login,
 																	   MedicineListing.medicineListing)
 
-	setUp(medicineListingScn.inject(atOnceUsers(1)))
+	setUp(medicineListingScn.inject(atOnceUsers(90000)))
 		.protocols(httpProtocol)
 }

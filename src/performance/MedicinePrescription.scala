@@ -46,7 +46,7 @@ class MedicinePrescription extends Simulation {
 		var login = exec(http("Login")
 			.get("/login")
 			.headers(headers_0)
-			.check(css("input[name=_csrf]","value").saveAs("stoken"))))
+			.check(css("input[name=_csrf]","value").saveAs("stoken")))
 		.pause(16)
 		.exec(http("logged")
 			.post("/login")
@@ -95,8 +95,8 @@ class MedicinePrescription extends Simulation {
 	object MedicinePrescriptionFormPositive {
 		var medicinePrescriptionFormPositive = exec(http("PrescriptionForm")
 			.get("/owners/6/pets/7/visits/1/medical-record/1/prescription/create")
-			.headers(headers_0))
-			.check(css("input[name=_csrf]","value").saveAs("stoken"))))
+			.headers(headers_0)
+			.check(css("input[name=_csrf]","value").saveAs("stoken")))
 		.pause(15)
 		.exec(http("PrescriptionCreated")
 			.post("/owners/6/pets/7/visits/1/medical-record/1/prescription/create")
@@ -108,17 +108,18 @@ class MedicinePrescription extends Simulation {
 		.pause(6)
 	}
 
-	object AddPrescriptionFormNegative {
+	object MedicinePrescriptionFormNegative {
 		var medicinePrescriptionFormNegative = exec(http("PrescriptionForm")
 			.get("/owners/6/pets/7/visits/1/medical-record/1/prescription/create")
-			.headers(headers_0))
+			.headers(headers_0)
+			.check(css("input[name=_csrf]","value").saveAs("stoken")))
 		.pause(3)
 		.exec(http("PrescriptionCreationFormWithErrorMessage")
 			.post("/owners/6/pets/7/visits/1/medical-record/1/prescription/create")
 			.headers(headers_3)
 			.formParam("id", "")
 			.formParam("dose", "prueba")
-			.formParam("_csrf", "6c2eb6bd-254b-4369-b765-800875c4ebb3"))
+			.formParam("_csrf", "${stoken}"))
 		.pause(9)
 	}
 
@@ -142,7 +143,7 @@ class MedicinePrescription extends Simulation {
 																						MedicinePrescriptionFormNegative.medicinePrescriptionFormNegative
 																						)
 
-	setUp(medicinePrescriptionPositiveScn.inject(atOnceUsers(1)),
-		  medicinePrescriptionNegativeScn.inject(atOnceUsers(1)))
+	setUp(medicinePrescriptionPositiveScn.inject(atOnceUsers(40000)),
+		  medicinePrescriptionNegativeScn.inject(atOnceUsers(40000)))
 		.protocols(httpProtocol)
 }
