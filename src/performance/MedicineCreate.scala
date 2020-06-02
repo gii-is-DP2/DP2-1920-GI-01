@@ -34,7 +34,7 @@ class MedicineCreate extends Simulation {
 		var login = exec(http("Login")
 			.get("/login")
 			.headers(headers_0)
-			.check(css("input[name=_csrf]","value").saveAs("stoken"))))
+			.check(css("input[name=_csrf]","value").saveAs("stoken")))
 		.pause(16)
 		.exec(http("logged")
 			.post("/login")
@@ -96,7 +96,7 @@ class MedicineCreate extends Simulation {
 																				MedicineListing.medicineListing,
 																				MedicineCreationFormNegative.medicineCreationFormNegative)																			
 
-	setUp(medicineCreationPositiveScn.inject(atOnceUsers(1)),
-		  medicineCreationNegativeScn.inject(atOnceUsers(1)))
+	setUp(medicineCreationPositiveScn.inject(atOnceUsers(45000)),
+		  medicineCreationNegativeScn.inject(atOnceUsers(45000)))
 		.protocols(httpProtocol)
 }

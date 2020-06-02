@@ -6,7 +6,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
-class MedicineCreateDiagnosis extends Simulation {
+class MedicineCreateWithFeeders extends Simulation {
 
 	val httpProtocol = http
 		.baseUrl("http://www.dp2.com")
@@ -67,7 +67,7 @@ class MedicineCreateDiagnosis extends Simulation {
 			.formParam("name", "${name}")
 			.formParam("expirationDate", "${expirationDate}")
 			.formParam("maker", "${maker}")
-			.formParam("petType", "${petType}")
+			.formParam("petType", "${type}")
 			.formParam("_csrf", "${stoken}"))
 		.pause(10)
 	}
@@ -87,7 +87,7 @@ class MedicineCreateDiagnosis extends Simulation {
 			.formParam("name", "${name}")
 			.formParam("expirationDate", "${expirationDate}")
 			.formParam("maker", "${maker}")
-			.formParam("petType", "${petType}")
+			.formParam("petType", "${type}")
 			.formParam("_csrf", "${stoken}"))
 		.pause(10)
 	}
@@ -102,8 +102,8 @@ class MedicineCreateDiagnosis extends Simulation {
 																				MedicineListing.medicineListing,
 																				MedicineCreationFormNegative.medicineCreationFormNegative)																			
 
-	setUp(medicineCreationPositiveScn.inject(rampUsers(40) during (50 seconds)),
-          medicineCreationNegativeScn.inject(rampUsers(40) during (50 seconds)))
+	setUp(medicineCreationPositiveScn.inject(rampUsers(1000) during (100 seconds)),
+          medicineCreationNegativeScn.inject(rampUsers(1000) during (100 seconds)))
 		.protocols(httpProtocol)
 		.assertions(
 			global.responseTime.max.lt(5000),

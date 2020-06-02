@@ -6,7 +6,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
-class MedicineCreate extends Simulation {
+class MedicineCreateDiagnosis extends Simulation {
 
 	val httpProtocol = http
 		.baseUrl("http://www.dp2.com")
@@ -34,7 +34,7 @@ class MedicineCreate extends Simulation {
 		var login = exec(http("Login")
 			.get("/login")
 			.headers(headers_0)
-			.check(css("input[name=_csrf]","value").saveAs("stoken"))))
+			.check(css("input[name=_csrf]","value").saveAs("stoken")))
 		.pause(16)
 		.exec(http("logged")
 			.post("/login")
@@ -96,8 +96,8 @@ class MedicineCreate extends Simulation {
 																				MedicineListing.medicineListing,
 																				MedicineCreationFormNegative.medicineCreationFormNegative)																			
 
-	setUp(medicineCreationPositiveScn.inject(rampUsers(250) during (100 seconds)),
-          medicineCreationNegativeScn.inject(rampUsers(250) during (100 seconds)))
+	setUp(medicineCreationPositiveScn.inject(rampUsers(40) during (50 seconds)),
+          medicineCreationNegativeScn.inject(rampUsers(40) during (50 seconds)))
 		.protocols(httpProtocol)
 		.assertions(
 			global.responseTime.max.lt(5000),
